@@ -613,6 +613,55 @@
             align-items: center;
             justify-content: center;
         }
+        
+        /* Mobile Responsive - Portrait Mode */
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+            .chat-sidebar {
+                width: 60px;
+                padding: 10px 8px;
+            }
+            
+            .chat-sidebar h3 {
+                font-size: 0.6rem;
+                text-align: center;
+                margin: 15px 0 8px 0;
+            }
+            
+            .channel, .dm-item {
+                justify-content: center;
+                padding: 10px 0;
+            }
+            
+            .channel-name, .dm-name {
+                display: none;
+            }
+            
+            .channel-icon {
+                font-size: 1.4rem;
+            }
+            
+            .dm-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.65rem;
+            }
+            
+            .chat-container {
+                height: calc(100vh - 140px);
+                margin: 0 10px;
+            }
+        }
+        
+        /* Landscape mode - full sidebar */
+        @media screen and (min-width: 769px), screen and (orientation: landscape) {
+            .chat-sidebar {
+                width: 260px;
+            }
+            
+            .channel-name, .dm-name {
+                display: inline;
+            }
+        }
     </style>
 </head>
 <body>
