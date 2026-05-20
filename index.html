@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2563eb">
+    <title>Craft Business Tracker</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #e5e5e5;
+        }
+        
+        body.dark-mode .header {
+            background: linear-gradient(135deg, #1e40af, #1e3a8a);
+        }
+        
+        body.dark-mode .stats,
+        body.dark-mode .categories,
+        body.dark-mode .card,
+        body.dark-mode .product-card,
+        body.dark-mode .modal-content {
+            background: #2d2d2d;
+            color: #e5e5e5;
+        }
+        
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group select,
+        body.dark-mode .form-group textarea {
+            background: #1a1a1a;
+            color: #e5e5e5;
+            border-color: #404040;
+        }
+        
+        body.dark-mode .item-row {
+            border-bottom-color: #404040;
+        }
+        
+        body.dark-mode .empty-state {
+            color: #9ca3af;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Stats Cards */
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            margin: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .stat-card.total {
+            background: #fef3c7;
+        }
+        
+        .stat-card.count {
+            background: #dbeafe;
+        }
+        
+        .stat-card.revenue {
+            background: #d1fae5;
+        }
+        
+        .stat-card.warning {
+            background: #fee2e2;
+        }
+        
+        body.dark-mode .stat-card.total {
+            background: #451a03;
+        }
+        
+        body.dark-mode .stat-card.count {
+            background: #172554;
+        }
+        
+        body.dark-mode .stat-card.revenue {
+            background: #064e3b;
+        }
+        
+        body.dark-mode .stat-card.warning {
+            background: #450a0a;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        body.dark-mode .stat-label {
+            color: #9ca3af;
+        }
+        
+        body.dark-mode .stat-value {
+            color: #e5e5e5;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+        
+        body.dark-mode .card h2 {
+            color: #e5e5e5;
+        }
+        
+        /* Item Rows */
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .item-row:last-child {
+            border-bottom: none;
+        }
+        
+        .item-info h3 {
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+        
+        .item-meta {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .item-amount {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .btn-edit {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        
+        .btn-delete {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .btn-success {
+            background: #d1fae5;
+            color: #059669;
+        }
+        
+        /* Product Cards */
+        .product-card {
+            background: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .product-image {
+            width: 80px;
+            height: 80px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .product-description {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .product-materials {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        
+        /* Photo Upload */
+        .photo-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .photo-upload:hover {
+            border-color: #2563eb;
+            background: #f0f7ff;
+        }
+        
+        .photo-upload.has-image {
+            border-style: solid;
+            border-color: #2563eb;
+            padding: 0;
+        }
+        
+        .photo-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+        }
+        
+        /* Material Rows */
+        .material-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .material-select {
+            flex: 2;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .material-qty {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .remove-material {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-complete {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        body.dark-mode .status-pending {
+            background: #451a03;
+        }
+        
+        body.dark-mode .status-progress {
+            background: #172554;
+        }
+        
+        body.dark-mode .status-complete {
+            background: #064e3b;
+        }
+        
+        body.dark-mode .status-cancelled {
+            background: #450a0a;
+        }
+        
+        /* Stock Levels */
+        .stock-ok {
+            color: #059669;
+        }
+        
+        .stock-low {
+            color: #dc2626;
+        }
+        
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            max-width: 600px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+        
+        body.dark-mode .bottom-nav {
+            background: #2d2d2d;
+            border-top-color: #404040;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        
+        .nav-btn.active {
+            color: #2563eb;
+        }
+        
+        .nav-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* Pages */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Add Button */
+        .add-btn {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: #2563eb;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            z-index: 50;
+        }
+        
+        .add-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background: inherit;
+            padding: 10px 0;
+            z-index: 10;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.2rem;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+        
+        body.dark-mode .form-group label {
+            color: #9ca3af;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:active {
+            background: #1d4ed8;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+        
+        /* Menu */
+        .menu-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .dark-mode-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* Make Modal */
+        .make-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .make-option {
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .make-option:hover {
+            border-color: #2563eb;
+            background: #f0f7ff;
+        }
+        
+        body.dark-mode .make-option {
+            border-color: #404040;
+        }
+        
+        body.dark-mode .make-option:hover {
+            border-color: #2563eb;
+            background: #1e293b;
+        }
+        
+        .make-option h3 {
+            margin-bottom: 5px;
+            color: #2563eb;
+        }
+        
+        .make-option p {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        body.dark-mode .make-option p {
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button class="dark-mode-toggle" id="darkModeBtn" onclick="toggleDarkMode()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <span>Dark</span>
+            </button>
+            <h1 id="pageTitle">Business Expenses</h1>
+            <p id="pageSubtitle">Track your craft business costs</p>
+        </div>
+        
+        <!-- EXPENSES PAGE -->
+        <div class="page active" id="expenses-page">
+            <div class="stats">
+                <div class="stat-card total">
+                    <div class="stat-label">Total Spent</div>
+                    <div class="stat-value" id="expenseTotal">$0.00</div>
+                </div>
+                <div class="stat-card count">
+                    <div class="stat-label">Purchases</div>
+                    <div class="stat-value" id="expenseCount">0</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>By Category</h2>
+                <div id="expenseCategories"></div>
+            </div>
+            
+            <div class="card">
+                <h2>Recent Purchases</h2>
+                <div id="expenseList"></div>
+            </div>
+        </div>
+        
+        <!-- PRODUCTS PAGE -->
+        <div class="page" id="products-page">
+            <div class="stats">
+                <div class="stat-card count">
+                    <div class="stat-label">Products</div>
+                    <div class="stat-value" id="productCount">0</div>
+                </div>
+                <div class="stat-card total">
+                    <div class="stat-label">Can Make</div>
+                    <div class="stat-value" id="canMakeCount">0</div>
+                </div>
+            </div>
+            
+            <div id="productList"></div>
+        </div>
+        
+        <!-- ORDERS PAGE -->
+        <div class="page" id="orders-page">
+            <div class="stats">
+                <div class="stat-card revenue">
+                    <div class="stat-label">Revenue</div>
+                    <div class="stat-value" id="orderRevenue">$0.00</div>
+                </div>
+                <div class="stat-card count">
+                    <div class="stat-label">Active Orders</div>
+                    <div class="stat-value" id="orderCount">0</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>By Status</h2>
+                <div id="orderStats"></div>
+            </div>
+            
+            <div class="card">
+                <h2>Orders</h2>
+                <div id="orderList"></div>
+            </div>
+        </div>
+        
+        <!-- INVENTORY PAGE -->
+        <div class="page" id="inventory-page">
+            <div class="stats">
+                <div class="stat-card count">
+                    <div class="stat-label">Items</div>
+                    <div class="stat-value" id="inventoryCount">0</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-label">Low Stock</div>
+                    <div class="stat-value" id="lowStockCount">0</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Materials</h2>
+                <div id="inventoryList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Button -->
+    <button class="add-btn" onclick="openModal()">+</button>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" data-page="expenses" onclick="showPage('expenses')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="9" y1="9" x2="15" y2="9"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            Expenses
+        </button>
+        <button class="nav-btn" data-page="products" onclick="showPage('products')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="10" r="3"/>
+                <path d="M7 17.5c0-2 2.5-3 5-3s5 1 5 3"/>
+            </svg>
+            Products
+        </button>
+        <button class="nav-btn" data-page="orders" onclick="showPage('orders')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            Orders
+        </button>
+        <button class="nav-btn" data-page="inventory" onclick="showPage('inventory')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            Inventory
+        </button>
+    </nav>
+
+    <!-- EXPENSE MODAL -->
+    <div class="modal" id="expense-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="expenseModalTitle">Add Purchase</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="expenseForm" onsubmit="saveExpense(event)">
+                <input type="hidden" id="expenseId">
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input type="text" id="expName" placeholder="e.g., Baltic Birch Plywood" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Amount ($)</label>
+                        <input type="number" id="expAmount" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="expQuantity" placeholder="1" step="0.01" min="0.01" value="1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <select id="expUnit">
+                            <option value="each">each</option>
+                            <option value="sheet">sheet</option>
+                            <option value="pack">pack</option>
+                            <option value="ft">ft</option>
+                            <option value="yd">yd</option>
+                            <option value="lb">lb</option>
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="oz">oz</option>
+                            <option value="set">set</option>
+                            <option value="roll">roll</option>
+                            <option value="bottle">bottle</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="expCategory" required>
+                            <option value="materials">Materials</option>
+                            <option value="tools">Tools</option>
+                            <option value="hardware">Hardware</option>
+                            <option value="finishing">Finishing</option>
+                            <option value="packaging">Packaging</option>
+                            <option value="software">Software</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="expDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Vendor Link (Optional - for reordering)</label>
+                    <input type="url" id="expLink" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="expNotes" rows="2" placeholder="Size, color, etc."></textarea>
+                </div>
+                <button type="submit" class="submit-btn" id="expenseSubmitBtn">Save Purchase</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- PRODUCT MODAL -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Add Product</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="productForm" onsubmit="saveProduct(event)">
+                <input type="hidden" id="productId">
+                <input type="hidden" id="productPhotoData">
+                
+                <div class="form-group">
+                    <label>Product Photo</label>
+                    <div class="photo-upload" id="photoUploadArea" onclick="document.getElementById('productPhoto').click()">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 10px;">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <p>Tap to add photo</p>
+                        <input type="file" id="productPhoto" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="prodName" placeholder="e.g., Pineapple Door Sign" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Default Price ($)</label>
+                        <input type="number" id="prodPrice" placeholder="0.00" step="0.01" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="prodDescription" rows="2" placeholder="Brief description..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Bill of Materials</label>
+                    <div id="materialsList"></div>
+                    <button type="button" class="btn btn-edit" onclick="addMaterialField()" style="margin-top: 10px;">+ Add Material</button>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="productSubmitBtn">Save Product</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- ORDER MODAL -->
+    <div class="modal" id="order-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="orderModalTitle">Add Order</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="orderForm" onsubmit="saveOrder(event)">
+                <input type="hidden" id="orderId">
+                
+                <div class="form-group">
+                    <label>Product (Optional)</label>
+                    <select id="orderProductSelect" onchange="loadProductForOrder()">
+                        <option value="">-- Select a product --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Customer Name</label>
+                    <input type="text" id="orderCustomer" placeholder="Customer name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Item/Description</label>
+                    <input type="text" id="orderItem" placeholder="What are they ordering?" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Amount ($)</label>
+                        <input type="number" id="orderAmount" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="orderStatus">
+                            <option value="pending">Pending</option>
+                            <option value="progress">In Progress</option>
+                            <option value="complete">Complete</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Order Date</label>
+                        <input type="date" id="orderDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date (Optional)</label>
+                        <input type="date" id="orderDueDate">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="orderNotes" rows="2" placeholder="Special instructions..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="orderSubmitBtn">Save Order</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- INVENTORY MODAL -->
+    <div class="modal" id="inventory-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="inventoryModalTitle">Add Inventory Item</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="inventoryForm" onsubmit="saveInventory(event)">
+                <input type="hidden" id="inventoryItemId">
+                
+                <div class="form-group">
+                    <label>Material Name</label>
+                    <input type="text" id="invName" placeholder="e.g., Baltic Birch Plywood" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Current Quantity</label>
+                        <input type="number" id="invQuantity" placeholder="0" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <select id="invUnit" required>
+                            <option value="sheet">sheet</option>
+                            <option value="pack">pack</option>
+                            <option value="each">each</option>
+                            <option value="ft">ft</option>
+                            <option value="yd">yd</option>
+                            <option value="lb">lb</option>
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="oz">oz</option>
+                            <option value="set">set</option>
+                            <option value="roll">roll</option>
+                            <option value="bottle">bottle</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Minimum Stock (low stock alert)</label>
+                    <input type="number" id="invMinStock" placeholder="5" step="0.01" min="0" value="5" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Storage Location</label>
+                    <input type="text" id="invLocation" placeholder="e.g., Garage shelf A">
+                </div>
+                
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="invNotes" rows="2" placeholder="Source, cost, etc."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="inventorySubmitBtn">Save Item</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- MAKE PRODUCT MODAL -->
+    <div class="modal" id="make-product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Make Product</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <p style="margin-bottom: 20px; color: #6b7280;">What would you like to do?</p>
+            <div class="make-options">
+                <div class="make-option" onclick="makeProductForStock()">
+                    <h3>📦 Make for Stock</h3>
+                    <p>Build inventory quantity. Materials will be deducted from inventory.</p>
+                </div>
+                <div class="make-option" onclick="makeProductForOrder()">
+                    <h3>📋 Create Order</h3>
+                    <p>Create a customer order for this product. Go to Orders page.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data
+        let expenses = JSON.parse(localStorage.getItem('craft_expenses')) || [];
+        let products = JSON.parse(localStorage.getItem('craft_products')) || [];
+        let orders = JSON.parse(localStorage.getItem('craft_orders')) || [];
+        let inventory = JSON.parse(localStorage.getItem('craft_inventory')) || [];
+        
+        let currentPage = 'expenses';
+        let currentProductId = null;
+        
+        // Categories
+        const categories = {
+            materials: { name: 'Materials', color: '#f59e0b' },
+            tools: { name: 'Tools', color: '#3b82f6' },
+            hardware: { name: 'Hardware', color: '#8b5cf6' },
+            finishing: { name: 'Finishing', color: '#10b981' },
+            packaging: { name: 'Packaging', color: '#f97316' },
+            software: { name: 'Software', color: '#ec4899' },
+            other: { name: 'Other', color: '#6b7280' }
+        };
+        
+        const statusLabels = {
+            pending: 'Pending',
+            progress: 'In Progress',
+            complete: 'Complete',
+            cancelled: 'Cancelled'
+        };
+        
+        const statusClasses = {
+            pending: 'status-pending',
+            progress: 'status-progress',
+            complete: 'status-complete',
+            cancelled: 'status-cancelled'
+        };
+        
+        // Page Navigation
+        function showPage(page) {
+            currentPage = page;
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(page + '-page').classList.add('active');
+            document.querySelector(`[data-page="${page}"]`).classList.add('active');
+            
+            // Update header
+            const titles = {
+                expenses: { title: 'Business Expenses', subtitle: 'Track your craft business costs' },
+                products: { title: 'My Products', subtitle: 'Manage products & bill of materials' },
+                orders: { title: 'Orders & Projects', subtitle: 'Manage customer orders' },
+                inventory: { title: 'Inventory', subtitle: 'Track materials & stock levels' }
+            };
+            
+            document.getElementById('pageTitle').textContent = titles[page].title;
+            document.getElementById('pageSubtitle').textContent = titles[page].subtitle;
+            
+            // Refresh displays
+            if (page === 'expenses') updateExpenses();
+            if (page === 'products') updateProducts();
+            if (page === 'orders') updateOrders();
+            if (page === 'inventory') updateInventory();
+        }
+        
+        // ========== EXPENSES ==========
+        function updateExpenses() {
+            const total = expenses.reduce((sum, e) => sum + e.amount, 0);
+            document.getElementById('expenseTotal').textContent = '$' + total.toFixed(2);
+            document.getElementById('expenseCount').textContent = expenses.length;
+            
+            // Category breakdown
+            const catTotals = {};
+            expenses.forEach(e => {
+                catTotals[e.category] = (catTotals[e.category] || 0) + e.amount;
+            });
+            
+            const catDiv = document.getElementById('expenseCategories');
+            catDiv.innerHTML = '';
+            
+            Object.entries(catTotals).sort((a, b) => b[1] - a[1]).forEach(([cat, amount]) => {
+                catDiv.innerHTML += `
+                    <div class="item-row">
+                        <span>${categories[cat]?.name || cat}</span>
+                        <span class="item-amount">$${amount.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            // Expense list
+            const list = document.getElementById('expenseList');
+            list.innerHTML = '';
+            
+            if (expenses.length === 0) {
+                list.innerHTML = '<div class="empty-state"><p>No purchases yet. Tap + to add one!</p></div>';
+                return;
+            }
+            
+            const sorted = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sorted.forEach(expense => {
+                const unitPrice = expense.amount / (expense.quantity || 1);
+                const unitDisplay = expense.quantity && expense.quantity !== 1 ? `${expense.quantity} ${expense.unit}` : '';
+                
+                list.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <h3>${escapeHtml(expense.name)} ${unitDisplay ? `<small style="color:#2563eb">(${unitDisplay})</small>` : ''}</h3>
+                            <div class="item-meta">
+                                ${categories[expense.category]?.name} • ${formatDate(expense.date)}
+                                ${expense.notes ? ' • ' + escapeHtml(expense.notes) : ''}
+                                ${expense.link ? ' • <a href="' + escapeHtml(expense.link) + '" target="_blank">🔗 Reorder</a>' : ''}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="item-amount" style="color: #dc2626;">-$${expense.amount.toFixed(2)}</div>
+                            ${unitDisplay ? `<small>$${unitPrice.toFixed(3)}/${expense.unit || 'ea'}</small>` : ''}
+                            <div class="item-actions">
+                                <button class="btn btn-edit" onclick="editExpense('${expense.id}')">Edit</button>
+                                <button class="btn btn-delete" onclick="deleteExpense('${expense.id}')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function saveExpense(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('expenseId').value;
+            const expense = {
+                id: id || Date.now().toString(),
+                name: document.getElementById('expName').value,
+                amount: parseFloat(document.getElementById('expAmount').value),
+                quantity: parseFloat(document.getElementById('expQuantity').value) || 1,
+                unit: document.getElementById('expUnit').value,
+                category: document.getElementById('expCategory').value,
+                date: document.getElementById('expDate').value,
+                notes: document.getElementById('expNotes').value,
+                link: document.getElementById('expLink').value
+            };
+            
+            if (id) {
+                const idx = expenses.findIndex(e => e.id === id);
+                if (idx !== -1) expenses[idx] = expense;
+            } else {
+                expenses.push(expense);
+            }
+            
+            localStorage.setItem('craft_expenses', JSON.stringify(expenses));
+            closeModal();
+            updateExpenses();
+        }
+        
+        function editExpense(id) {
+            const exp = expenses.find(e => e.id === id);
+            if (!exp) return;
+            
+            document.getElementById('expenseId').value = id;
+            document.getElementById('expName').value = exp.name;
+            document.getElementById('expAmount').value = exp.amount;
+            document.getElementById('expQuantity').value = exp.quantity || 1;
+            document.getElementById('expUnit').value = exp.unit || 'each';
+            document.getElementById('expCategory').value = exp.category;
+            document.getElementById('expDate').value = exp.date;
+            document.getElementById('expNotes').value = exp.notes || '';
+            document.getElementById('expLink').value = exp.link || '';
+            
+            document.getElementById('expenseModalTitle').textContent = 'Edit Purchase';
+            document.getElementById('expenseSubmitBtn').textContent = 'Update Purchase';
+            
+            document.getElementById('expense-modal').classList.add('active');
+        }
+        
+        function deleteExpense(id) {
+            if (confirm('Delete this purchase?')) {
+                expenses = expenses.filter(e => e.id !== id);
+                localStorage.setItem('craft_expenses', JSON.stringify(expenses));
+                updateExpenses();
+            }
+        }
+
+        // ========== PRODUCTS ==========
+        function updateProducts() {
+            document.getElementById('productCount').textContent = products.length;
+            
+            // Calculate how many of each product can be made
+            let totalCanMake = 0;
+            products.forEach(prod => {
+                totalCanMake += calculateCanMake(prod);
+            });
+            document.getElementById('canMakeCount').textContent = totalCanMake;
+            
+            // Update product dropdown in order form
+            const select = document.getElementById('orderProductSelect');
+            select.innerHTML = '<option value="">-- Select a product --</option>';
+            products.forEach(prod => {
+                select.innerHTML += `<option value="${prod.id}">${escapeHtml(prod.name)}</option>`;
+            });
+            
+            // Render product cards
+            const list = document.getElementById('productList');
+            list.innerHTML = '';
+            
+            if (products.length === 0) {
+                list.innerHTML = '<div class="empty-state"><p>No products yet. Tap + to add your first product!</p></div>';
+                return;
+            }
+            
+            products.forEach(product => {
+                const canMake = calculateCanMake(product);
+                const materialsList = product.materials?.map(m => {
+                    const invItem = inventory.find(i => i.id === m.inventoryId);
+                    return invItem ? `${m.quantity} ${invItem.unit} ${invItem.name}` : '';
+                }).filter(Boolean).join(', ') || 'No materials set';
+                
+                list.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-image">
+                            ${product.photo ? `<img src="${product.photo}" alt="${escapeHtml(product.name)}">` : '📷'}
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">${escapeHtml(product.name)}</div>
+                            <div class="product-description">${escapeHtml(product.description || '')}</div>
+                            ${product.price ? `<div style="font-weight: 600; color: #2563eb; margin-bottom: 5px;">$${parseFloat(product.price).toFixed(2)}</div>` : ''}
+                            <div class="product-materials">${escapeHtml(materialsList)}</div>
+                            <div style="margin-top: 10px; padding: 8px; background: ${canMake > 0 ? '#d1fae5' : '#fee2e2'}; border-radius: 6px; font-size: 0.85rem;">
+                                Can make: <strong>${canMake}</strong> ${canMake === 1 ? 'unit' : 'units'}
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="makeProduct('${product.id}')">Make</button>
+                            <button class="btn btn-edit" onclick="editProduct('${product.id}')">Edit</button>
+                            <button class="btn btn-delete" onclick="deleteProduct('${product.id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function calculateCanMake(product) {
+            if (!product.materials || product.materials.length === 0) return 0;
+            
+            let minCanMake = Infinity;
+            product.materials.forEach(mat => {
+                const invItem = inventory.find(i => i.id === mat.inventoryId);
+                if (invItem) {
+                    const canMake = Math.floor(invItem.quantity / mat.quantity);
+                    minCanMake = Math.min(minCanMake, canMake);
+                } else {
+                    minCanMake = 0;
+                }
+            });
+            
+            return minCanMake === Infinity ? 0 : minCanMake;
+        }
+        
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const photoData = e.target.result;
+                document.getElementById('productPhotoData').value = photoData;
+                
+                // Show preview
+                const uploadArea = document.getElementById('photoUploadArea');
+                uploadArea.classList.add('has-image');
+                uploadArea.innerHTML = `<img src="${photoData}" class="photo-preview">`;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function addMaterialField(inventoryId = '', quantity = '') {
+            const container = document.getElementById('materialsList');
+            const div = document.createElement('div');
+            div.className = 'material-row';
+            div.innerHTML = `
+                <select class="material-select" required>
+                    <option value="">-- Select material --</option>
+                    ${inventory.map(i => `<option value="${i.id}" ${i.id === inventoryId ? 'selected' : ''}>${escapeHtml(i.name)}</option>`).join('')}
+                </select>
+                <input type="number" class="material-qty" placeholder="Qty" step="0.01" min="0" value="${quantity}" required>
+                <button type="button" class="remove-material" onclick="this.parentElement.remove()">×</button>
+            `;
+            container.appendChild(div);
+        }
+        
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('productId').value;
+            
+            // Collect materials
+            const materials = [];
+            document.querySelectorAll('.material-row').forEach(row => {
+                const invId = row.querySelector('.material-select').value;
+                const qty = parseFloat(row.querySelector('.material-qty').value);
+                if (invId && qty > 0) {
+                    materials.push({ inventoryId: invId, quantity: qty });
+                }
+            });
+            
+            const product = {
+                id: id || Date.now().toString(),
+                name: document.getElementById('prodName').value,
+                description: document.getElementById('prodDescription').value,
+                price: parseFloat(document.getElementById('prodPrice').value) || 0,
+                photo: document.getElementById('productPhotoData').value,
+                materials: materials
+            };
+            
+            if (id) {
+                const idx = products.findIndex(p => p.id === id);
+                if (idx !== -1) products[idx] = product;
+            } else {
+                products.push(product);
+            }
+            
+            localStorage.setItem('craft_products', JSON.stringify(products));
+            closeModal();
+            updateProducts();
+        }
+        
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            
+            document.getElementById('productId').value = id;
+            document.getElementById('prodName').value = product.name;
+            document.getElementById('prodDescription').value = product.description || '';
+            document.getElementById('prodPrice').value = product.price || '';
+            document.getElementById('productPhotoData').value = product.photo || '';
+            
+            // Show photo preview if exists
+            if (product.photo) {
+                const uploadArea = document.getElementById('photoUploadArea');
+                uploadArea.classList.add('has-image');
+                uploadArea.innerHTML = `<img src="${product.photo}" class="photo-preview">`;
+            }
+            
+            // Load materials
+            document.getElementById('materialsList').innerHTML = '';
+            if (product.materials) {
+                product.materials.forEach(m => addMaterialField(m.inventoryId, m.quantity));
+            }
+            
+            document.getElementById('productModalTitle').textContent = 'Edit Product';
+            document.getElementById('productSubmitBtn').textContent = 'Update Product';
+            
+            document.getElementById('product-modal').classList.add('active');
+        }
+        
+        function deleteProduct(id) {
+            if (confirm('Delete this product?')) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('craft_products', JSON.stringify(products));
+                updateProducts();
+            }
+        }
+        
+        function makeProduct(productId) {
+            currentProductId = productId;
+            document.getElementById('make-product-modal').classList.add('active');
+        }
+        
+        function makeProductForStock() {
+            const product = products.find(p => p.id === currentProductId);
+            if (!product) return;
+            
+            const qty = parseInt(prompt(`How many "${product.name}" do you want to make?`));
+            if (!qty || qty <= 0) return;
+            
+            // Deduct materials
+            let canMake = true;
+            product.materials.forEach(mat => {
+                const invItem = inventory.find(i => i.id === mat.inventoryId);
+                if (!invItem || invItem.quantity < mat.quantity * qty) {
+                    canMake = false;
+                    alert(`Not enough ${invItem?.name || 'material'}! Need ${mat.quantity * qty}, have ${invItem?.quantity || 0}`);
+                }
+            });
+            
+            if (!canMake) return;
+            
+            // Deduct from inventory
+            product.materials.forEach(mat => {
+                const invItem = inventory.find(i => i.id === mat.inventoryId);
+                if (invItem) {
+                    invItem.quantity -= mat.quantity * qty;
+                }
+            });
+            
+            localStorage.setItem('craft_inventory', JSON.stringify(inventory));
+            closeModal();
+            updateInventory();
+            updateProducts();
+            
+            alert(`${qty} ${product.name}(s) added to stock! Materials deducted.`);
+        }
+        
+        function makeProductForOrder() {
+            closeModal();
+            showPage('orders');
+            openModal();
+            // Pre-select the product in the order form
+            document.getElementById('orderProductSelect').value = currentProductId;
+            loadProductForOrder();
+        }
+
+        // ========== ORDERS ==========
+        function updateOrders() {
+            const activeOrders = orders.filter(o => o.status !== 'complete' && o.status !== 'cancelled');
+            const revenue = orders.filter(o => o.status === 'complete').reduce((sum, o) => sum + o.amount, 0);
+            
+            document.getElementById('orderRevenue').textContent = '$' + revenue.toFixed(2);
+            document.getElementById('orderCount').textContent = activeOrders.length;
+            
+            // Status counts
+            const counts = { pending: 0, progress: 0, complete: 0, cancelled: 0 };
+            orders.forEach(o => counts[o.status]++);
+            
+            const statsDiv = document.getElementById('orderStats');
+            statsDiv.innerHTML = '';
+            
+            Object.entries(counts).forEach(([status, count]) => {
+                if (count > 0) {
+                    statsDiv.innerHTML += `
+                        <div class="item-row">
+                            <span><span class="status-badge ${statusClasses[status]}">${statusLabels[status]}</span></span>
+                            <span class="item-amount">${count}</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            // Order list
+            const list = document.getElementById('orderList');
+            list.innerHTML = '';
+            
+            if (orders.length === 0) {
+                list.innerHTML = '<div class="empty-state"><p>No orders yet. Tap + to add one!</p></div>';
+                return;
+            }
+            
+            const sorted = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sorted.forEach(order => {
+                const dueDisplay = order.dueDate ? `Due: ${formatDate(order.dueDate)}` : '';
+                
+                list.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <h3>${escapeHtml(order.customer)}</h3>
+                            <div class="item-meta">
+                                ${escapeHtml(order.item)} • ${formatDate(order.date)}
+                                ${dueDisplay ? ' • ' + dueDisplay : ''}
+                                ${order.notes ? '<br>' + escapeHtml(order.notes) : ''}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="item-amount" style="color: #16a34a;">+$${order.amount.toFixed(2)}</div>
+                            <span class="status-badge ${statusClasses[order.status]}">${statusLabels[order.status]}</span>
+                            <div class="item-actions" style="margin-top: 5px;">
+                                <button class="btn btn-edit" onclick="editOrder('${order.id}')">Edit</button>
+                                <button class="btn btn-delete" onclick="deleteOrder('${order.id}')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function loadProductForOrder() {
+            const productId = document.getElementById('orderProductSelect').value;
+            if (!productId) return;
+            
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                document.getElementById('orderItem').value = product.name;
+                document.getElementById('orderAmount').value = product.price || '';
+            }
+        }
+        
+        function saveOrder(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('orderId').value;
+            const productId = document.getElementById('orderProductSelect').value;
+            const newStatus = document.getElementById('orderStatus').value;
+            
+            const order = {
+                id: id || Date.now().toString(),
+                customer: document.getElementById('orderCustomer').value,
+                item: document.getElementById('orderItem').value,
+                productId: productId,
+                amount: parseFloat(document.getElementById('orderAmount').value),
+                status: newStatus,
+                date: document.getElementById('orderDate').value,
+                dueDate: document.getElementById('orderDueDate').value,
+                notes: document.getElementById('orderNotes').value
+            };
+            
+            const oldOrder = id ? orders.find(o => o.id === id) : null;
+            const oldStatus = oldOrder ? oldOrder.status : null;
+            
+            if (id) {
+                const idx = orders.findIndex(o => o.id === id);
+                if (idx !== -1) orders[idx] = order;
+            } else {
+                orders.push(order);
+            }
+            
+            // Deduct materials if order is being completed
+            if (newStatus === 'complete' && oldStatus !== 'complete' && productId) {
+                const product = products.find(p => p.id === productId);
+                if (product && product.materials) {
+                    product.materials.forEach(mat => {
+                        const invItem = inventory.find(i => i.id === mat.inventoryId);
+                        if (invItem) {
+                            invItem.quantity = Math.max(0, invItem.quantity - mat.quantity);
+                        }
+                    });
+                    localStorage.setItem('craft_inventory', JSON.stringify(inventory));
+                    updateInventory();
+                    updateProducts();
+                }
+            }
+            
+            localStorage.setItem('craft_orders', JSON.stringify(orders));
+            closeModal();
+            updateOrders();
+        }
+        
+        function editOrder(id) {
+            const order = orders.find(o => o.id === id);
+            if (!order) return;
+            
+            document.getElementById('orderId').value = id;
+            document.getElementById('orderProductSelect').value = order.productId || '';
+            document.getElementById('orderCustomer').value = order.customer;
+            document.getElementById('orderItem').value = order.item;
+            document.getElementById('orderAmount').value = order.amount;
+            document.getElementById('orderStatus').value = order.status;
+            document.getElementById('orderDate').value = order.date;
+            document.getElementById('orderDueDate').value = order.dueDate || '';
+            document.getElementById('orderNotes').value = order.notes || '';
+            
+            document.getElementById('orderModalTitle').textContent = 'Edit Order';
+            document.getElementById('orderSubmitBtn').textContent = 'Update Order';
+            
+            document.getElementById('order-modal').classList.add('active');
+        }
+        
+        function deleteOrder(id) {
+            if (confirm('Delete this order?')) {
+                orders = orders.filter(o => o.id !== id);
+                localStorage.setItem('craft_orders', JSON.stringify(orders));
+                updateOrders();
+            }
+        }
+        
+        // ========== INVENTORY ==========
+        function updateInventory() {
+            document.getElementById('inventoryCount').textContent = inventory.length;
+            
+            // Count low stock items
+            const lowStock = inventory.filter(i => i.quantity <= i.minStock);
+            document.getElementById('lowStockCount').textContent = lowStock.length;
+            
+            // Render list
+            const list = document.getElementById('inventoryList');
+            list.innerHTML = '';
+            
+            if (inventory.length === 0) {
+                list.innerHTML = '<div class="empty-state"><p>No inventory items yet. Tap + to add materials!</p></div>';
+                return;
+            }
+            
+            // Sort by low stock first
+            const sorted = [...inventory].sort((a, b) => {
+                const aLow = a.quantity <= a.minStock ? 0 : 1;
+                const bLow = b.quantity <= b.minStock ? 0 : 1;
+                return aLow - bLow;
+            });
+            
+            sorted.forEach(item => {
+                const isLow = item.quantity <= item.minStock;
+                const stockClass = isLow ? 'stock-low' : 'stock-ok';
+                const stockText = isLow ? 'LOW STOCK' : 'OK';
+                
+                list.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <h3>${escapeHtml(item.name)}</h3>
+                            <div class="item-meta">
+                                Min: ${item.minStock} ${item.unit} • ${item.location || 'No location'}
+                                ${item.notes ? ' • ' + escapeHtml(item.notes) : ''}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="item-amount ${stockClass}">${item.quantity} ${item.unit}</div>
+                            <small class="${stockClass}">${stockText}</small>
+                            <div class="item-actions" style="margin-top: 5px;">
+                                <button class="btn btn-edit" onclick="editInventory('${item.id}')">Edit</button>
+                                <button class="btn btn-delete" onclick="deleteInventory('${item.id}')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function saveInventory(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('inventoryItemId').value;
+            const item = {
+                id: id || Date.now().toString(),
+                name: document.getElementById('invName').value,
+                quantity: parseFloat(document.getElementById('invQuantity').value),
+                unit: document.getElementById('invUnit').value,
+                minStock: parseFloat(document.getElementById('invMinStock').value),
+                location: document.getElementById('invLocation').value,
+                notes: document.getElementById('invNotes').value
+            };
+            
+            if (id) {
+                const idx = inventory.findIndex(i => i.id === id);
+                if (idx !== -1) inventory[idx] = item;
+            } else {
+                inventory.push(item);
+            }
+            
+            localStorage.setItem('craft_inventory', JSON.stringify(inventory));
+            closeModal();
+            updateInventory();
+        }
+        
+        function editInventory(id) {
+            const item = inventory.find(i => i.id === id);
+            if (!item) return;
+            
+            document.getElementById('inventoryItemId').value = id;
+            document.getElementById('invName').value = item.name;
+            document.getElementById('invQuantity').value = item.quantity;
+            document.getElementById('invUnit').value = item.unit;
+            document.getElementById('invMinStock').value = item.minStock;
+            document.getElementById('invLocation').value = item.location || '';
+            document.getElementById('invNotes').value = item.notes || '';
+            
+            document.getElementById('inventoryModalTitle').textContent = 'Edit Inventory Item';
+            document.getElementById('inventorySubmitBtn').textContent = 'Update Item';
+            
+            document.getElementById('inventory-modal').classList.add('active');
+        }
+        
+        function deleteInventory(id) {
+            if (confirm('Delete this inventory item?')) {
+                inventory = inventory.filter(i => i.id !== id);
+                localStorage.setItem('craft_inventory', JSON.stringify(inventory));
+                updateInventory();
+            }
+        }
+        
+        // ========== MODAL CONTROL ==========
+        function openModal() {
+            if (currentPage === 'expenses') {
+                document.getElementById('expenseForm').reset();
+                document.getElementById('expenseId').value = '';
+                document.getElementById('expDate').valueAsDate = new Date();
+                document.getElementById('expenseModalTitle').textContent = 'Add Purchase';
+                document.getElementById('expenseSubmitBtn').textContent = 'Save Purchase';
+                document.getElementById('expense-modal').classList.add('active');
+            } else if (currentPage === 'products') {
+                document.getElementById('productForm').reset();
+                document.getElementById('productId').value = '';
+                document.getElementById('productPhotoData').value = '';
+                document.getElementById('materialsList').innerHTML = '';
+                
+                // Reset photo upload area
+                const uploadArea = document.getElementById('photoUploadArea');
+                uploadArea.classList.remove('has-image');
+                uploadArea.innerHTML = `
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 10px;">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <p>Tap to add photo</p>
+                    <input type="file" id="productPhoto" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                `;
+                
+                // Add one empty material field if inventory exists
+                if (inventory.length > 0) {
+                    addMaterialField();
+                }
+                
+                document.getElementById('productModalTitle').textContent = 'Add Product';
+                document.getElementById('productSubmitBtn').textContent = 'Save Product';
+                document.getElementById('product-modal').classList.add('active');
+            } else if (currentPage === 'orders') {
+                document.getElementById('orderForm').reset();
+                document.getElementById('orderId').value = '';
+                document.getElementById('orderDate').valueAsDate = new Date();
+                document.getElementById('orderModalTitle').textContent = 'Add Order';
+                document.getElementById('orderSubmitBtn').textContent = 'Save Order';
+                document.getElementById('order-modal').classList.add('active');
+            } else if (currentPage === 'inventory') {
+                document.getElementById('inventoryForm').reset();
+                document.getElementById('inventoryItemId').value = '';
+                document.getElementById('inventoryModalTitle').textContent = 'Add Inventory Item';
+                document.getElementById('inventorySubmitBtn').textContent = 'Save Item';
+                document.getElementById('inventory-modal').classList.add('active');
+            }
+        }
+        
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        }
+        
+        // ========== UTILITIES ==========
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        
+        // Dark Mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            updateDarkModeButton();
+        }
+        
+        function updateDarkModeButton() {
+            const isDark = document.body.classList.contains('dark-mode');
+            const btn = document.getElementById('darkModeBtn');
+            const icon = isDark 
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+            btn.innerHTML = icon + '<span>' + (isDark ? 'Light' : 'Dark') + '</span>';
+        }
+        
+        // Load saved preference or detect system preference
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode');
+        }
+        updateDarkModeButton();
+        
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        });
+        
+        // Initial load
+        showPage('expenses');
+    </script>
+</body>
+</html>
