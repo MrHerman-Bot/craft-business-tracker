@@ -1058,6 +1058,23 @@
         
         // Also persist messages for custom channels
         let channelMessages = JSON.parse(localStorage.getItem('channelMessages')) || {
+            'general': [
+                { id: 1, author: 'Alex Thompson', avatar: 'AT', text: 'Welcome to the team chat everyone!', time: '9:00 AM', own: false },
+                { id: 2, author: 'Jordan Smith', avatar: 'JS', text: 'Thanks Alex! Excited to get started.', time: '9:05 AM', own: false },
+                { id: 3, author: 'Casey Johnson', avatar: 'CJ', text: 'Morning all! Ready for the day.', time: '9:10 AM', own: false }
+            ],
+            'announcements': [
+                { id: 1, author: 'Alex Thompson', avatar: 'AT', text: '📢 New safety protocols start Monday. Please review the updated handbook.', time: 'Yesterday', own: false }
+            ],
+            'tasks': [
+                { id: 1, author: 'Jordan Smith', avatar: 'JS', text: 'Zone A restocking is complete ✅', time: '10:30 AM', own: false },
+                { id: 2, author: 'Casey Johnson', avatar: 'CJ', text: 'Starting inventory count in Zone B', time: '11:00 AM', own: false }
+            ],
+            'random': [],
+            'dm-alex': [],
+            'dm-jordan': [],
+            'dm-casey': []
+        };
         
         // Check if already logged in
         if (localStorage.getItem('currentUser')) {
@@ -1127,24 +1144,6 @@
         
         // Chat functionality
         let currentChannelId = 'general';
-        const channelMessages = JSON.parse(localStorage.getItem('channelMessages')) || {
-            'general': [
-                { id: 1, author: 'Alex Thompson', avatar: 'AT', text: 'Welcome to the team chat everyone!', time: '9:00 AM', own: false },
-                { id: 2, author: 'Jordan Smith', avatar: 'JS', text: 'Thanks Alex! Excited to get started.', time: '9:05 AM', own: false },
-                { id: 3, author: 'Casey Johnson', avatar: 'CJ', text: 'Morning all! Ready for the day.', time: '9:10 AM', own: false }
-            ],
-            'announcements': [
-                { id: 1, author: 'Alex Thompson', avatar: 'AT', text: '📢 New safety protocols start Monday. Please review the updated handbook.', time: 'Yesterday', own: false }
-            ],
-            'tasks': [
-                { id: 1, author: 'Jordan Smith', avatar: 'JS', text: 'Zone A restocking is complete ✅', time: '10:30 AM', own: false },
-                { id: 2, author: 'Casey Johnson', avatar: 'CJ', text: 'Starting inventory count in Zone B', time: '11:00 AM', own: false }
-            ],
-            'random': [],
-            'dm-alex': [],
-            'dm-jordan': [],
-            'dm-casey': []
-        };
         
         function setupCommunications() {
             // Show/hide create channel button based on role
