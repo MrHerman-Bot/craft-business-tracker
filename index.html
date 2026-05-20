@@ -273,6 +273,7 @@
         .nav-card.employees .icon { background: #e0e7ff; }
         .nav-card.sales .icon { background: #d1fae5; }
         .nav-card.inventory .icon { background: #fef3c7; }
+        .nav-card.communications .icon { background: #fce7f3; }
         
         .nav-card h3 {
             font-size: 1.1rem;
@@ -399,6 +400,219 @@
             border-color: #667eea;
             background: #e0e7ff;
         }
+        
+        /* Chat Styles */
+        .chat-container {
+            display: flex;
+            height: calc(100vh - 180px);
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .chat-sidebar {
+            width: 260px;
+            background: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .chat-sidebar h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #718096;
+            letter-spacing: 0.5px;
+            margin: 20px 0 10px 0;
+        }
+        
+        .chat-sidebar h3:first-child {
+            margin-top: 0;
+        }
+        
+        .channel-list, .dm-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .channel, .dm-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .channel:hover, .dm-item:hover {
+            background: #e2e8f0;
+        }
+        
+        .channel.active {
+            background: #e0e7ff;
+            color: #667eea;
+        }
+        
+        .channel-icon {
+            font-size: 1.1rem;
+        }
+        
+        .channel-name {
+            font-size: 0.95rem;
+        }
+        
+        .dm-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .dm-name {
+            font-size: 0.95rem;
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header h3 {
+            font-size: 1.1rem;
+            color: #2d3748;
+        }
+        
+        .member-count {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+        }
+        
+        .message.own {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .message-content {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message.own .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message-author {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 4px;
+        }
+        
+        .message.own .message-author {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .message-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: #718096;
+            margin-top: 4px;
+        }
+        
+        .message.own .message-time {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .chat-input-area {
+            padding: 16px 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        
+        .chat-input-area input:focus {
+            border-color: #667eea;
+        }
+        
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -477,6 +691,11 @@
                         <h3>Inventory</h3>
                         <p>Track stock & materials</p>
                     </div>
+                    <div class="nav-card communications" onclick="showPage('communications')">
+                        <div class="icon">💬</div>
+                        <h3>Communications</h3>
+                        <p>Team messaging & chat</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -520,6 +739,65 @@
                 <h3>Inventory Dashboard</h3>
                 <p>Track stock levels, manage materials, receive low stock alerts, and calculate production capacity. Enhanced tracking coming soon.</p>
                 <span class="coming-soon-badge">Coming Soon</span>
+            </div>
+        </div>
+        
+        <!-- Communications Page -->
+        <div class="page" id="communicationsPage">
+            <div class="page-header">
+                <button class="back-btn" onclick="showPage('dashboard')">←</button>
+                <h2>Team Communications</h2>
+            </div>
+            <div class="chat-container">
+                <div class="chat-sidebar">
+                    <h3>Channels</h3>
+                    <div class="channel-list">
+                        <div class="channel active" onclick="switchChannel('general')">
+                            <span class="channel-icon">#</span>
+                            <span class="channel-name">general</span>
+                        </div>
+                        <div class="channel" onclick="switchChannel('announcements')">
+                            <span class="channel-icon">📢</span>
+                            <span class="channel-name">announcements</span>
+                        </div>
+                        <div class="channel" onclick="switchChannel('tasks')">
+                            <span class="channel-icon">✅</span>
+                            <span class="channel-name">tasks</span>
+                        </div>
+                        <div class="channel" onclick="switchChannel('random')">
+                            <span class="channel-icon">💬</span>
+                            <span class="channel-name">random</span>
+                        </div>
+                    </div>
+                    <h3>Direct Messages</h3>
+                    <div class="dm-list">
+                        <div class="dm-item" onclick="switchChannel('dm-alex')">
+                            <div class="dm-avatar">AT</div>
+                            <span class="dm-name">Alex Thompson</span>
+                        </div>
+                        <div class="dm-item" onclick="switchChannel('dm-jordan')">
+                            <div class="dm-avatar">JS</div>
+                            <span class="dm-name">Jordan Smith</span>
+                        </div>
+                        <div class="dm-item" onclick="switchChannel('dm-casey')">
+                            <div class="dm-avatar">CJ</div>
+                            <span class="dm-name">Casey Johnson</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-main">
+                    <div class="chat-header">
+                        <h3 id="currentChannel">#general</h3>
+                        <span class="member-count">3 members</span>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleMessageKeypress(event)">
+                        <button onclick="sendMessage()" class="send-btn">📤</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -609,6 +887,110 @@
                 document.getElementById('salesPage').classList.add('active');
             } else if (pageName === 'inventory') {
                 document.getElementById('inventoryPage').classList.add('active');
+            } else if (pageName === 'communications') {
+                document.getElementById('communicationsPage').classList.add('active');
+                loadMessages();
+            }
+        }
+        
+        // Chat functionality
+        let currentChannelId = 'general';
+        const channelMessages = {
+            'general': [
+                { id: 1, author: 'Alex Thompson', avatar: 'AT', text: 'Welcome to the team chat everyone!', time: '9:00 AM', own: false },
+                { id: 2, author: 'Jordan Smith', avatar: 'JS', text: 'Thanks Alex! Excited to get started.', time: '9:05 AM', own: false },
+                { id: 3, author: 'Casey Johnson', avatar: 'CJ', text: 'Morning all! Ready for the day.', time: '9:10 AM', own: false }
+            ],
+            'announcements': [
+                { id: 1, author: 'Alex Thompson', avatar: 'AT', text: '📢 New safety protocols start Monday. Please review the updated handbook.', time: 'Yesterday', own: false }
+            ],
+            'tasks': [
+                { id: 1, author: 'Jordan Smith', avatar: 'JS', text: 'Zone A restocking is complete ✅', time: '10:30 AM', own: false },
+                { id: 2, author: 'Casey Johnson', avatar: 'CJ', text: 'Starting inventory count in Zone B', time: '11:00 AM', own: false }
+            ],
+            'random': [],
+            'dm-alex': [],
+            'dm-jordan': [],
+            'dm-casey': []
+        };
+        
+        function loadMessages() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            
+            const messages = channelMessages[currentChannelId] || [];
+            messages.forEach(msg => {
+                const isOwn = msg.author === currentUser.name;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message ' + (isOwn ? 'own' : '');
+                msgDiv.innerHTML = `
+                    <div class="message-avatar">${msg.avatar}</div>
+                    <div class="message-content">
+                        <div class="message-author">${msg.author}</div>
+                        <div class="message-text">${msg.text}</div>
+                        <div class="message-time">${msg.time}</div>
+                    </div>
+                `;
+                container.appendChild(msgDiv);
+            });
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function switchChannel(channelId) {
+            currentChannelId = channelId;
+            
+            // Update UI
+            document.querySelectorAll('.channel').forEach(ch => ch.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Update header
+            const channelNames = {
+                'general': '#general',
+                'announcements': '📢 announcements', 
+                'tasks': '✅ tasks',
+                'random': '💬 random',
+                'dm-alex': 'Alex Thompson',
+                'dm-jordan': 'Jordan Smith',
+                'dm-casey': 'Casey Johnson'
+            };
+            document.getElementById('currentChannel').textContent = channelNames[channelId] || '#' + channelId;
+            
+            // Load messages
+            loadMessages();
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            
+            const newMessage = {
+                id: Date.now(),
+                author: currentUser.name,
+                avatar: currentUser.avatar,
+                text: text,
+                time: timeStr,
+                own: true
+            };
+            
+            if (!channelMessages[currentChannelId]) {
+                channelMessages[currentChannelId] = [];
+            }
+            channelMessages[currentChannelId].push(newMessage);
+            
+            input.value = '';
+            loadMessages();
+        }
+        
+        function handleMessageKeypress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
             }
         }
     </script>
