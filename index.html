@@ -614,6 +614,159 @@
             justify-content: center;
         }
         
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-size: 1.25rem;
+            color: #2d3748;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .modal-close:hover {
+            background: #f1f5f9;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .modal-footer .btn {
+            width: auto;
+            padding: 10px 20px;
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        
+        /* Sidebar Header */
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0 10px 0;
+        }
+        
+        .sidebar-header h3 {
+            margin: 0;
+        }
+        
+        .add-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        
+        .add-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Member Select List */
+        .member-select-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        
+        .member-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 6px;
+        }
+        
+        .member-checkbox:hover {
+            background: #e2e8f0;
+        }
+        
+        .member-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .member-checkbox span {
+            font-size: 0.95rem;
+            color: #2d3748;
+        }
+        
         /* Mobile Responsive - Portrait Mode */
         @media screen and (max-width: 768px) and (orientation: portrait) {
             .chat-sidebar {
@@ -799,36 +952,24 @@
             </div>
             <div class="chat-container">
                 <div class="chat-sidebar">
-                    <h3>Channels</h3>
-                    <div class="channel-list">
-                        <div class="channel active" onclick="switchChannel('general')">
-                            <span class="channel-icon">#</span>
-                            <span class="channel-name">general</span>
-                        </div>
-                        <div class="channel" onclick="switchChannel('announcements')">
-                            <span class="channel-icon">📢</span>
-                            <span class="channel-name">announcements</span>
-                        </div>
-                        <div class="channel" onclick="switchChannel('tasks')">
-                            <span class="channel-icon">✅</span>
-                            <span class="channel-name">tasks</span>
-                        </div>
-                        <div class="channel" onclick="switchChannel('random')">
-                            <span class="channel-icon">💬</span>
-                            <span class="channel-name">random</span>
-                        </div>
+                    <div class="sidebar-header">
+                        <h3>Channels</h3>
+                        <button id="createChannelBtn" class="add-btn" onclick="showCreateChannelModal()" style="display: none;">+</button>
+                    </div>
+                    <div class="channel-list" id="channelList">
+                        <!-- Channels loaded dynamically -->
                     </div>
                     <h3>Direct Messages</h3>
                     <div class="dm-list">
-                        <div class="dm-item" onclick="switchChannel('dm-alex')">
+                        <div class="dm-item" onclick="switchDM('dm-alex')">
                             <div class="dm-avatar">AT</div>
                             <span class="dm-name">Alex Thompson</span>
                         </div>
-                        <div class="dm-item" onclick="switchChannel('dm-jordan')">
+                        <div class="dm-item" onclick="switchDM('dm-jordan')">
                             <div class="dm-avatar">JS</div>
                             <span class="dm-name">Jordan Smith</span>
                         </div>
-                        <div class="dm-item" onclick="switchChannel('dm-casey')">
+                        <div class="dm-item" onclick="switchDM('dm-casey')">
                             <div class="dm-avatar">CJ</div>
                             <span class="dm-name">Casey Johnson</span>
                         </div>
@@ -837,7 +978,7 @@
                 <div class="chat-main">
                     <div class="chat-header">
                         <h3 id="currentChannel">#general</h3>
-                        <span class="member-count">3 members</span>
+                        <span class="member-count" id="memberCount">3 members</span>
                     </div>
                     <div class="chat-messages" id="chatMessages">
                         <!-- Messages will be loaded here -->
@@ -846,6 +987,36 @@
                         <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleMessageKeypress(event)">
                         <button onclick="sendMessage()" class="send-btn">📤</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Create Channel Modal -->
+        <div class="modal-overlay" id="createChannelModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Create New Channel</h3>
+                    <button class="modal-close" onclick="closeCreateChannelModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Channel Name</label>
+                        <input type="text" id="newChannelName" placeholder="e.g., warehouse-updates" maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Icon (emoji)</label>
+                        <input type="text" id="newChannelIcon" placeholder="🏭" maxlength="2" value="💬">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Members</label>
+                        <div class="member-select-list" id="memberSelectList">
+                            <!-- Checkboxes for each user -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeCreateChannelModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="createChannel()">Create Channel</button>
                 </div>
             </div>
         </div>
@@ -875,6 +1046,14 @@
         };
         
         let currentUser = null;
+        
+        // Channel definitions - Owner/Manager can create new ones
+        let channels = {
+            'general': { icon: '#', name: 'general', members: ['Alex Thompson', 'Jordan Smith', 'Casey Johnson'], creator: 'system' },
+            'announcements': { icon: '📢', name: 'announcements', members: ['Alex Thompson', 'Jordan Smith', 'Casey Johnson'], creator: 'system' },
+            'tasks': { icon: '✅', name: 'tasks', members: ['Alex Thompson', 'Jordan Smith', 'Casey Johnson'], creator: 'system' },
+            'random': { icon: '💬', name: 'random', members: ['Alex Thompson', 'Jordan Smith', 'Casey Johnson'], creator: 'system' }
+        };
         
         // Check if already logged in
         if (localStorage.getItem('currentUser')) {
@@ -938,7 +1117,7 @@
                 document.getElementById('inventoryPage').classList.add('active');
             } else if (pageName === 'communications') {
                 document.getElementById('communicationsPage').classList.add('active');
-                loadMessages();
+                setupCommunications();
             }
         }
         
@@ -962,6 +1141,39 @@
             'dm-jordan': [],
             'dm-casey': []
         };
+        
+        function setupCommunications() {
+            // Show/hide create channel button based on role
+            const canCreateChannels = currentUser.role === 'Owner' || currentUser.role === 'Manager';
+            document.getElementById('createChannelBtn').style.display = canCreateChannels ? 'flex' : 'none';
+            
+            // Load channels
+            renderChannelList();
+            
+            // Load messages for current channel
+            loadMessages();
+        }
+        
+        function renderChannelList() {
+            const list = document.getElementById('channelList');
+            list.innerHTML = '';
+            
+            // Get channels user has access to
+            const accessibleChannels = Object.entries(channels).filter(([id, channel]) => {
+                return channel.members.includes(currentUser.name);
+            });
+            
+            accessibleChannels.forEach(([id, channel]) => {
+                const div = document.createElement('div');
+                div.className = 'channel' + (id === currentChannelId ? ' active' : '');
+                div.onclick = () => switchChannel(id);
+                div.innerHTML = `
+                    <span class="channel-icon">${channel.icon}</span>
+                    <span class="channel-name">${channel.name}</span>
+                `;
+                list.appendChild(div);
+            });
+        }
         
         function loadMessages() {
             const container = document.getElementById('chatMessages');
@@ -995,16 +1207,35 @@
             event.currentTarget.classList.add('active');
             
             // Update header
-            const channelNames = {
-                'general': '#general',
-                'announcements': '📢 announcements', 
-                'tasks': '✅ tasks',
-                'random': '💬 random',
+            const channel = channels[channelId];
+            if (channel) {
+                document.getElementById('currentChannel').textContent = channel.icon + ' ' + channel.name;
+                document.getElementById('memberCount').textContent = channel.members.length + ' members';
+            } else {
+                document.getElementById('currentChannel').textContent = '#' + channelId;
+                document.getElementById('memberCount').textContent = 'Direct Message';
+            }
+            
+            // Load messages
+            loadMessages();
+        }
+        
+        function switchDM(dmId) {
+            currentChannelId = dmId;
+            
+            // Update UI
+            document.querySelectorAll('.channel').forEach(ch => ch.classList.remove('active'));
+            document.querySelectorAll('.dm-item').forEach(dm => dm.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Update header
+            const dmNames = {
                 'dm-alex': 'Alex Thompson',
                 'dm-jordan': 'Jordan Smith',
                 'dm-casey': 'Casey Johnson'
             };
-            document.getElementById('currentChannel').textContent = channelNames[channelId] || '#' + channelId;
+            document.getElementById('currentChannel').textContent = dmNames[dmId] || 'Direct Message';
+            document.getElementById('memberCount').textContent = 'Direct Message';
             
             // Load messages
             loadMessages();
@@ -1041,6 +1272,78 @@
             if (event.key === 'Enter') {
                 sendMessage();
             }
+        }
+        
+        // Create Channel Modal Functions
+        function showCreateChannelModal() {
+            // Populate member list
+            const memberList = document.getElementById('memberSelectList');
+            memberList.innerHTML = '';
+            
+            Object.entries(users).forEach(([email, user]) => {
+                const label = document.createElement('label');
+                label.className = 'member-checkbox';
+                label.innerHTML = `
+                    <input type="checkbox" value="${user.name}" checked>
+                    <span>${user.name}</span>
+                `;
+                memberList.appendChild(label);
+            });
+            
+            // Show modal
+            document.getElementById('createChannelModal').classList.add('active');
+        }
+        
+        function closeCreateChannelModal() {
+            document.getElementById('createChannelModal').classList.remove('active');
+            document.getElementById('newChannelName').value = '';
+            document.getElementById('newChannelIcon').value = '💬';
+        }
+        
+        function createChannel() {
+            const name = document.getElementById('newChannelName').value.trim().toLowerCase().replace(/\s+/g, '-');
+            const icon = document.getElementById('newChannelIcon').value.trim() || '💬';
+            
+            if (!name) {
+                alert('Please enter a channel name');
+                return;
+            }
+            
+            // Check if channel already exists
+            if (channels[name]) {
+                alert('A channel with this name already exists');
+                return;
+            }
+            
+            // Get selected members
+            const checkboxes = document.querySelectorAll('#memberSelectList input[type="checkbox"]:checked');
+            const selectedMembers = Array.from(checkboxes).map(cb => cb.value);
+            
+            if (selectedMembers.length === 0) {
+                alert('Please select at least one member');
+                return;
+            }
+            
+            // Create the channel
+            channels[name] = {
+                icon: icon,
+                name: name,
+                members: selectedMembers,
+                creator: currentUser.name
+            };
+            
+            // Initialize empty message array
+            channelMessages[name] = [];
+            
+            // Close modal and refresh
+            closeCreateChannelModal();
+            renderChannelList();
+            
+            // Switch to new channel
+            currentChannelId = name;
+            document.getElementById('currentChannel').textContent = icon + ' ' + name;
+            document.getElementById('memberCount').textContent = selectedMembers.length + ' members';
+            loadMessages();
         }
     </script>
 </body>
