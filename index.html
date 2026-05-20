@@ -1265,6 +1265,39 @@
             margin-top: 10px;
         }
         
+        /* === HR / EMPLOYEE MANAGEMENT STYLES === */
+        .employee-mgmt-page { padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .employee-mgmt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .btn-add-employee { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-add-employee:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
+        
+        .employee-table-container { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .employee-table { width: 100%; border-collapse: collapse; }
+        .employee-table th { background: #f8fafc; padding: 16px; text-align: left; font-size: 0.8rem; text-transform: uppercase; color: #718096; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+        .employee-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; }
+        .employee-table tr:hover td { background: #f8fafc; }
+        
+        .employee-table-cell { display: flex; align-items: center; gap: 12px; }
+        .employee-table-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem; }
+        .employee-table-info .name { font-weight: 600; color: #2d3748; }
+        .employee-table-info .email { font-size: 0.8rem; color: #718096; }
+        
+        .role-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .role-owner { background: #e0e7ff; color: #667eea; }
+        .role-manager { background: #dbeafe; color: #3b82f6; }
+        .role-employee { background: #d1fae5; color: #10b981; }
+        .role-hr { background: #fce7f3; color: #db2777; }
+        
+        .action-btns { display: flex; gap: 8px; }
+        .btn-icon { width: 36px; height: 36px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.2s; }
+        .btn-edit { background: #e0e7ff; color: #667eea; }
+        .btn-edit:hover { background: #667eea; color: white; }
+        .btn-delete { background: #fee2e2; color: #ef4444; }
+        .btn-delete:hover { background: #ef4444; color: white; }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-hint { font-size: 0.8rem; color: #718096; margin-top: 4px; }
+        
 </style>
 </head>
 <body>
@@ -1370,6 +1403,11 @@
                         <div class="icon">🏢</div>
                         <h3>Org Chart</h3>
                         <p>Company hierarchy & profile</p>
+                    </div>
+                    <div class="nav-card inventory" id="employeeMgmtNav" style="display: none;" onclick="showPage('employeeMgmt')">
+                        <div class="icon">⚙️</div>
+                        <h3>HR Admin</h3>
+                        <p>Manage employees & roles</p>
                     </div>
                     <div class="nav-card inventory" onclick="showPage('inventory')">
                         <div class="icon">📦</div>
@@ -1482,6 +1520,110 @@
                         </div>
                         <button class="add-task-btn" onclick="showAddTaskModal('done')">+ Add Task</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Employee Management Page (HR/Owner only) -->
+        <div class="page" id="employeeMgmtPage">
+            <div class="page-header">
+                <button class="back-btn" onclick="showPage('dashboard')">←</button>
+                <h2>Employee Management</h2>
+            </div>
+            <div class="employee-mgmt-page">
+                <div class="employee-mgmt-header">
+                    <h3>All Employees</h3>
+                    <button class="btn-add-employee" onclick="showEmployeeModal()">
+                        <span>+</span> Add Employee
+                    </button>
+                </div>
+                <div class="employee-table-container">
+                    <table class="employee-table">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Role</th>
+                                <th>Business Unit</th>
+                                <th>Manager</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeMgmtTable">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Employee Modal (Add/Edit) -->
+        <div class="modal-overlay" id="employeeModal">
+            <div class="modal" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3 id="employeeModalTitle">Add Employee</h3>
+                    <button class="modal-close" onclick="closeEmployeeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editingEmployeeEmail">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="empName" placeholder="e.g., Jane Smith">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="empEmail" placeholder="e.g., jane@company.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="text" id="empPassword" placeholder="e.g., password123">
+                            <div class="form-hint">Temporary password for login</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Birthday (MM/DD)</label>
+                            <input type="text" id="empBirthday" placeholder="e.g., 12/25" maxlength="5">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Job Title</label>
+                            <input type="text" id="empTitle" placeholder="e.g., Marketing Specialist">
+                        </div>
+                        <div class="form-group">
+                            <label>Role</label>
+                            <select id="empRole">
+                                <option value="Employee">Employee</option>
+                                <option value="Manager">Manager</option>
+                                <option value="HR">HR</option>
+                                <option value="Owner">Owner</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Business Unit</label>
+                            <select id="empBusinessUnit">
+                                <option value="Operations">Operations</option>
+                                <option value="Sales">Sales</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Human Resources">Human Resources</option>
+                                <option value="Executive">Executive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Direct Manager</label>
+                            <select id="empManager">
+                                <option value="">— None (Executive) —</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeEmployeeModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveEmployee()">Save Employee</button>
                 </div>
             </div>
         </div>
@@ -1658,6 +1800,16 @@
                 birthday: '09/03',
                 manager: 'Alex Thompson',
                 businessUnit: 'Finance'
+            },
+            'hr@company.com': {
+                password: 'hr123',
+                name: 'Sam Parker',
+                role: 'HR',
+                avatar: 'SP',
+                title: 'Human Resources Manager',
+                birthday: '04/12',
+                manager: 'Alex Thompson',
+                businessUnit: 'Human Resources'
             }
         };
         
@@ -2311,52 +2463,45 @@
             });
             
             container.appendChild(deptLevel);
-        }
+        .quick-task-item:hover { background: #fde68a; }
         
-        /* === BUSINESS UNIT PERMISSION HELPERS === */
+        /* === HR / EMPLOYEE MANAGEMENT STYLES === */
+        .employee-mgmt-page { padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .employee-mgmt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .employee-mgmt-header h3 { font-size: 1.2rem; color: #2d3748; }
+        .btn-add-employee { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-add-employee:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
         
-        function canViewSales() {
-            if (!currentUser) return false;
-            const user = Object.values(users).find(u => u.name === currentUser.name);
-            return user && (user.role === 'Owner' || user.businessUnit === 'Sales' || user.businessUnit === 'Finance');
-        }
+        .employee-table-container { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .employee-table { width: 100%; border-collapse: collapse; }
+        .employee-table th { background: #f8fafc; padding: 16px; text-align: left; font-size: 0.8rem; text-transform: uppercase; color: #718096; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+        .employee-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; }
+        .employee-table tr:hover td { background: #f8fafc; }
         
-        function canViewInventory() {
-            if (!currentUser) return false;
-            const user = Object.values(users).find(u => u.name === currentUser.name);
-            return user && (user.role === 'Owner' || user.businessUnit === 'Operations' || user.businessUnit === 'Finance');
-        }
+        .employee-table-cell { display: flex; align-items: center; gap: 12px; }
+        .employee-table-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem; }
+        .employee-table-info .name { font-weight: 600; color: #2d3748; }
+        .employee-table-info .email { font-size: 0.8rem; color: #718096; }
         
-        showPage = function(pageName) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            
-            if (pageName === 'dashboard') {
-                document.getElementById('dashboardPage').classList.add('active');
-                updateTodayDashboard();
-            } else if (pageName === 'employees') {
-                document.getElementById('employeesPage').classList.add('active');
-                loadEmployeesPage();
-            } else if (pageName === 'tasks') {
-                document.getElementById('tasksPage').classList.add('active');
-                loadTasksPage();
-            } else if (pageName === 'sales') {
-                document.getElementById('salesPage').classList.add('active');
-            } else if (pageName === 'inventory') {
-                document.getElementById('inventoryPage').classList.add('active');
-            } else if (pageName === 'communications') {
-                document.getElementById('communicationsPage').classList.add('active');
-                setupCommunications();
-            } else if (pageName === 'chat') {
-                document.getElementById('chatPage').classList.add('active');
-                loadChatMessages();
-            } else if (pageName === 'profile') {
-                document.getElementById('profilePage').classList.add('active');
-                loadProfilePage();
-            }
-        };
+        .role-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .role-owner { background: #e0e7ff; color: #667eea; }
+        .role-manager { background: #dbeafe; color: #3b82f6; }
+        .role-employee { background: #d1fae5; color: #10b981; }
+        .role-hr { background: #fce7f3; color: #db2777; }
         
-        // Create Channel Modal Functions
-        function showCreateChannelModal() {
+        .action-btns { display: flex; gap: 8px; }
+        .btn-icon { width: 36px; height: 36px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.2s; }
+        .btn-edit { background: #e0e7ff; color: #667eea; }
+        .btn-edit:hover { background: #667eea; color: white; }
+        .btn-delete { background: #fee2e2; color: #ef4444; }
+        .btn-delete:hover { background: #ef4444; color: white; }
+        
+        /* Employee Form Modal */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-hint { font-size: 0.8rem; color: #718096; margin-top: 4px; }
+        
+</style>
+</head>
             // Populate member list
             const memberList = document.getElementById('memberSelectList');
             memberList.innerHTML = '';
@@ -2429,6 +2574,215 @@
             document.getElementById('currentChannel').textContent = icon + ' ' + name;
             document.getElementById('memberCount').textContent = selectedMembers.length + ' members';
             loadMessages();
+        }
+        
+        /* === EMPLOYEE MANAGEMENT FUNCTIONS (HR/Owner Only) === */
+        
+        function loadEmployeeMgmtPage() {
+            const tbody = document.getElementById('employeeMgmtTable');
+            tbody.innerHTML = '';
+            
+            Object.entries(users).forEach(([email, user]) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="employee-table-cell">
+                            <div class="employee-table-avatar">${user.avatar}</div>
+                            <div class="employee-table-info">
+                                <div class="name">${user.name}</div>
+                                <div class="email">${email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span></td>
+                    <td>${user.businessUnit}</td>
+                    <td>${user.manager || '—'}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-icon btn-edit" onclick="editEmployee('${email}')" title="Edit">✏️</button>
+                            ${user.role !== 'Owner' ? `<button class="btn-icon btn-delete" onclick="deleteEmployee('${email}')" title="Delete">🗑️</button>` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        let editingEmployeeEmail = null;
+        
+        function showEmployeeModal(email = null) {
+            editingEmployeeEmail = email;
+            document.getElementById('employeeModalTitle').textContent = email ? 'Edit Employee' : 'Add Employee';
+            
+            // Populate manager dropdown
+            const managerSelect = document.getElementById('empManager');
+            managerSelect.innerHTML = '<option value="">— None (Executive) —</option>';
+            Object.entries(users).forEach(([email, user]) => {
+                if (user.role === 'Manager' || user.role === 'Owner' || user.role === 'HR') {
+                    managerSelect.innerHTML += `<option value="${user.name}">${user.name}</option>`;
+                }
+            });
+            
+            if (email && users[email]) {
+                const user = users[email];
+                document.getElementById('empName').value = user.name;
+                document.getElementById('empEmail').value = email;
+                document.getElementById('empEmail').disabled = true;
+                document.getElementById('empPassword').value = '';
+                document.getElementById('empPassword').placeholder = 'Leave blank to keep current';
+                document.getElementById('empBirthday').value = user.birthday || '';
+                document.getElementById('empTitle').value = user.title || '';
+                document.getElementById('empRole').value = user.role;
+                document.getElementById('empBusinessUnit').value = user.businessUnit || 'Operations';
+                document.getElementById('empManager').value = user.manager || '';
+            } else {
+                document.getElementById('empName').value = '';
+                document.getElementById('empEmail').value = '';
+                document.getElementById('empEmail').disabled = false;
+                document.getElementById('empPassword').value = '';
+                document.getElementById('empPassword').placeholder = 'e.g., password123';
+                document.getElementById('empBirthday').value = '';
+                document.getElementById('empTitle').value = '';
+                document.getElementById('empRole').value = 'Employee';
+                document.getElementById('empBusinessUnit').value = 'Operations';
+                document.getElementById('empManager').value = '';
+            }
+            
+            document.getElementById('employeeModal').classList.add('active');
+        }
+        
+        function closeEmployeeModal() {
+            document.getElementById('employeeModal').classList.remove('active');
+            editingEmployeeEmail = null;
+        }
+        
+        function saveEmployee() {
+            const name = document.getElementById('empName').value.trim();
+            let email = document.getElementById('empEmail').value.trim().toLowerCase();
+            const password = document.getElementById('empPassword').value.trim();
+            const birthday = document.getElementById('empBirthday').value.trim();
+            const title = document.getElementById('empTitle').value.trim();
+            const role = document.getElementById('empRole').value;
+            const businessUnit = document.getElementById('empBusinessUnit').value;
+            const manager = document.getElementById('empManager').value;
+            
+            if (!name || !email || (!editingEmployeeEmail && !password)) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate avatar initials
+            const avatar = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            
+            if (editingEmployeeEmail) {
+                // Update existing
+                const existing = users[editingEmployeeEmail];
+                users[editingEmployeeEmail] = {
+                    ...existing,
+                    name,
+                    birthday,
+                    title,
+                    role,
+                    businessUnit,
+                    manager,
+                    avatar,
+                    ...(password ? { password } : {})
+                };
+            } else {
+                // Create new
+                if (users[email]) {
+                    alert('An employee with this email already exists');
+                    return;
+                }
+                users[email] = {
+                    password,
+                    name,
+                    role,
+                    avatar,
+                    title,
+                    birthday,
+                    manager,
+                    businessUnit
+                };
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('companyUsers', JSON.stringify(users));
+            
+            closeEmployeeModal();
+            loadEmployeeMgmtPage();
+            
+            // Refresh dashboard if visible
+            if (document.getElementById('employeesPage').classList.contains('active')) {
+                loadEmployeesPage();
+            }
+        }
+        
+        function editEmployee(email) {
+            showEmployeeModal(email);
+        }
+        
+        function deleteEmployee(email) {
+            const user = users[email];
+            if (!user) return;
+            
+            if (confirm(`Are you sure you want to delete ${user.name}? This action cannot be undone.`)) {
+                delete users[email];
+                localStorage.setItem('companyUsers', JSON.stringify(users));
+                loadEmployeeMgmtPage();
+            }
+        }
+        
+        /* === SHOW PAGE HANDLER === */
+        
+        function isAdmin() {
+            if (!currentUser) return false;
+            const user = Object.values(users).find(u => u.name === currentUser.name);
+            return user && (user.role === 'Owner' || user.role === 'HR');
+        }
+        
+        function showEmployeeMgmtNav() {
+            const nav = document.getElementById('employeeMgmtNav');
+            if (nav && isAdmin()) {
+                nav.style.display = 'block';
+            }
+        }
+        
+        showPage = function(pageName) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            
+            if (pageName === 'dashboard') {
+                document.getElementById('dashboardPage').classList.add('active');
+                updateTodayDashboard();
+                showEmployeeMgmtNav();
+            } else if (pageName === 'employees') {
+                document.getElementById('employeesPage').classList.add('active');
+                loadEmployeesPage();
+            } else if (pageName === 'tasks') {
+                document.getElementById('tasksPage').classList.add('active');
+                loadTasksPage();
+            } else if (pageName === 'employeeMgmt') {
+                document.getElementById('employeeMgmtPage').classList.add('active');
+                loadEmployeeMgmtPage();
+            } else if (pageName === 'sales') {
+                document.getElementById('salesPage').classList.add('active');
+            } else if (pageName === 'inventory') {
+                document.getElementById('inventoryPage').classList.add('active');
+            } else if (pageName === 'communications') {
+                document.getElementById('communicationsPage').classList.add('active');
+                setupCommunications();
+            } else if (pageName === 'chat') {
+                document.getElementById('chatPage').classList.add('active');
+                loadChatMessages();
+            } else if (pageName === 'profile') {
+                document.getElementById('profilePage').classList.add('active');
+                loadProfilePage();
+            }
+        };
+        
+        // Show HR admin nav on initial load if admin
+        if (localStorage.getItem('currentUser')) {
+            setTimeout(showEmployeeMgmtNav, 100);
         }
     </script>
 </body>
