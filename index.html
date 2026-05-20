@@ -2327,8 +2327,8 @@
             return user && (user.role === 'Owner' || user.businessUnit === 'Operations' || user.businessUnit === 'Finance');
         }
         
-        // Create Channel Modal Functions
-        function showCreateChannelModal() {
+        showPage = function(pageName) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             
             if (pageName === 'dashboard') {
                 document.getElementById('dashboardPage').classList.add('active');
