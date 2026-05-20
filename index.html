@@ -365,45 +365,8 @@
             font-weight: 600;
         }
         
-        /* User Select for Demo */
-        .user-select {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-        }
-        
-        .user-select p {
-            font-size: 0.85rem;
-            color: #718096;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .user-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-        
-        .user-chip {
-            padding: 8px 16px;
-            background: #f7fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-        
-        .user-chip:hover {
-            border-color: #667eea;
-            background: #e0e7ff;
-        }
-        
-        /* Chat Styles */
-        .chat-container {
-            display: flex;
+        /* Mobile Responsive - Portrait Mode */
+        @media screen and (max-width: 768px) and (orientation: portrait) {
             height: calc(100vh - 180px);
             max-width: 1200px;
             margin: 0 auto;
@@ -839,15 +802,6 @@
                 <button type="submit" class="btn btn-primary">Sign In</button>
                 <p class="error-message" id="loginError">Invalid email or password</p>
             </form>
-            
-            <div class="user-select">
-                <p>Quick demo login (click to auto-fill):</p>
-                <div class="user-chips">
-                    <span class="user-chip" onclick="quickLogin('owner@company.com', 'owner')">👑 Owner</span>
-                    <span class="user-chip" onclick="quickLogin('manager@company.com', 'manager')">📊 Manager</span>
-                    <span class="user-chip" onclick="quickLogin('employee@company.com', 'employee')">👤 Employee</span>
-                </div>
-            </div>
         </div>
     </div>
     
