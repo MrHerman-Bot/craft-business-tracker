@@ -1048,12 +1048,16 @@
         let currentUser = null;
         
         // Channel definitions - Owner/Manager can create new ones
-        let channels = {
+        // Load from localStorage or use defaults
+        let channels = JSON.parse(localStorage.getItem('channels')) || {
             'general': { icon: '#', name: 'general', members: ['Alex Thompson', 'Jordan Smith', 'Casey Johnson'], creator: 'system' },
             'announcements': { icon: '📢', name: 'announcements', members: ['Alex Thompson', 'Jordan Smith', 'Casey Johnson'], creator: 'system' },
             'tasks': { icon: '✅', name: 'tasks', members: ['Alex Thompson', 'Jordan Smith', 'Casey Johnson'], creator: 'system' },
             'random': { icon: '💬', name: 'random', members: ['Alex Thompson', 'Jordan Smith', 'Casey Johnson'], creator: 'system' }
         };
+        
+        // Also persist messages for custom channels
+        let channelMessages = JSON.parse(localStorage.getItem('channelMessages')) || {
         
         // Check if already logged in
         if (localStorage.getItem('currentUser')) {
@@ -1123,7 +1127,7 @@
         
         // Chat functionality
         let currentChannelId = 'general';
-        const channelMessages = {
+        const channelMessages = JSON.parse(localStorage.getItem('channelMessages')) || {
             'general': [
                 { id: 1, author: 'Alex Thompson', avatar: 'AT', text: 'Welcome to the team chat everyone!', time: '9:00 AM', own: false },
                 { id: 2, author: 'Jordan Smith', avatar: 'JS', text: 'Thanks Alex! Excited to get started.', time: '9:05 AM', own: false },
@@ -1264,6 +1268,9 @@
             }
             channelMessages[currentChannelId].push(newMessage);
             
+            // Save messages to localStorage
+            localStorage.setItem('channelMessages', JSON.stringify(channelMessages));
+            
             input.value = '';
             loadMessages();
         }
@@ -1334,6 +1341,10 @@
             
             // Initialize empty message array
             channelMessages[name] = [];
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('channels', JSON.stringify(channels));
+            localStorage.setItem('channelMessages', JSON.stringify(channelMessages));
             
             // Close modal and refresh
             closeCreateChannelModal();
