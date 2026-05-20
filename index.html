@@ -2576,6 +2576,70 @@
             loadMessages();
         }
         
+        // Create Channel Modal Functions
+        function showCreateChannelModal() {
+            const memberList = document.getElementById('memberSelectList');
+            memberList.innerHTML = '';
+            
+            Object.entries(users).forEach(([email, user]) => {
+                const label = document.createElement('label');
+                label.className = 'member-checkbox';
+                label.innerHTML = `
+                    <input type="checkbox" value="${user.name}" checked>
+                    <span>${user.name}</span>
+                `;
+                memberList.appendChild(label);
+            });
+            
+            document.getElementById('createChannelModal').classList.add('active');
+        }
+        
+        function closeCreateChannelModal() {
+            document.getElementById('createChannelModal').classList.remove('active');
+            document.getElementById('newChannelName').value = '';
+            document.getElementById('newChannelIcon').value = '💬';
+        }
+        
+        function createChannel() {
+            const name = document.getElementById('newChannelName').value.trim().toLowerCase().replace(/\s+/g, '-');
+            const icon = document.getElementById('newChannelIcon').value.trim() || '💬';
+            
+            if (!name) {
+                alert('Please enter a channel name');
+                return;
+            }
+            
+            if (channels[name]) {
+                alert('A channel with this name already exists');
+                return;
+            }
+            
+            const checkboxes = document.querySelectorAll('#memberSelectList input[type="checkbox"]:checked');
+            const selectedMembers = Array.from(checkboxes).map(cb => cb.value);
+            
+            if (selectedMembers.length === 0) {
+                alert('Please select at least one member');
+                return;
+            }
+            
+            channels[name] = {
+                icon: icon,
+                name: name,
+                members: selectedMembers,
+                creator: currentUser.name
+            };
+            
+            channelMessages[name] = [];
+            
+            localStorage.setItem('channels', JSON.stringify(channels));
+            localStorage.setItem('channelMessages', JSON.stringify(channelMessages));
+            
+            closeCreateChannelModal();
+            renderChannelList();
+            
+            openChat(name, name, icon, false);
+        }
+        
         /* === EMPLOYEE MANAGEMENT FUNCTIONS (HR/Owner Only) === */
         
         function loadEmployeeMgmtPage() {
