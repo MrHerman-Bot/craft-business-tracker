@@ -962,7 +962,310 @@
         .quick-task-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #fef3c7; border-radius: 8px; font-size: 0.9rem; cursor: pointer; }
         .quick-task-item:hover { background: #fde68a; }
         
-    </style>
+    
+        
+        /* === PROFILE / ORG CHART STYLES === */
+        .profile-dashboard {
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .my-profile-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .my-profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .my-profile-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .my-profile-info .title {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+        
+        .my-profile-info .reports-to {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+        
+        .org-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .org-section h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #718096;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Org Chart Tree */
+        .org-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .org-level {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .org-node {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            min-width: 200px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        
+        .org-node:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .org-node.executive {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
+        }
+        
+        .org-node.manager {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+        }
+        
+        .org-node.staff {
+            border-color: #10b981;
+        }
+        
+        .org-node-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin: 0 auto 12px;
+        }
+        
+        .org-node h4 {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+        
+        .org-node .title {
+            font-size: 0.9rem;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .org-node .meta {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+        
+        .org-node .meta .birthday {
+            color: #f59e0b;
+            font-weight: 500;
+        }
+        
+        /* Direct Reports Section */
+        .direct-reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .report-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .report-card:hover {
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .report-card .avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .report-card .info {
+            flex: 1;
+        }
+        
+        .report-card .name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+        
+        .report-card .title {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+        
+        .report-card .birthday {
+            font-size: 0.75rem;
+            color: #f59e0b;
+            margin-top: 2px;
+        }
+        
+        /* Team View */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        
+        .team-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .team-card:hover {
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .team-card.is-me {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
+        }
+        
+        .team-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .team-card-avatar {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        
+        .team-card-info h4 {
+            font-size: 1.1rem;
+            color: #2d3748;
+        }
+        
+        .team-card-info .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        .badge-owner { background: #e0e7ff; color: #667eea; }
+        .badge-manager { background: #dbeafe; color: #3b82f6; }
+        .badge-employee { background: #d1fae5; color: #10b981; }
+        
+        .team-card-details {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+        }
+        
+        .team-card-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            padding: 6px 0;
+        }
+        
+        .team-card-row .label {
+            color: #718096;
+        }
+        
+        .team-card-row .value {
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .business-unit-tag {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+</style>
 </head>
 <body>
     <!-- Login Screen -->
@@ -1058,15 +1361,15 @@
                         <h3>Team</h3>
                         <p>Clock in/out & view members</p>
                     </div>
-                    <div class="nav-card communications" onclick="showPage('tasks')">
+                    <div class="nav-card sales" onclick="showPage('tasks')">
                         <div class="icon">📋</div>
                         <h3>Tasks</h3>
                         <p>Kanban board & assignments</p>
                     </div>
-                    <div class="nav-card sales" onclick="showPage('sales')">
-                        <div class="icon">💰</div>
-                        <h3>Sales</h3>
-                        <p>View orders & revenue</p>
+                    <div class="nav-card communications" onclick="showPage('profile')">
+                        <div class="icon">🏢</div>
+                        <h3>Org Chart</h3>
+                        <p>Company hierarchy & profile</p>
                     </div>
                     <div class="nav-card inventory" onclick="showPage('inventory')">
                         <div class="icon">📦</div>
@@ -1077,6 +1380,52 @@
                         <div class="icon">💬</div>
                         <h3>Messages</h3>
                         <p>Team chat & channels</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile/Org Chart Page -->
+        <div class="page" id="profilePage">
+            <div class="page-header">
+                <button class="back-btn" onclick="showPage('dashboard')">←</button>
+                <h2>Organization</h2>
+            </div>
+            <div class="profile-dashboard">
+                <!-- My Profile Card -->
+                <div class="my-profile-card" id="myProfileCard">
+                    <!-- Loaded dynamically -->
+                </div>
+                
+                <!-- My Chain of Command -->
+                <div class="org-section">
+                    <h3>🔗 Your Reporting Structure</h3>
+                    <div id="reportingChain">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+                
+                <!-- My Direct Reports (if any) -->
+                <div class="org-section" id="directReportsSection" style="display: none;">
+                    <h3>👥 Your Direct Reports</h3>
+                    <div class="direct-reports-grid" id="directReportsGrid">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+                
+                <!-- My Team (same business unit) -->
+                <div class="org-section">
+                    <h3>🤝 Your Team</h3>
+                    <div class="team-grid" id="myTeamGrid">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Full Company Org Chart (Owner/Manager only) -->
+                <div class="org-section" id="fullOrgSection">
+                    <h3>🏢 Company Organization</h3>
+                    <div class="org-tree" id="fullOrgChart">
+                        <!-- Loaded dynamically -->
                     </div>
                 </div>
             </div>
@@ -1258,25 +1607,57 @@
     </div>
     
     <script>
-        // Demo User Database
+        // Demo User Database with Org Structure
         const users = {
             'owner@company.com': {
                 password: 'owner123',
                 name: 'Alex Thompson',
                 role: 'Owner',
-                avatar: 'AT'
+                avatar: 'AT',
+                title: 'CEO & Founder',
+                birthday: '03/15',
+                manager: null,
+                businessUnit: 'Executive'
             },
             'manager@company.com': {
                 password: 'manager123',
                 name: 'Jordan Smith',
                 role: 'Manager',
-                avatar: 'JS'
+                avatar: 'JS',
+                title: 'Warehouse Manager',
+                birthday: '07/22',
+                manager: 'Alex Thompson',
+                businessUnit: 'Operations'
             },
             'employee@company.com': {
                 password: 'employee123',
                 name: 'Casey Johnson',
                 role: 'Employee',
-                avatar: 'CJ'
+                avatar: 'CJ',
+                title: 'Inventory Specialist',
+                birthday: '11/08',
+                manager: 'Jordan Smith',
+                businessUnit: 'Operations'
+            },
+            'sales@company.com': {
+                password: 'sales123',
+                name: 'Morgan Lee',
+                role: 'Employee',
+                avatar: 'ML',
+                title: 'Sales Representative',
+                birthday: '05/14',
+                manager: 'Alex Thompson',
+                businessUnit: 'Sales'
+            },
+            'finance@company.com': {
+                password: 'finance123',
+                name: 'Riley Torres',
+                role: 'Manager',
+                avatar: 'RT',
+                title: 'Finance Manager',
+                birthday: '09/03',
+                manager: 'Alex Thompson',
+                businessUnit: 'Finance'
             }
         };
         
@@ -1695,8 +2076,259 @@
             }
         }
         
-        showPage = function(pageName) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        /* === PROFILE / ORG CHART FUNCTIONS === */
+        
+        function loadProfilePage() {
+            const allUsers = Object.values(users);
+            const me = allUsers.find(u => u.name === currentUser.name);
+            
+            // My Profile Card
+            const myCard = document.getElementById('myProfileCard');
+            myCard.innerHTML = `
+                <div class="my-profile-avatar">${me.avatar}</div>
+                <div class="my-profile-info">
+                    <h2>${me.name}</h2>
+                    <div class="title">${me.title}</div>
+                    <div class="reports-to">🎂 ${me.birthday} · ${me.manager ? 'Reports to: ' + me.manager : 'Executive Level'}</div>
+                </div>
+                <div style="margin-left: auto; text-align: right;">
+                    <div style="font-size: 0.9rem; opacity: 0.9;">${me.role}</div>
+                    <div class="business-unit-tag" style="margin-top: 8px;">${me.businessUnit}</div>
+                </div>
+            `;
+            
+            // My Reporting Chain
+            const chainContainer = document.getElementById('reportingChain');
+            chainContainer.innerHTML = '';
+            
+            const chain = getReportingChain(me.name);
+            chain.forEach((person, index) => {
+                const node = document.createElement('div');
+                node.className = 'org-level';
+                node.innerHTML = `
+                    <div class="org-node ${person.role === 'Owner' ? 'executive' : person.role === 'Manager' ? 'manager' : 'staff'}">
+                        <div class="org-node-avatar">${person.avatar}</div>
+                        <h4>${person.name}</h4>
+                        <div class="title">${person.title}</div>
+                        <div class="meta">${person.businessUnit} · 🎂 ${person.birthday}</div>
+                    </div>
+                `;
+                chainContainer.appendChild(node);
+                
+                if (index < chain.length - 1) {
+                    const arrow = document.createElement('div');
+                    arrow.style.textAlign = 'center';
+                    arrow.style.fontSize = '1.5rem';
+                    arrow.style.color = '#cbd5e1';
+                    arrow.textContent = '↑';
+                    chainContainer.appendChild(arrow);
+                }
+            });
+            
+            // My Direct Reports
+            const myReports = allUsers.filter(u => u.manager === me.name);
+            const reportsSection = document.getElementById('directReportsSection');
+            const reportsGrid = document.getElementById('directReportsGrid');
+            
+            if (myReports.length > 0) {
+                reportsSection.style.display = 'block';
+                reportsGrid.innerHTML = '';
+                myReports.forEach(report => {
+                    const card = document.createElement('div');
+                    card.className = 'report-card';
+                    card.innerHTML = `
+                        <div class="avatar">${report.avatar}</div>
+                        <div class="info">
+                            <div class="name">${report.name}</div>
+                            <div class="title">${report.title}</div>
+                            <div class="birthday">🎂 ${report.birthday}</div>
+                        </div>
+                    `;
+                    reportsGrid.appendChild(card);
+                });
+            } else {
+                reportsSection.style.display = 'none';
+            }
+            
+            // My Team (same business unit)
+            const myTeam = allUsers.filter(u => u.businessUnit === me.businessUnit && u.name !== me.name);
+            const teamGrid = document.getElementById('myTeamGrid');
+            teamGrid.innerHTML = '';
+            
+            const myCard2 = document.createElement('div');
+            myCard2.className = 'team-card is-me';
+            myCard2.innerHTML = `
+                <div class="team-card-header">
+                    <div class="team-card-avatar">${me.avatar}</div>
+                    <div class="team-card-info">
+                        <h4>${me.name} (You)</h4>
+                        <span class="badge badge-${me.role.toLowerCase()}">${me.role}</span>
+                    </div>
+                </div>
+                <div class="team-card-details">
+                    <div class="team-card-row"><span class="label">Title:</span><span class="value">${me.title}</span></div>
+                    <div class="team-card-row"><span class="label">Birthday:</span><span class="value">${me.birthday}</span></div>
+                    <div class="team-card-row"><span class="label">Manager:</span><span class="value">${me.manager || '—'}</span></div>
+                </div>
+            `;
+            teamGrid.appendChild(myCard2);
+            
+            myTeam.forEach(teammate => {
+                const card = document.createElement('div');
+                card.className = 'team-card';
+                card.innerHTML = `
+                    <div class="team-card-header">
+                        <div class="team-card-avatar">${teammate.avatar}</div>
+                        <div class="team-card-info">
+                            <h4>${teammate.name}</h4>
+                            <span class="badge badge-${teammate.role.toLowerCase()}">${teammate.role}</span>
+                        </div>
+                    </div>
+                    <div class="team-card-details">
+                        <div class="team-card-row"><span class="label">Title:</span><span class="value">${teammate.title}</span></div>
+                        <div class="team-card-row"><span class="label">Birthday:</span><span class="value">${teammate.birthday}</span></div>
+                        <div class="team-card-row"><span class="label">Manager:</span><span class="value">${teammate.manager || '—'}</span></div>
+                    </div>
+                `;
+                teamGrid.appendChild(card);
+            });
+            
+            // Full Company Org Chart
+            const fullOrgSection = document.getElementById('fullOrgSection');
+            const fullOrgChart = document.getElementById('fullOrgChart');
+            
+            if (me.role === 'Owner' || me.role === 'Manager') {
+                fullOrgSection.style.display = 'block';
+                fullOrgSection.querySelector('h3').textContent = '🏢 Company Organization';
+                renderFullOrgChart(fullOrgChart, allUsers);
+            } else {
+                fullOrgSection.style.display = 'block';
+                fullOrgSection.querySelector('h3').textContent = '🏢 Your Department';
+                renderDepartmentChart(fullOrgChart, allUsers, me.businessUnit);
+            }
+        }
+        
+        function getReportingChain(personName) {
+            const chain = [];
+            let current = Object.values(users).find(u => u.name === personName);
+            
+            while (current) {
+                chain.unshift(current);
+                const managerName = current.manager;
+                current = managerName ? Object.values(users).find(u => u.name === managerName) : null;
+            }
+            
+            return chain;
+        }
+        
+        function renderFullOrgChart(container, allUsers) {
+            container.innerHTML = '';
+            
+            const executives = allUsers.filter(u => !u.manager);
+            const managers = allUsers.filter(u => u.manager && (u.role === 'Manager' || executives.some(e => e.name === u.manager)));
+            const staff = allUsers.filter(u => u.role === 'Employee');
+            
+            if (executives.length > 0) {
+                const execLevel = document.createElement('div');
+                execLevel.className = 'org-level';
+                executives.forEach(exec => {
+                    execLevel.innerHTML += `
+                        <div class="org-node executive">
+                            <div class="org-node-avatar">${exec.avatar}</div>
+                            <h4>${exec.name}</h4>
+                            <div class="title">${exec.title}</div>
+                            <div class="meta">🎂 ${exec.birthday}</div>
+                        </div>
+                    `;
+                });
+                container.appendChild(execLevel);
+            }
+            
+            if (managers.length > 0) {
+                const arrow1 = document.createElement('div');
+                arrow1.style.textAlign = 'center';
+                arrow1.style.fontSize = '1.5rem';
+                arrow1.style.color = '#cbd5e1';
+                arrow1.textContent = '↓';
+                container.appendChild(arrow1);
+                
+                const mgrLevel = document.createElement('div');
+                mgrLevel.className = 'org-level';
+                managers.forEach(mgr => {
+                    mgrLevel.innerHTML += `
+                        <div class="org-node manager">
+                            <div class="org-node-avatar">${mgr.avatar}</div>
+                            <h4>${mgr.name}</h4>
+                            <div class="title">${mgr.title}</div>
+                            <div class="meta">Reports to: ${mgr.manager}</div>
+                        </div>
+                    `;
+                });
+                container.appendChild(mgrLevel);
+            }
+            
+            if (staff.length > 0) {
+                const arrow2 = document.createElement('div');
+                arrow2.style.textAlign = 'center';
+                arrow2.style.fontSize = '1.5rem';
+                arrow2.style.color = '#cbd5e1';
+                arrow2.textContent = '↓';
+                container.appendChild(arrow2);
+                
+                const staffLevel = document.createElement('div');
+                staffLevel.className = 'org-level';
+                staff.forEach(member => {
+                    staffLevel.innerHTML += `
+                        <div class="org-node staff">
+                            <div class="org-node-avatar">${member.avatar}</div>
+                            <h4>${member.name}</h4>
+                            <div class="title">${member.title}</div>
+                            <div class="meta">Reports to: ${member.manager}</div>
+                        </div>
+                    `;
+                });
+                container.appendChild(staffLevel);
+            }
+        }
+        
+        function renderDepartmentChart(container, allUsers, businessUnit) {
+            container.innerHTML = '';
+            
+            const deptUsers = allUsers.filter(u => u.businessUnit === businessUnit);
+            const deptLevel = document.createElement('div');
+            deptLevel.className = 'org-level';
+            
+            deptUsers.forEach(user => {
+                const nodeClass = user.role === 'Owner' ? 'executive' : user.role === 'Manager' ? 'manager' : 'staff';
+                deptLevel.innerHTML += `
+                    <div class="org-node ${nodeClass}">
+                        <div class="org-node-avatar">${user.avatar}</div>
+                        <h4>${user.name}</h4>
+                        <div class="title">${user.title}</div>
+                        <div class="meta">🎂 ${user.birthday}</div>
+                    </div>
+                `;
+            });
+            
+            container.appendChild(deptLevel);
+        }
+        
+        /* === BUSINESS UNIT PERMISSION HELPERS === */
+        
+        function canViewSales() {
+            if (!currentUser) return false;
+            const user = Object.values(users).find(u => u.name === currentUser.name);
+            return user && (user.role === 'Owner' || user.businessUnit === 'Sales' || user.businessUnit === 'Finance');
+        }
+        
+        function canViewInventory() {
+            if (!currentUser) return false;
+            const user = Object.values(users).find(u => u.name === currentUser.name);
+            return user && (user.role === 'Owner' || user.businessUnit === 'Operations' || user.businessUnit === 'Finance');
+        }
+        
+        // Create Channel Modal Functions
+        function showCreateChannelModal() {
             
             if (pageName === 'dashboard') {
                 document.getElementById('dashboardPage').classList.add('active');
@@ -1717,6 +2349,9 @@
             } else if (pageName === 'chat') {
                 document.getElementById('chatPage').classList.add('active');
                 loadChatMessages();
+            } else if (pageName === 'profile') {
+                document.getElementById('profilePage').classList.add('active');
+                loadProfilePage();
             }
         };
         
