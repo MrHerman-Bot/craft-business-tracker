@@ -889,6 +889,79 @@
                 display: inline;
             }
         }
+        
+        /* === EMPLOYEES PAGE STYLES === */
+        .employees-list { padding: 20px; max-width: 800px; margin: 0 auto; }
+        .employee-card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .employee-card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .employee-avatar-large { width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.5rem; }
+        .employee-details { flex: 1; }
+        .employee-details h4 { font-size: 1.1rem; color: #2d3748; margin-bottom: 4px; }
+        .employee-details .role { font-size: 0.85rem; color: #667eea; font-weight: 600; }
+        .employee-details .last-clock { font-size: 0.8rem; color: #718096; margin-top: 4px; }
+        .employee-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-small { flex: 1; padding: 12px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-clockin { background: #10b981; color: white; }
+        .btn-clockin:hover { background: #059669; }
+        .btn-clockout { background: #ef4444; color: white; }
+        .btn-clockout:hover { background: #dc2626; }
+        .btn-clockin:disabled, .btn-clockout:disabled { background: #cbd5e1; cursor: not-allowed; }
+        
+        /* === TASK BOARD STYLES === */
+        .tasks-board { padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .board-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .board-column { background: #f8fafc; border-radius: 16px; padding: 16px; }
+        .board-column-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid; }
+        .board-column.todo .board-column-header { border-color: #f59e0b; }
+        .board-column.doing .board-column-header { border-color: #3b82f6; }
+        .board-column.done .board-column-header { border-color: #10b981; }
+        .board-column-header h3 { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .board-column.todo h3 { color: #f59e0b; }
+        .board-column.doing h3 { color: #3b82f6; }
+        .board-column.done h3 { color: #10b981; }
+        .task-count { background: white; padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; color: #718096; }
+        .task-list { display: flex; flex-direction: column; gap: 10px; min-height: 100px; }
+        .task-card { background: white; border-radius: 12px; padding: 14px; cursor: pointer; transition: all 0.2s; border-left: 4px solid; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .task-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.1); transform: translateY(-1px); }
+        .task-card.todo { border-left-color: #f59e0b; }
+        .task-card.doing { border-left-color: #3b82f6; }
+        .task-card.done { border-left-color: #10b981; }
+        .task-card-title { font-size: 0.95rem; font-weight: 600; color: #2d3748; margin-bottom: 8px; }
+        .task-card-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; }
+        .task-assignee { display: flex; align-items: center; gap: 6px; }
+        .task-assignee-avatar { width: 24px; height: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.6rem; font-weight: 600; }
+        .task-card-meta .due { color: #718096; }
+        .task-card-meta .due.overdue { color: #ef4444; font-weight: 600; }
+        .add-task-btn { width: 100%; padding: 12px; border: 2px dashed #cbd5e1; background: transparent; border-radius: 10px; color: #718096; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+        .add-task-btn:hover { border-color: #667eea; color: #667eea; }
+        
+        /* === TODAY DASHBOARD STYLES === */
+        .dashboard-today { padding: 20px; max-width: 800px; margin: 0 auto; }
+        .today-section { background: white; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .today-section h3 { font-size: 0.85rem; text-transform: uppercase; color: #718096; letter-spacing: 0.5px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .employee-status-list { display: flex; flex-direction: column; gap: 12px; }
+        .employee-status-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 12px; }
+        .status-indicator { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .status-indicator.clockedin { background: #10b981; animation: pulse 2s infinite; }
+        .status-indicator.clockout { background: #ef4444; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .employee-status-info { flex: 1; }
+        .employee-status-info .name { font-weight: 600; color: #2d3748; }
+        .employee-status-info .meta { font-size: 0.8rem; color: #718096; }
+        .employee-status-time { text-align: right; }
+        .employee-status-time .time { font-weight: 600; color: #2d3748; }
+        .employee-status-time .location { font-size: 0.75rem; color: #718096; }
+        .task-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .task-summary-card { background: #f8fafc; border-radius: 12px; padding: 16px; text-align: center; }
+        .task-summary-card .count { font-size: 2rem; font-weight: 700; margin-bottom: 4px; }
+        .task-summary-card.todo .count { color: #f59e0b; }
+        .task-summary-card.doing .count { color: #3b82f6; }
+        .task-summary-card.done .count { color: #10b981; }
+        .task-summary-card .label { font-size: 0.8rem; color: #718096; }
+        .quick-tasks-list { display: flex; flex-direction: column; gap: 8px; }
+        .quick-task-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #fef3c7; border-radius: 8px; font-size: 0.9rem; cursor: pointer; }
+        .quick-task-item:hover { background: #fde68a; }
+        
     </style>
 </head>
 <body>
@@ -939,14 +1012,56 @@
             </div>
         </header>
         
-        <!-- Dashboard -->
+        <!-- Today Dashboard -->
         <div class="page active" id="dashboardPage">
+            <div class="dashboard-today">
+                <!-- Clock In Status Section -->
+                <div class="today-section">
+                    <h3>👥 Who's Working Today</h3>
+                    <div id="todayStatusList" class="employee-status-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Task Summary -->
+                <div class="today-section">
+                    <h3>📋 Task Board Summary</h3>
+                    <div class="task-summary-grid">
+                        <div class="task-summary-card todo">
+                            <div class="count" id="summaryTodo">0</div>
+                            <div class="label">To Do</div>
+                        </div>
+                        <div class="task-summary-card doing">
+                            <div class="count" id="summaryDoing">0</div>
+                            <div class="label">In Progress</div>
+                        </div>
+                        <div class="task-summary-card done">
+                            <div class="count" id="summaryDone">0</div>
+                            <div class="label">Done</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- My Tasks -->
+                <div class="today-section">
+                    <h3>🎯 My Tasks</h3>
+                    <div id="myTasksList" class="quick-tasks-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+            
             <div class="dashboard-nav">
                 <div class="nav-grid">
                     <div class="nav-card employees" onclick="showPage('employees')">
                         <div class="icon">👥</div>
-                        <h3>Employees</h3>
-                        <p>Manage team & track tasks</p>
+                        <h3>Team</h3>
+                        <p>Clock in/out & view members</p>
+                    </div>
+                    <div class="nav-card communications" onclick="showPage('tasks')">
+                        <div class="icon">📋</div>
+                        <h3>Tasks</h3>
+                        <p>Kanban board & assignments</p>
                     </div>
                     <div class="nav-card sales" onclick="showPage('sales')">
                         <div class="icon">💰</div>
@@ -960,8 +1075,8 @@
                     </div>
                     <div class="nav-card communications" onclick="showPage('communications')">
                         <div class="icon">💬</div>
-                        <h3>Communications</h3>
-                        <p>Team messaging & chat</p>
+                        <h3>Messages</h3>
+                        <p>Team chat & channels</p>
                     </div>
                 </div>
             </div>
@@ -971,13 +1086,54 @@
         <div class="page" id="employeesPage">
             <div class="page-header">
                 <button class="back-btn" onclick="showPage('dashboard')">←</button>
-                <h2>Employee Management</h2>
+                <h2>Team Members</h2>
             </div>
-            <div class="placeholder-content">
-                <div class="icon" style="background: #e0e7ff;">👥</div>
-                <h3>Employee Dashboard</h3>
-                <p>Track employee attendance, assign tasks, monitor productivity, and manage schedules. Coming soon with real-time updates and GPS check-ins.</p>
-                <span class="coming-soon-badge">Coming Soon</span>
+            <div class="employees-list" id="employeesList">
+                <!-- Employee cards loaded dynamically -->
+            </div>
+        </div>
+        
+        <!-- Tasks Board Page -->
+        <div class="page" id="tasksPage">
+            <div class="page-header">
+                <button class="back-btn" onclick="showPage('dashboard')">←</button>
+                <h2>Task Board</h2>
+            </div>
+            <div class="tasks-board">
+                <div class="board-columns">
+                    <div class="board-column todo">
+                        <div class="board-column-header">
+                            <h3>📝 To Do</h3>
+                            <span class="task-count" id="countTodo">0</span>
+                        </div>
+                        <div class="task-list" id="todoList">
+                            <!-- Tasks loaded dynamically -->
+                        </div>
+                        <button class="add-task-btn" onclick="showAddTaskModal('todo')">+ Add Task</button>
+                    </div>
+                    
+                    <div class="board-column doing">
+                        <div class="board-column-header">
+                            <h3>🔄 In Progress</h3>
+                            <span class="task-count" id="countDoing">0</span>
+                        </div>
+                        <div class="task-list" id="doingList">
+                            <!-- Tasks loaded dynamically -->
+                        </div>
+                        <button class="add-task-btn" onclick="showAddTaskModal('doing')">+ Add Task</button>
+                    </div>
+                    
+                    <div class="board-column done">
+                        <div class="board-column-header">
+                            <h3>✅ Done</h3>
+                            <span class="task-count" id="countDone">0</span>
+                        </div>
+                        <div class="task-list" id="doneList">
+                            <!-- Tasks loaded dynamically -->
+                        </div>
+                        <button class="add-task-btn" onclick="showAddTaskModal('done')">+ Add Task</button>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -1200,30 +1356,6 @@
             document.getElementById('loginError').style.display = 'none';
         }
         
-        function showPage(pageName) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Show selected page
-            if (pageName === 'dashboard') {
-                document.getElementById('dashboardPage').classList.add('active');
-            } else if (pageName === 'employees') {
-                document.getElementById('employeesPage').classList.add('active');
-            } else if (pageName === 'sales') {
-                document.getElementById('salesPage').classList.add('active');
-            } else if (pageName === 'inventory') {
-                document.getElementById('inventoryPage').classList.add('active');
-            } else if (pageName === 'communications') {
-                document.getElementById('communicationsPage').classList.add('active');
-                setupCommunications();
-            } else if (pageName === 'chat') {
-                document.getElementById('chatPage').classList.add('active');
-                loadChatMessages();
-            }
-        }
-        
         // Chat functionality
         let currentChatId = 'general';
         let currentChatName = '#general';
@@ -1342,6 +1474,251 @@
                 sendChatMessage();
             }
         }
+        
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+        
+        /* === TODAY DASHBOARD === */
+        
+        let employeeStatus = JSON.parse(localStorage.getItem('employeeStatus')) || {
+            'Alex Thompson': { clockedIn: false, lastClockIn: null, lastClockOut: null, location: null },
+            'Jordan Smith': { clockedIn: true, lastClockIn: '07:45 AM', lastClockOut: null, location: 'Warehouse A' },
+            'Casey Johnson': { clockedIn: false, lastClockIn: null, lastClockOut: '05:30 PM', location: 'Main Office' }
+        };
+        
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [
+            { id: 1, title: 'Restock Zone A shelves', status: 'todo', assignee: 'Casey Johnson', due: 'Today', priority: 'high' },
+            { id: 2, title: 'Update inventory spreadsheet', status: 'doing', assignee: 'Jordan Smith', due: 'Today', priority: 'medium' },
+            { id: 3, title: 'Clean workshop area', status: 'done', assignee: 'Alex Thompson', due: 'Yesterday', priority: 'low' },
+            { id: 4, title: 'Order new supplies', status: 'todo', assignee: 'Jordan Smith', due: 'Tomorrow', priority: 'high' },
+            { id: 5, title: 'Quality check batch #42', status: 'doing', assignee: 'Casey Johnson', due: 'Today', priority: 'high' }
+        ];
+        
+        function loadEmployeesPage() {
+            const container = document.getElementById('employeesList');
+            container.innerHTML = '';
+            
+            const allEmployees = Object.entries(users).map(([email, user]) => ({ email, ...user }));
+            
+            allEmployees.forEach(emp => {
+                const status = employeeStatus[emp.name] || { clockedIn: false };
+                const card = document.createElement('div');
+                card.className = 'employee-card';
+                
+                const isSelf = emp.name === currentUser.name;
+                const canManage = currentUser.role === 'Owner' || currentUser.role === 'Manager';
+                const showActions = isSelf || canManage;
+                
+                card.innerHTML = `
+                    <div class="employee-card-header">
+                        <div class="employee-avatar-large">${emp.avatar}</div>
+                        <div class="employee-details">
+                            <h4>${emp.name} ${isSelf ? '(You)' : ''}</h4>
+                            <span class="role">${emp.role}</span>
+                            <div class="last-clock">
+                                ${status.clockedIn 
+                                    ? `<span style="color: #10b981;">● Clocked in at ${status.lastClockIn}</span>` 
+                                    : status.lastClockOut 
+                                        ? `<span style="color: #ef4444;">○ Last clock out: ${status.lastClockOut}</span>` 
+                                        : '<span style="color: #718096;">Not clocked in today</span>'}
+                            </div>
+                            ${status.location ? `<div style="font-size: 0.75rem; color: #10b981;">📍 ${status.location}</div>` : ''}
+                        </div>
+                    </div>
+                    ${showActions ? `
+                    <div class="employee-actions">
+                        <button class="btn-small btn-clockin" ${status.clockedIn ? 'disabled' : ''} 
+                            onclick="clockIn('${emp.name}')">Clock In</button>
+                        <button class="btn-small btn-clockout" ${!status.clockedIn ? 'disabled' : ''} 
+                            onclick="clockOut('${emp.name}')">Clock Out</button>
+                    </div>
+                    ` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function clockIn(name) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude.toFixed(4);
+                        const lng = position.coords.longitude.toFixed(4);
+                        const location = `${lat}, ${lng}`;
+                        
+                        employeeStatus[name] = { clockedIn: true, lastClockIn: timeStr, lastClockOut: employeeStatus[name]?.lastClockOut || null, location: location };
+                        localStorage.setItem('employeeStatus', JSON.stringify(employeeStatus));
+                        loadEmployeesPage();
+                        updateTodayDashboard();
+                    },
+                    (error) => {
+                        employeeStatus[name] = { clockedIn: true, lastClockIn: timeStr, lastClockOut: employeeStatus[name]?.lastClockOut || null, location: 'GPS unavailable' };
+                        localStorage.setItem('employeeStatus', JSON.stringify(employeeStatus));
+                        loadEmployeesPage();
+                        updateTodayDashboard();
+                    },
+                    { timeout: 10000 }
+                );
+            } else {
+                employeeStatus[name] = { clockedIn: true, lastClockIn: timeStr, lastClockOut: employeeStatus[name]?.lastClockOut || null, location: 'GPS not supported' };
+                localStorage.setItem('employeeStatus', JSON.stringify(employeeStatus));
+                loadEmployeesPage();
+                updateTodayDashboard();
+            }
+        }
+        
+        function clockOut(name) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            
+            employeeStatus[name] = { clockedIn: false, lastClockIn: employeeStatus[name]?.lastClockIn || null, lastClockOut: timeStr, location: employeeStatus[name]?.location || null };
+            localStorage.setItem('employeeStatus', JSON.stringify(employeeStatus));
+            loadEmployeesPage();
+            updateTodayDashboard();
+        }
+        
+        function loadTasksPage() {
+            document.getElementById('countTodo').textContent = tasks.filter(t => t.status === 'todo').length;
+            document.getElementById('countDoing').textContent = tasks.filter(t => t.status === 'doing').length;
+            document.getElementById('countDone').textContent = tasks.filter(t => t.status === 'done').length;
+            
+            renderTaskColumn('todo', 'todoList');
+            renderTaskColumn('doing', 'doingList');
+            renderTaskColumn('done', 'doneList');
+        }
+        
+        function renderTaskColumn(status, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            const columnTasks = tasks.filter(t => t.status === status);
+            
+            columnTasks.forEach(task => {
+                const card = document.createElement('div');
+                card.className = `task-card ${status}`;
+                card.innerHTML = `
+                    <div class="task-card-title">${task.title}</div>
+                    <div class="task-card-meta">
+                        <div class="task-assignee">
+                            <div class="task-assignee-avatar">${task.assignee.split(' ').map(n => n[0]).join('')}</div>
+                            <span>${task.assignee.split(' ')[0]}</span>
+                        </div>
+                        <span class="due ${task.due === 'Yesterday' ? 'overdue' : ''}">${task.due}</span>
+                    </div>
+                `;
+                
+                card.onclick = () => {
+                    const nextStatus = status === 'todo' ? 'doing' : status === 'doing' ? 'done' : 'todo';
+                    task.status = nextStatus;
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    loadTasksPage();
+                    updateTodayDashboard();
+                };
+                
+                container.appendChild(card);
+            });
+        }
+        
+        function showAddTaskModal(initialStatus) {
+            const title = prompt('Task title:');
+            if (!title) return;
+            
+            const assigneeNames = Object.values(users).map(u => u.name);
+            const assignee = prompt(`Assign to (${assigneeNames.join(', ')}):`, currentUser.name);
+            if (!assignee || !assigneeNames.includes(assignee)) { alert('Invalid assignee'); return; }
+            
+            tasks.push({ id: Date.now(), title: title, status: initialStatus, assignee: assignee, due: 'Today' });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            loadTasksPage();
+            updateTodayDashboard();
+        }
+        
+        function updateTodayDashboard() {
+            const statusList = document.getElementById('todayStatusList');
+            if (statusList) {
+                statusList.innerHTML = '';
+                Object.entries(employeeStatus).forEach(([name, status]) => {
+                    const user = Object.values(users).find(u => u.name === name);
+                    if (!user) return;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'employee-status-item';
+                    item.innerHTML = `
+                        <div class="status-indicator ${status.clockedIn ? 'clockedin' : 'clockout'}"></div>
+                        <div class="employee-status-info"><div class="name">${name}</div><div class="meta">${user.role}</div></div>
+                        <div class="employee-status-time">
+                            ${status.clockedIn 
+                                ? `<div class="time">${status.lastClockIn}</div><div class="location">📍 ${status.location || 'On-site'}</div>` 
+                                : status.lastClockOut ? `<div class="time">Out at ${status.lastClockOut}</div>` : '<div class="time">Not clocked</div>'}
+                        </div>
+                    `;
+                    statusList.appendChild(item);
+                });
+            }
+            
+            const summaryTodo = document.getElementById('summaryTodo');
+            const summaryDoing = document.getElementById('summaryDoing');
+            const summaryDone = document.getElementById('summaryDone');
+            
+            if (summaryTodo) summaryTodo.textContent = tasks.filter(t => t.status === 'todo').length;
+            if (summaryDoing) summaryDoing.textContent = tasks.filter(t => t.status === 'doing').length;
+            if (summaryDone) summaryDone.textContent = tasks.filter(t => t.status === 'done').length;
+            
+            const myTasksList = document.getElementById('myTasksList');
+            if (myTasksList) {
+                myTasksList.innerHTML = '';
+                const myTasks = tasks.filter(t => t.assignee === currentUser?.name && t.status !== 'done');
+                
+                if (myTasks.length === 0) {
+                    myTasksList.innerHTML = '<div style="color: #718096; text-align: center; padding: 20px;">No active tasks! 🎉</div>';
+                } else {
+                    myTasks.forEach(task => {
+                        const div = document.createElement('div');
+                        div.className = 'quick-task-item';
+                        const statusIcon = task.status === 'todo' ? '⬜' : '🔄';
+                        div.innerHTML = `${statusIcon} ${task.title}`;
+                        div.onclick = () => {
+                            task.status = task.status === 'todo' ? 'doing' : 'done';
+                            localStorage.setItem('tasks', JSON.stringify(tasks));
+                            updateTodayDashboard();
+                            loadTasksPage();
+                        };
+                        myTasksList.appendChild(div);
+                    });
+                }
+            }
+        }
+        
+        showPage = function(pageName) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            
+            if (pageName === 'dashboard') {
+                document.getElementById('dashboardPage').classList.add('active');
+                updateTodayDashboard();
+            } else if (pageName === 'employees') {
+                document.getElementById('employeesPage').classList.add('active');
+                loadEmployeesPage();
+            } else if (pageName === 'tasks') {
+                document.getElementById('tasksPage').classList.add('active');
+                loadTasksPage();
+            } else if (pageName === 'sales') {
+                document.getElementById('salesPage').classList.add('active');
+            } else if (pageName === 'inventory') {
+                document.getElementById('inventoryPage').classList.add('active');
+            } else if (pageName === 'communications') {
+                document.getElementById('communicationsPage').classList.add('active');
+                setupCommunications();
+            } else if (pageName === 'chat') {
+                document.getElementById('chatPage').classList.add('active');
+                loadChatMessages();
+            }
+        };
         
         // Create Channel Modal Functions
         function showCreateChannelModal() {
