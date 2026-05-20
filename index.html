@@ -730,6 +730,117 @@
             color: #2d3748;
         }
         
+        /* Communications List Styles */
+        .header-action-btn {
+            margin-left: auto;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .communications-list {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .comm-section {
+            margin-bottom: 30px;
+        }
+        
+        .comm-section > h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #718096;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .channel-item, .dm-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .channel-item:hover, .dm-item:hover {
+            background: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+        
+        .dm-item .dm-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Chat Page Styles */
+        .chat-header-compact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chat-header-info {
+            flex: 1;
+        }
+        
+        .chat-header-info h3 {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .chat-header-info span {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+        
+        .chat-messages-full {
+            height: calc(100vh - 180px);
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .chat-input-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 20px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-input-bar input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        
+        .chat-input-bar input:focus {
+            border-color: #667eea;
+        }
+        
         /* Mobile Responsive - Portrait Mode */
         @media screen and (max-width: 768px) and (orientation: portrait) {
             .chat-sidebar {
@@ -898,50 +1009,64 @@
             </div>
         </div>
         
-        <!-- Communications Page -->
+        <!-- Communications Page - Channel List -->
         <div class="page" id="communicationsPage">
             <div class="page-header">
                 <button class="back-btn" onclick="showPage('dashboard')">←</button>
                 <h2>Team Communications</h2>
+                <button id="createChannelBtn" class="header-action-btn" onclick="showCreateChannelModal()" style="display: none;">+ New</button>
             </div>
-            <div class="chat-container">
-                <div class="chat-sidebar">
-                    <div class="sidebar-header">
-                        <h3>Channels</h3>
-                        <button id="createChannelBtn" class="add-btn" onclick="showCreateChannelModal()" style="display: none;">+</button>
-                    </div>
+            <div class="communications-list">
+                <div class="comm-section">
+                    <h3>Channels</h3>
                     <div class="channel-list" id="channelList">
                         <!-- Channels loaded dynamically -->
                     </div>
+                </div>
+                <div class="comm-section">
                     <h3>Direct Messages</h3>
-                    <div class="dm-list">
-                        <div class="dm-item" onclick="switchDM('dm-alex')">
+                    <div class="dm-list" id="dmList">
+                        <div class="dm-item" onclick="openChat('dm-alex', 'Alex Thompson', 'AT')">
                             <div class="dm-avatar">AT</div>
-                            <span class="dm-name">Alex Thompson</span>
+                            <div class="dm-info">
+                                <span class="dm-name">Alex Thompson</span>
+                                <span class="dm-role">Owner</span>
+                            </div>
                         </div>
-                        <div class="dm-item" onclick="switchDM('dm-jordan')">
+                        <div class="dm-item" onclick="openChat('dm-jordan', 'Jordan Smith', 'JS')">
                             <div class="dm-avatar">JS</div>
-                            <span class="dm-name">Jordan Smith</span>
+                            <div class="dm-info">
+                                <span class="dm-name">Jordan Smith</span>
+                                <span class="dm-role">Manager</span>
+                            </div>
                         </div>
-                        <div class="dm-item" onclick="switchDM('dm-casey')">
+                        <div class="dm-item" onclick="openChat('dm-casey', 'Casey Johnson', 'CJ')">
                             <div class="dm-avatar">CJ</div>
-                            <span class="dm-name">Casey Johnson</span>
+                            <div class="dm-info">
+                                <span class="dm-name">Casey Johnson</span>
+                                <span class="dm-role">Employee</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="chat-main">
-                    <div class="chat-header">
-                        <h3 id="currentChannel">#general</h3>
-                        <span class="member-count" id="memberCount">3 members</span>
-                    </div>
-                    <div class="chat-messages" id="chatMessages">
-                        <!-- Messages will be loaded here -->
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleMessageKeypress(event)">
-                        <button onclick="sendMessage()" class="send-btn">📤</button>
-                    </div>
+            </div>
+        </div>
+        
+        <!-- Individual Chat Page -->
+        <div class="page" id="chatPage">
+            <div class="page-header chat-header-compact">
+                <button class="back-btn" onclick="showPage('communications')">←</button>
+                <div class="chat-header-info">
+                    <h3 id="chatTitle">#general</h3>
+                    <span id="chatSubtitle">3 members</span>
                 </div>
+            </div>
+            <div class="chat-messages-full" id="chatMessagesFull">
+                <!-- Messages will be loaded here -->
+            </div>
+            <div class="chat-input-bar">
+                <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleChatKeypress(event)">
+                <button onclick="sendChatMessage()" class="send-btn">📤</button>
             </div>
         </div>
         
@@ -1093,11 +1218,17 @@
             } else if (pageName === 'communications') {
                 document.getElementById('communicationsPage').classList.add('active');
                 setupCommunications();
+            } else if (pageName === 'chat') {
+                document.getElementById('chatPage').classList.add('active');
+                loadChatMessages();
             }
         }
         
         // Chat functionality
-        let currentChannelId = 'general';
+        let currentChatId = 'general';
+        let currentChatName = '#general';
+        let currentChatIcon = '#';
+        let isDM = false;
         
         function setupCommunications() {
             // Show/hide create channel button based on role
@@ -1106,9 +1237,6 @@
             
             // Load channels
             renderChannelList();
-            
-            // Load messages for current channel
-            loadMessages();
         }
         
         function renderChannelList() {
@@ -1122,21 +1250,44 @@
             
             accessibleChannels.forEach(([id, channel]) => {
                 const div = document.createElement('div');
-                div.className = 'channel' + (id === currentChannelId ? ' active' : '');
-                div.onclick = () => switchChannel(id);
+                div.className = 'channel-item';
+                div.onclick = () => openChat(id, channel.name, channel.icon, false);
                 div.innerHTML = `
-                    <span class="channel-icon">${channel.icon}</span>
-                    <span class="channel-name">${channel.name}</span>
+                    <div class="channel-icon">${channel.icon}</div>
+                    <div class="channel-info">
+                        <span class="channel-name">${channel.name}</span>
+                        <span class="channel-members">${channel.members.length} members</span>
+                    </div>
                 `;
                 list.appendChild(div);
             });
         }
         
-        function loadMessages() {
-            const container = document.getElementById('chatMessages');
+        function openChat(chatId, name, icon, dm) {
+            currentChatId = chatId;
+            currentChatName = name;
+            currentChatIcon = icon;
+            isDM = dm;
+            
+            // Update chat header
+            document.getElementById('chatTitle').textContent = isDM ? name : icon + ' ' + name;
+            
+            const channel = channels[chatId];
+            if (channel && !isDM) {
+                document.getElementById('chatSubtitle').textContent = channel.members.length + ' members';
+            } else {
+                document.getElementById('chatSubtitle').textContent = 'Direct Message';
+            }
+            
+            // Show chat page
+            showPage('chat');
+        }
+        
+        function loadChatMessages() {
+            const container = document.getElementById('chatMessagesFull');
             container.innerHTML = '';
             
-            const messages = channelMessages[currentChannelId] || [];
+            const messages = channelMessages[currentChatId] || [];
             messages.forEach(msg => {
                 const isOwn = msg.author === currentUser.name;
                 const msgDiv = document.createElement('div');
@@ -1156,50 +1307,8 @@
             container.scrollTop = container.scrollHeight;
         }
         
-        function switchChannel(channelId) {
-            currentChannelId = channelId;
-            
-            // Update UI
-            document.querySelectorAll('.channel').forEach(ch => ch.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            // Update header
-            const channel = channels[channelId];
-            if (channel) {
-                document.getElementById('currentChannel').textContent = channel.icon + ' ' + channel.name;
-                document.getElementById('memberCount').textContent = channel.members.length + ' members';
-            } else {
-                document.getElementById('currentChannel').textContent = '#' + channelId;
-                document.getElementById('memberCount').textContent = 'Direct Message';
-            }
-            
-            // Load messages
-            loadMessages();
-        }
-        
-        function switchDM(dmId) {
-            currentChannelId = dmId;
-            
-            // Update UI
-            document.querySelectorAll('.channel').forEach(ch => ch.classList.remove('active'));
-            document.querySelectorAll('.dm-item').forEach(dm => dm.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            // Update header
-            const dmNames = {
-                'dm-alex': 'Alex Thompson',
-                'dm-jordan': 'Jordan Smith',
-                'dm-casey': 'Casey Johnson'
-            };
-            document.getElementById('currentChannel').textContent = dmNames[dmId] || 'Direct Message';
-            document.getElementById('memberCount').textContent = 'Direct Message';
-            
-            // Load messages
-            loadMessages();
-        }
-        
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
             const text = input.value.trim();
             
             if (!text) return;
@@ -1216,21 +1325,21 @@
                 own: true
             };
             
-            if (!channelMessages[currentChannelId]) {
-                channelMessages[currentChannelId] = [];
+            if (!channelMessages[currentChatId]) {
+                channelMessages[currentChatId] = [];
             }
-            channelMessages[currentChannelId].push(newMessage);
+            channelMessages[currentChatId].push(newMessage);
             
-            // Save messages to localStorage
+            // Save to localStorage
             localStorage.setItem('channelMessages', JSON.stringify(channelMessages));
             
             input.value = '';
-            loadMessages();
+            loadChatMessages();
         }
         
-        function handleMessageKeypress(event) {
+        function handleChatKeypress(event) {
             if (event.key === 'Enter') {
-                sendMessage();
+                sendChatMessage();
             }
         }
         
