@@ -305,12 +305,111 @@
             text-decoration: none;
             color: inherit;
             display: block;
+            position: relative;
+            user-select: none;
         }
         
         .nav-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px var(--shadow);
             border-color: #667eea;
+        }
+        
+        .nav-card.dragging {
+            opacity: 0.5;
+            transform: scale(1.02);
+            z-index: 100;
+        }
+        
+        .nav-card.drag-over {
+            border: 2px dashed #667eea;
+            transform: scale(1.02);
+        }
+        
+        .nav-card.editing-mode {
+            cursor: grab;
+        }
+        
+        .nav-card.editing-mode:active {
+            cursor: grabbing;
+        }
+        
+        .drag-handle {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            cursor: grab;
+            padding: 4px 8px;
+            border-radius: 6px;
+            opacity: 0;
+            transition: all 0.2s;
+            font-size: 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .nav-card.editing-mode .drag-handle {
+            opacity: 0.6;
+        }
+        
+        .drag-handle:hover {
+            opacity: 1 !important;
+            background: #667eea;
+            color: white;
+        }
+        
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        .edit-layout-btn {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+        
+        .edit-layout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        }
+        
+        .edit-layout-btn.editing {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .layout-hint {
+            position: fixed;
+            bottom: 115px;
+            right: 20px;
+            background: var(--card-bg);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            max-width: 200px;
+            text-align: center;
+        }
+        
+        .layout-hint.show {
+            opacity: 1;
         }
         
         .nav-card .icon {
@@ -348,6 +447,15 @@
         <span class="icon">🌙</span>
         <span id="themeText">Dark</span>
     </button>
+    
+    <button class="edit-layout-btn" id="editLayoutBtn" onclick="toggleLayoutEdit()" style="display: none;">
+        <span>✏️</span>
+        <span id="editLayoutText">Edit Layout</span>
+    </button>
+    
+    <div class="layout-hint" id="layoutHint">
+        Drag cards to reorder your dashboard
+    </div>
     
     <!-- Login Screen -->
     <div class="login-screen" id="loginScreen">
@@ -527,6 +635,176 @@
             // Show HR nav for admins
             if (currentUser.role === 'Owner' || currentUser.role === 'HR') {
                 document.getElementById('hrNav').style.display = 'block';
+            }
+            
+            // Show edit layout button
+            document.getElementById('editLayoutBtn').style.display = 'flex';
+            
+            // Load user's saved layout
+            loadUserLayout();
+        }
+        
+        // Drag and Drop Layout Management
+        let isEditingLayout = false;
+        let draggedElement = null;
+        
+        function toggleLayoutEdit() {
+            isEditingLayout = !isEditingLayout;
+            const btn = document.getElementById('editLayoutBtn');
+            const btnText = document.getElementById('editLayoutText');
+            const hint = document.getElementById('layoutHint');
+            const cards = document.querySelectorAll('.nav-card:not(#hrNav)');
+            
+            if (isEditingLayout) {
+                btn.classList.add('editing');
+                btnText.textContent = 'Done';
+                hint.classList.add('show');
+                
+                // Add editing mode to cards
+                cards.forEach(card => {
+                    card.classList.add('editing-mode');
+                    card.draggable = true;
+                    card.addEventListener('dragstart', handleDragStart);
+                    card.addEventListener('dragend', handleDragEnd);
+                    card.addEventListener('dragover', handleDragOver);
+                    card.addEventListener('dragleave', handleDragLeave);
+                    card.addEventListener('drop', handleDrop);
+                    
+                    // Add drag handle
+                    if (!card.querySelector('.drag-handle')) {
+                        const handle = document.createElement('div');
+                        handle.className = 'drag-handle';
+                        handle.innerHTML = '⋮⋮';
+                        card.appendChild(handle);
+                    }
+                    
+                    // Prevent navigation while editing
+                    card.addEventListener('click', preventNavigation);
+                });
+            } else {
+                btn.classList.remove('editing');
+                btnText.textContent = 'Edit Layout';
+                hint.classList.remove('show');
+                
+                // Remove editing mode from cards
+                cards.forEach(card => {
+                    card.classList.remove('editing-mode');
+                    card.draggable = false;
+                    card.removeEventListener('dragstart', handleDragStart);
+                    card.removeEventListener('dragend', handleDragEnd);
+                    card.removeEventListener('dragover', handleDragOver);
+                    card.removeEventListener('dragleave', handleDragLeave);
+                    card.removeEventListener('drop', handleDrop);
+                    card.removeEventListener('click', preventNavigation);
+                });
+                
+                // Save the layout
+                saveUserLayout();
+            }
+        }
+        
+        function preventNavigation(e) {
+            if (isEditingLayout) {
+                e.preventDefault();
+            }
+        }
+        
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedElement = null;
+            document.querySelectorAll('.nav-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('drag-over');
+        }
+        
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (draggedElement && draggedElement !== this) {
+                const grid = document.querySelector('.nav-grid');
+                const cards = Array.from(grid.querySelectorAll('.nav-card'));
+                const draggedIndex = cards.indexOf(draggedElement);
+                const dropIndex = cards.indexOf(this);
+                
+                if (draggedIndex < dropIndex) {
+                    this.parentNode.insertBefore(draggedElement, this.nextSibling);
+                } else {
+                    this.parentNode.insertBefore(draggedElement, this);
+                }
+            }
+        }
+        
+        function saveUserLayout() {
+            if (!currentUser) return;
+            
+            const grid = document.querySelector('.nav-grid');
+            const cards = grid.querySelectorAll('.nav-card');
+            const layout = [];
+            
+            cards.forEach(card => {
+                // Get the card type from href or id
+                const href = card.getAttribute('href');
+                const id = card.id;
+                if (href) {
+                    layout.push(href.replace('.html', ''));
+                } else if (id === 'hrNav') {
+                    layout.push('hr');
+                }
+            });
+            
+            const layoutKey = `layout_${currentUser.email}`;
+            localStorage.setItem(layoutKey, JSON.stringify(layout));
+        }
+        
+        function loadUserLayout() {
+            if (!currentUser) return;
+            
+            const layoutKey = `layout_${currentUser.email}`;
+            const savedLayout = localStorage.getItem(layoutKey);
+            
+            if (savedLayout) {
+                try {
+                    const layout = JSON.parse(savedLayout);
+                    const grid = document.querySelector('.nav-grid');
+                    const cardsMap = {};
+                    
+                    // Build a map of current cards
+                    grid.querySelectorAll('.nav-card').forEach(card => {
+                        const href = card.getAttribute('href');
+                        const id = card.id;
+                        if (href) {
+                            cardsMap[href.replace('.html', '')] = card;
+                        } else if (id === 'hrNav') {
+                            cardsMap['hr'] = card;
+                        }
+                    });
+                    
+                    // Reorder based on saved layout
+                    layout.forEach(key => {
+                        if (cardsMap[key]) {
+                            grid.appendChild(cardsMap[key]);
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error loading layout:', e);
+                }
             }
         }
         
