@@ -363,39 +363,37 @@
         }
         
         .edit-layout-btn {
-            position: fixed;
-            bottom: 70px;
-            right: 20px;
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             border: none;
-            padding: 12px 18px;
-            border-radius: 25px;
+            padding: 10px 16px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
-            z-index: 1001;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            display: flex;
+            font-size: 13px;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
             transition: all 0.3s;
+            margin-top: 20px;
         }
         
         .edit-layout-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
         .edit-layout-btn.editing {
             background: linear-gradient(135deg, #ef4444, #dc2626);
         }
         
+        .layout-controls {
+            text-align: center;
+            padding: 10px 0 30px;
+        }
+        
         .layout-hint {
-            position: fixed;
-            bottom: 115px;
-            right: 20px;
             background: var(--card-bg);
-            padding: 10px 14px;
+            padding: 10px 16px;
             border-radius: 10px;
             font-size: 13px;
             color: var(--text-secondary);
@@ -403,9 +401,10 @@
             box-shadow: 0 4px 12px var(--shadow);
             opacity: 0;
             transition: opacity 0.3s;
-            pointer-events: none;
-            max-width: 200px;
-            text-align: center;
+            margin-bottom: 10px;
+            display: inline-block;
+            position: relative;
+            z-index: 10;
         }
         
         .layout-hint.show {
@@ -447,15 +446,6 @@
         <span class="icon">🌙</span>
         <span id="themeText">Dark</span>
     </button>
-    
-    <button class="edit-layout-btn" id="editLayoutBtn" onclick="toggleLayoutEdit()" style="display: none;">
-        <span>✏️</span>
-        <span id="editLayoutText">Edit Layout</span>
-    </button>
-    
-    <div class="layout-hint" id="layoutHint">
-        Drag cards to reorder your dashboard
-    </div>
     
     <!-- Login Screen -->
     <div class="login-screen" id="loginScreen">
@@ -540,6 +530,17 @@
                     <h3>Messages</h3>
                     <p>Team chat & channels</p>
                 </a>
+            </div>
+            
+            <div class="layout-controls" id="layoutControls" style="display: none;">
+                <div class="layout-hint" id="layoutHint">
+                    Drag cards to reorder your dashboard
+                </div>
+                <br>
+                <button class="edit-layout-btn" id="editLayoutBtn" onclick="toggleLayoutEdit()">
+                    <span>✏️</span>
+                    <span id="editLayoutText">Edit Layout</span>
+                </button>
             </div>
         </div>
     </div>
@@ -637,8 +638,8 @@
                 document.getElementById('hrNav').style.display = 'block';
             }
             
-            // Show edit layout button
-            document.getElementById('editLayoutBtn').style.display = 'flex';
+            // Show edit layout controls
+            document.getElementById('layoutControls').style.display = 'block';
             
             // Load user's saved layout
             loadUserLayout();
