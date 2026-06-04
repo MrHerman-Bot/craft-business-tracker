@@ -757,6 +757,13 @@
             loadUserLayout();
         }
         
+        // Refresh badges when user returns to dashboard
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && currentUser) {
+                updateAllBadges();
+            }
+        });
+        
         // Drag and Drop Layout Management
         let isEditingLayout = false;
         let draggedElement = null;

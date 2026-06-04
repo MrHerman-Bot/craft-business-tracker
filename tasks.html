@@ -534,6 +534,17 @@
             document.getElementById('countTodo').textContent = counts.todo;
             document.getElementById('countDoing').textContent = counts.doing;
             document.getElementById('countDone').textContent = counts.done;
+            
+            // Update dashboard badge with total pending tasks (todo + doing)
+            updateTaskBadge(counts.todo + counts.doing);
+        }
+        
+        // Update dashboard badge via localStorage
+        function updateTaskBadge(count) {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (user) {
+                localStorage.setItem(`badge_tasks_${user.email}`, count.toString());
+            }
         }
         
         function createTaskCard(task) {
