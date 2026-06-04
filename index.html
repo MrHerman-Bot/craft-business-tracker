@@ -664,6 +664,11 @@
                 // Add editing mode to cards
                 cards.forEach(card => {
                     card.classList.add('editing-mode');
+                    // Store href and remove it temporarily
+                    if (card.getAttribute('href')) {
+                        card.setAttribute('data-href', card.getAttribute('href'));
+                        card.removeAttribute('href');
+                    }
                     card.draggable = true;
                     card.addEventListener('dragstart', handleDragStart);
                     card.addEventListener('dragend', handleDragEnd);
@@ -676,11 +681,9 @@
                         const handle = document.createElement('div');
                         handle.className = 'drag-handle';
                         handle.innerHTML = '⋮⋮';
+                        handle.style.pointerEvents = 'none';
                         card.appendChild(handle);
                     }
-                    
-                    // Prevent navigation while editing
-                    card.addEventListener('click', preventNavigation);
                 });
             } else {
                 btn.classList.remove('editing');
@@ -691,12 +694,16 @@
                 cards.forEach(card => {
                     card.classList.remove('editing-mode');
                     card.draggable = false;
+                    // Restore href
+                    if (card.getAttribute('data-href')) {
+                        card.setAttribute('href', card.getAttribute('data-href'));
+                        card.removeAttribute('data-href');
+                    }
                     card.removeEventListener('dragstart', handleDragStart);
                     card.removeEventListener('dragend', handleDragEnd);
                     card.removeEventListener('dragover', handleDragOver);
                     card.removeEventListener('dragleave', handleDragLeave);
                     card.removeEventListener('drop', handleDrop);
-                    card.removeEventListener('click', preventNavigation);
                 });
                 
                 // Save the layout
@@ -704,16 +711,16 @@
             }
         }
         
-        function preventNavigation(e) {
-            if (isEditingLayout) {
-                e.preventDefault();
-            }
-        }
-        
         function handleDragStart(e) {
             draggedElement = this;
             this.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
+            // Required for Firefox/Chrome drag to work
+            e.dataTransfer.setData('text/plain', this.getAttribute('href') || 'hr');
+            // Set drag image to the element itself
+            if (e.dataTransfer.setDragImage) {
+                e.dataTransfer.setDragImage(this, 50, 30);
+            }
         }
         
         function handleDragEnd(e) {
@@ -760,8 +767,8 @@
             const layout = [];
             
             cards.forEach(card => {
-                // Get the card type from href or id
-                const href = card.getAttribute('href');
+                // Get the card type from data-href (stored during edit) or href
+                const href = card.getAttribute('data-href') || card.getAttribute('href');
                 const id = card.id;
                 if (href) {
                     layout.push(href.replace('.html', ''));
