@@ -123,6 +123,82 @@
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 3px solid;
+            cursor: pointer;
+            user-select: none;
+            transition: opacity 0.2s;
+        }
+        
+        .board-column-header:hover {
+            opacity: 0.8;
+        }
+        
+        .board-column-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .collapse-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+            transition: transform 0.3s;
+        }
+        
+        .collapse-btn.collapsed {
+            transform: rotate(-90deg);
+        }
+        
+        .board-column-content {
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        
+        .board-column-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+        
+        .board-column-content:not(.collapsed) {
+            max-height: 2000px;
+            opacity: 1;
+        }
+        
+        .column-sort {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sort-select {
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        
+        .sort-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .sort-direction {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+        }
+        
+        .sort-direction:hover {
+            color: #667eea;
         }
         
         .board-column.todo .board-column-header {
@@ -401,34 +477,75 @@
     <div class="tasks-board">
         <div class="board-columns">
             <div class="board-column todo">
-                <div class="board-column-header">
-                    <h3>📝 To Do</h3>
-                    <span class="task-count" id="countTodo">0</span>
+                <div class="board-column-header" onclick="toggleColumnCollapse('todo')">
+                    <div class="board-column-header-left">
+                        <button class="collapse-btn" id="collapse-todo" onclick="event.stopPropagation()">▼</button>
+                        <h3>📝 To Do</h3>
+                    </div>
+                    <div class="column-sort" onclick="event.stopPropagation()">
+                        <select class="sort-select" id="sort-todo" onchange="sortTasks('todo')">
+                            <option value="">Sort by...</option>
+                            <option value="title">Description</option>
+                            <option value="due">Due Date</option>
+                            <option value="assignee">Employee</option>
+                        </select>
+                        <button class="sort-direction" id="sortDir-todo" onclick="toggleSortDirection('todo')">↑</button>
+                        <span class="task-count" id="countTodo">0</span>
+                    </div>
                 </div>
-                <div class="task-list" id="todoList"></div>
-                <button class="add-task-btn" onclick="showAddTaskModal('todo')">+ Add Task</button>
+                <div class="board-column-content" id="content-todo">
+                    <div class="task-list" id="todoList"></div>
+                    <button class="add-task-btn" onclick="event.stopPropagation(); showAddTaskModal('todo')">+ Add Task</button>
+                </div>
             </div>
             
             <div class="board-column doing">
-                <div class="board-column-header">
-                    <h3>🔄 In Progress</h3>
-                    <span class="task-count" id="countDoing">0</span>
+                <div class="board-column-header" onclick="toggleColumnCollapse('doing')">
+                    <div class="board-column-header-left">
+                        <button class="collapse-btn" id="collapse-doing" onclick="event.stopPropagation()">▼</button>
+                        <h3>🔄 In Progress</h3>
+                    </div>
+                    <div class="column-sort" onclick="event.stopPropagation()">
+                        <select class="sort-select" id="sort-doing" onchange="sortTasks('doing')">
+                            <option value="">Sort by...</option>
+                            <option value="title">Description</option>
+                            <option value="due">Due Date</option>
+                            <option value="assignee">Employee</option>
+                        </select>
+                        <button class="sort-direction" id="sortDir-doing" onclick="toggleSortDirection('doing')">↑</button>
+                        <span class="task-count" id="countDoing">0</span>
+                    </div>
                 </div>
-                <div class="task-list" id="doingList"></div>
-                <button class="add-task-btn" onclick="showAddTaskModal('doing')">+ Add Task</button>
+                <div class="board-column-content" id="content-doing">
+                    <div class="task-list" id="doingList"></div>
+                    <button class="add-task-btn" onclick="event.stopPropagation(); showAddTaskModal('doing')">+ Add Task</button>
+                </div>
             </div>
             
             <div class="board-column done">
-                <div class="board-column-header">
-                    <h3>✅ Done</h3>
-                    <span class="task-count" id="countDone">0</span>
+                <div class="board-column-header" onclick="toggleColumnCollapse('done')">
+                    <div class="board-column-header-left">
+                        <button class="collapse-btn" id="collapse-done" onclick="event.stopPropagation()">▼</button>
+                        <h3>✅ Done</h3>
+                    </div>
+                    <div class="column-sort" onclick="event.stopPropagation()">
+                        <select class="sort-select" id="sort-done" onchange="sortTasks('done')">
+                            <option value="">Sort by...</option>
+                            <option value="title">Description</option>
+                            <option value="due">Due Date</option>
+                            <option value="assignee">Employee</option>
+                        </select>
+                        <button class="sort-direction" id="sortDir-done" onclick="toggleSortDirection('done')">↑</button>
+                        <span class="task-count" id="countDone">0</span>
+                    </div>
                 </div>
-                <div class="task-list" id="doneList"></div>
-                <button class="add-task-btn" onclick="showAddTaskModal('done')">+ Add Task</button>
+                <div class="board-column-content" id="content-done">
+                    <div class="task-list" id="doneList"></div>
+                    <button class="add-task-btn" onclick="event.stopPropagation(); showAddTaskModal('done')">+ Add Task</button>
+                </div>
             </div>
         </div>
     </div>
-    
     <!-- Task Modal -->
     <div class="modal-overlay" id="taskModal">
         <div class="modal">
@@ -511,23 +628,66 @@
         ];
         
         let currentStatus = 'todo';
+        let sortState = { todo: { field: '', asc: true }, doing: { field: '', asc: true }, done: { field: '', asc: true } };
+        
+        // Column collapse/expand
+        function toggleColumnCollapse(column) {
+            const content = document.getElementById(`content-${column}`);
+            const btn = document.getElementById(`collapse-${column}`);
+            content.classList.toggle('collapsed');
+            btn.classList.toggle('collapsed');
+            btn.textContent = content.classList.contains('collapsed') ? '▶' : '▼';
+        }
+        
+        // Sort tasks in a column
+        function sortTasks(column) {
+            const select = document.getElementById(`sort-${column}`);
+            const field = select.value;
+            sortState[column].field = field;
+            renderTasksForColumn(column);
+        }
+        
+        // Toggle sort direction
+        function toggleSortDirection(column) {
+            sortState[column].asc = !sortState[column].asc;
+            const btn = document.getElementById(`sortDir-${column}`);
+            btn.textContent = sortState[column].asc ? '↑' : '↓';
+            if (sortState[column].field) {
+                renderTasksForColumn(column);
+            }
+        }
+        
+        // Render tasks for a specific column with sorting
+        function renderTasksForColumn(column) {
+            const list = document.getElementById(`${column}List`);
+            list.innerHTML = '';
+            
+            let columnTasks = tasks.filter(t => t.status === column);
+            const { field, asc } = sortState[column];
+            
+            if (field) {
+                columnTasks.sort((a, b) => {
+                    let valA = (a[field] || '').toString().toLowerCase();
+                    let valB = (b[field] || '').toString().toLowerCase();
+                    if (valA < valB) return asc ? -1 : 1;
+                    if (valA > valB) return asc ? 1 : -1;
+                    return 0;
+                });
+            }
+            
+            columnTasks.forEach(task => {
+                list.appendChild(createTaskCard(task));
+            });
+        }
         
         // Load tasks on page load
         loadTasks();
         
         function loadTasks() {
-            // Clear lists
-            document.getElementById('todoList').innerHTML = '';
-            document.getElementById('doingList').innerHTML = '';
-            document.getElementById('doneList').innerHTML = '';
-            
             // Count tasks
             const counts = { todo: 0, doing: 0, done: 0 };
-            
             tasks.forEach(task => {
                 counts[task.status]++;
-                const taskCard = createTaskCard(task);
-                document.getElementById(task.status + 'List').appendChild(taskCard);
             });
             
             // Update counts
@@ -537,6 +697,11 @@
             
             // Update dashboard badge with total pending tasks (todo + doing)
             updateTaskBadge(counts.todo + counts.doing);
+            
+            // Render each column with sorting
+            ['todo', 'doing', 'done'].forEach(column => {
+                renderTasksForColumn(column);
+            });
         }
         
         // Update dashboard badge via localStorage
