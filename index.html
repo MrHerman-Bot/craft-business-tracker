@@ -315,6 +315,37 @@
             border-color: #667eea;
         }
         
+        .card-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8px;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            animation: badgePulse 2s infinite;
+            z-index: 10;
+        }
+        
+        .card-badge:empty,
+        .card-badge[data-count="0"],
+        .card-badge[style*="display: none"] {
+            display: none !important;
+        }
+        
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
         .nav-card.dragging {
             opacity: 0.5;
             transform: scale(1.02);
@@ -495,37 +526,43 @@
         
         <div class="dashboard-nav">
             <div class="nav-grid">
-                <a href="tasks.html" class="nav-card tasks">
+                <a href="tasks.html" class="nav-card tasks" id="card-tasks">
+                    <span class="card-badge" id="badge-tasks"></span>
                     <div class="icon">📋</div>
                     <h3>Tasks</h3>
                     <p>Kanban board & assignments</p>
                 </a>
                 
-                <a href="team.html" class="nav-card team">
+                <a href="team.html" class="nav-card team" id="card-team">
+                    <span class="card-badge" id="badge-team"></span>
                     <div class="icon">👥</div>
                     <h3>Team</h3>
                     <p>Clock in/out & team view</p>
                 </a>
                 
-                <a href="org.html" class="nav-card org">
+                <a href="org.html" class="nav-card org" id="card-org">
+                    <span class="card-badge" id="badge-org"></span>
                     <div class="icon">🏢</div>
                     <h3>Org Chart</h3>
                     <p>Company hierarchy & profile</p>
                 </a>
                 
                 <a href="hr.html" class="nav-card hr" id="hrNav" style="display: none;">
+                    <span class="card-badge" id="badge-hr"></span>
                     <div class="icon">⚙️</div>
                     <h3>HR Admin</h3>
                     <p>Manage employees & roles</p>
                 </a>
                 
-                <a href="inventory.html" class="nav-card inventory">
+                <a href="inventory.html" class="nav-card inventory" id="card-inventory">
+                    <span class="card-badge" id="badge-inventory"></span>
                     <div class="icon">📦</div>
                     <h3>Inventory</h3>
                     <p>Track stock & materials</p>
                 </a>
                 
-                <a href="messages.html" class="nav-card messages">
+                <a href="messages.html" class="nav-card messages" id="card-messages">
+                    <span class="card-badge" id="badge-messages"></span>
                     <div class="icon">💬</div>
                     <h3>Messages</h3>
                     <p>Team chat & channels</p>
@@ -603,6 +640,77 @@
         
         let currentUser = null;
         
+        // Badge Management System
+        const BADGE_TYPES = ['tasks', 'team', 'org', 'hr', 'inventory', 'messages'];
+        
+        // Initialize demo badge data if not exists
+        function initBadgeData() {
+            if (!localStorage.getItem('badges_initialized')) {
+                // Set some demo counts for different user types
+                setBadgeCount('messages', 3);
+                setBadgeCount('tasks', 5);
+                setBadgeCount('hr', 2);
+                setBadgeCount('inventory', 1);
+                localStorage.setItem('badges_initialized', 'true');
+            }
+        }
+        
+        // Get badge count for a specific type
+        function getBadgeCount(type) {
+            const key = `badge_${type}_${currentUser?.email || 'guest'}`;
+            const count = localStorage.getItem(key);
+            return count ? parseInt(count, 10) : 0;
+        }
+        
+        // Set badge count for a specific type
+        function setBadgeCount(type, count) {
+            if (!currentUser) return;
+            const key = `badge_${type}_${currentUser.email}`;
+            localStorage.setItem(key, count.toString());
+            updateBadgeDisplay(type, count);
+        }
+        
+        // Increment badge count
+        function incrementBadge(type) {
+            const current = getBadgeCount(type);
+            setBadgeCount(type, current + 1);
+        }
+        
+        // Decrement badge count
+        function decrementBadge(type) {
+            const current = getBadgeCount(type);
+            if (current > 0) {
+                setBadgeCount(type, current - 1);
+            }
+        }
+        
+        // Clear badge count
+        function clearBadge(type) {
+            setBadgeCount(type, 0);
+        }
+        
+        // Update badge display
+        function updateBadgeDisplay(type, count) {
+            const badge = document.getElementById(`badge-${type}`);
+            if (!badge) return;
+            
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.style.display = 'flex';
+            } else {
+                badge.textContent = '';
+                badge.style.display = 'none';
+            }
+        }
+        
+        // Update all badges for current user
+        function updateAllBadges() {
+            BADGE_TYPES.forEach(type => {
+                const count = getBadgeCount(type);
+                updateBadgeDisplay(type, count);
+            });
+        }
+        
         // Check if already logged in
         if (localStorage.getItem('currentUser')) {
             currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -640,6 +748,10 @@
             
             // Show edit layout controls
             document.getElementById('layoutControls').style.display = 'block';
+            
+            // Initialize demo badge data and display
+            initBadgeData();
+            updateAllBadges();
             
             // Load user's saved layout
             loadUserLayout();
