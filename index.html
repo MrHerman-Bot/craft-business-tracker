@@ -662,6 +662,13 @@
             return count ? parseInt(count, 10) : 0;
         }
         
+        // Listen for message badge updates from messages page
+        window.addEventListener('storage', function(e) {
+            if (e.key && e.key.startsWith('badge_messages_')) {
+                updateAllBadges();
+            }
+        });
+        
         // Set badge count for a specific type
         function setBadgeCount(type, count) {
             if (!currentUser) return;
