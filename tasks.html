@@ -703,6 +703,79 @@
     </div>
     
     <script>
+        // Check and generate any recurring tasks due today
+        function generateDueRecurringTasks() {
+            const today = new Date().toISOString().split('T')[0];
+            const allTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const newTasksCreated = [];
+            
+            // Get all recurring task templates (tasks that have recurring pattern)
+            const recurringTemplates = allTasks.filter(t => t.recurring && t.recurring.type);
+            
+            // Group by title + assignee to find unique recurring tasks
+            const processedPatterns = new Set();
+            
+            recurringTemplates.forEach(template => {
+                const patternKey = `${template.title}|${template.assignee}|${template.recurring.type}`;
+                if (processedPatterns.has(patternKey)) return;
+                processedPatterns.add(patternKey);
+                
+                // Check if there's already a pending task for this pattern
+                const pendingExists = allTasks.some(t => 
+                    t.title === template.title && 
+                    t.assignee === template.assignee &&
+                    t.status !== 'done' &&
+                    t.due && t.due >= today
+                );
+                
+                // If no pending task exists, check if we need to create one
+                if (!pendingExists) {
+                    // Find the most recent completed task of this type
+                    const completedTasks = allTasks.filter(t => 
+                        t.title === template.title && 
+                        t.assignee === template.assignee &&
+                        t.status === 'done' &&
+                        t.due
+                    ).sort((a, b) => new Date(b.due) - new Date(a.due));
+                    
+                    const lastTask = completedTasks[0];
+                    let nextDue = null;
+                    
+                    if (lastTask) {
+                        nextDue = generateNextOccurrence(template.recurring, lastTask.due);
+                    } else if (template.due) {
+                        // No completed tasks yet, use template due date
+                        const templateDue = new Date(template.due);
+                        if (templateDue <= new Date(today)) {
+                            nextDue = today;
+                        }
+                    }
+                    
+                    // If next due date is today or in the past, create it
+                    if (nextDue && nextDue <= today) {
+                        const newTask = {
+                            id: Date.now() + Math.random(),
+                            title: template.title,
+                            assignee: template.assignee,
+                            due: today,
+                            status: 'todo',
+                            recurring: template.recurring
+                        };
+                        allTasks.push(newTask);
+                        newTasksCreated.push(newTask);
+                    }
+                }
+            });
+            
+            // Save if new tasks were created
+            if (newTasksCreated.length > 0) {
+                localStorage.setItem('tasks', JSON.stringify(allTasks));
+                tasks = allTasks;
+                return true;
+            }
+            return false;
+        }
+        
         // Theme Management
         function initTheme() {
             const savedTheme = localStorage.getItem('theme');
@@ -738,6 +811,9 @@
             { id: 4, title: 'Order new supplies', status: 'todo', assignee: 'Jordan Smith', due: '2025-05-26' },
             { id: 5, title: 'Quality check batch #42', status: 'doing', assignee: 'Casey Johnson', due: '2025-05-24' }
         ];
+        
+        // Check for recurring tasks due today
+        generateDueRecurringTasks();
         
         let currentStatus = 'todo';
         let sortState = { todo: { field: '', asc: true }, doing: { field: '', asc: true }, done: { field: '', asc: true } };
