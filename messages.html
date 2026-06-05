@@ -572,6 +572,53 @@
             margin-bottom: 8px;
             color: var(--text-primary);
         }
+        
+        /* Print transcript button */
+        .print-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 8px;
+            margin-left: auto;
+            transition: color 0.2s;
+        }
+        
+        .print-btn:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Read-only indicator */
+        .read-only-banner {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            text-align: center;
+            border-bottom: 1px solid #fcd34d;
+        }
+        
+        body.dark-mode .read-only-banner {
+            background: #451a03;
+            color: #fcd34d;
+            border-bottom-color: #78350f;
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .printable-transcript, .printable-transcript * {
+                visibility: visible;
+            }
+            .printable-transcript {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -601,6 +648,7 @@
                     <h3 id="conversationName">Alex Thompson</h3>
                     <p id="conversationStatus">Online</p>
                 </div>
+                <button class="print-btn" onclick="printTranscript()" title="Print Transcript">🖨️</button>
             </div>
             <div class="messages-list" id="messagesList">
                 <!-- Messages populated by JavaScript -->
@@ -654,6 +702,41 @@
         
         // Current user
         const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Alex Thompson', email: 'owner@company.com' };
+        
+        // Get current user's role
+        function getCurrentUserRole() {
+            const emp = employees.find(e => e.email === currentUser.email);
+            return emp?.role || 'Employee';
+        }
+        
+        // Check if user can view all team messages (Owners, Managers, HR)
+        function canViewAllTeamMessages() {
+            const role = getCurrentUserRole();
+            return ['Owner', 'Manager', 'HR'].includes(role);
+        }
+        
+        // Check if user can send messages to teams
+        function canSendToTeams() {
+            const role = getCurrentUserRole();
+            return ['Owner', 'Manager', 'HR'].includes(role);
+        }
+        
+        // Check if user can view a specific team conversation
+        function canViewTeamConversation(teamId) {
+            // Owners, Managers, HR can see all team conversations
+            if (canViewAllTeamMessages()) return true;
+            
+            // Regular employees can only see their own team's conversations
+            const user = employees.find(e => e.email === currentUser.email);
+            return user && user.team?.toLowerCase() === teamId;
+        }
+        
+        // Check if user can send to a specific team
+        function canSendToTeam(teamId) {
+            // Only Owners, Managers, HR can send to teams
+            if (!canSendToTeams()) return false;
+            return true;
+        }
         
         // Employees and Teams data
         const employees = [
@@ -721,8 +804,14 @@
                 return (bLast?.id || 0) - (aLast?.id || 0);
             });
             
+            // Filter visible conversations based on role
+            const visibleConversations = sortedConversations.filter(([id, conv]) => {
+                if (!conv.isTeam) return true; // Individual conversations always visible
+                return canViewTeamConversation(id); // Filter teams by role
+            });
+            
             // Team Conversations Section
-            const teamConversations = sortedConversations.filter(([_, conv]) => conv.isTeam);
+            const teamConversations = visibleConversations.filter(([_, conv]) => conv.isTeam);
             if (teamConversations.length > 0) {
                 container.innerHTML += '<div class="section-header">Team Conversations</div>';
                 teamConversations.forEach(([id, conv]) => {
@@ -731,7 +820,7 @@
             }
             
             // Individual Conversations Section
-            const individualConversations = sortedConversations.filter(([_, conv]) => !conv.isTeam);
+            const individualConversations = visibleConversations.filter(([_, conv]) => !conv.isTeam);
             if (individualConversations.length > 0) {
                 container.innerHTML += '<div class="section-header">Direct Messages</div>';
                 individualConversations.forEach(([id, conv]) => {
@@ -740,7 +829,7 @@
             }
             
             // Empty state if no conversations
-            if (sortedConversations.length === 0) {
+            if (visibleConversations.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="icon">💬</div>
@@ -803,6 +892,25 @@
             document.getElementById('conversationAvatar').className = `conversation-avatar ${isTeam ? 'team' : ''}`;
             document.getElementById('conversationName').textContent = conversation.contact.name;
             document.getElementById('conversationStatus').textContent = isTeam ? `${teams.find(t => t.id === conversationId)?.members.length || 0} members` : 'Online';
+            
+            // Check if user can send to this conversation
+            const canSend = !isTeam || canSendToTeam(conversationId);
+            const inputContainer = document.querySelector('.message-input-container');
+            
+            // Show read-only banner for team conversations where user can't send
+            const existingBanner = document.getElementById('readOnlyBanner');
+            if (existingBanner) existingBanner.remove();
+            
+            if (isTeam && !canSend) {
+                const banner = document.createElement('div');
+                banner.id = 'readOnlyBanner';
+                banner.className = 'read-only-banner';
+                banner.textContent = '🔒 Read-only: Only Owners, Managers, and HR can send team messages';
+                document.getElementById('conversationView').insertBefore(banner, document.getElementById('conversationHeader').nextSibling);
+                inputContainer.style.display = 'none';
+            } else {
+                inputContainer.style.display = 'flex';
+            }
             
             // Render messages
             renderMessages(conversation);
@@ -875,6 +983,13 @@
             if (!text || !currentConversationId) return;
             
             const conversation = conversations[currentConversationId];
+            
+            // Check permissions for team messages
+            if (conversation.isTeam && !canSendToTeam(currentConversationId)) {
+                alert('Only Owners, Managers, and HR can send messages to teams.');
+                return;
+            }
+            
             const now = new Date();
             const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
             const date = now.toISOString().split('T')[0];
@@ -943,14 +1058,16 @@
             
             const filterLower = filter.toLowerCase();
             
-            // Teams section
-            const filteredTeams = teams.filter(t => t.name.toLowerCase().includes(filterLower));
-            if (filteredTeams.length > 0) {
-                container.innerHTML += '<div class="section-header">Teams</div>';
-                filteredTeams.forEach(team => {
-                    const option = createContactOption(team, true);
-                    container.appendChild(option);
-                });
+            // Teams section - only show if user can send to teams
+            if (canSendToTeams()) {
+                const filteredTeams = teams.filter(t => t.name.toLowerCase().includes(filterLower));
+                if (filteredTeams.length > 0) {
+                    container.innerHTML += '<div class="section-header">Teams</div>';
+                    filteredTeams.forEach(team => {
+                        const option = createContactOption(team, true);
+                        container.appendChild(option);
+                    });
+                }
             }
             
             // Individuals section
@@ -1022,6 +1139,130 @@
             if (dateStr === yesterday) return 'Yesterday';
             
             return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+        
+        // Print transcript
+        function printTranscript() {
+            if (!currentConversationId) return;
+            
+            const conversation = conversations[currentConversationId];
+            if (!conversation) return;
+            
+            const isTeam = conversation.isTeam;
+            const contactName = conversation.contact.name;
+            const userName = currentUser.name || currentUser.email;
+            const printDate = new Date().toLocaleString('en-US', { 
+                month: 'long', day: 'numeric', year: 'numeric', 
+                hour: 'numeric', minute: '2-digit' 
+            });
+            
+            // Build transcript HTML
+            let transcriptHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Message Transcript - ${contactName}</title>
+                    <style>
+                        body {
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            max-width: 800px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            background: white;
+                            color: #333;
+                        }
+                        .header {
+                            border-bottom: 2px solid #333;
+                            padding-bottom: 20px;
+                            margin-bottom: 30px;
+                        }
+                        .header h1 {
+                            margin: 0 0 10px 0;
+                            font-size: 1.5rem;
+                        }
+                        .header .meta {
+                            color: #666;
+                            font-size: 0.9rem;
+                        }
+                        .message {
+                            margin-bottom: 16px;
+                            padding: 12px;
+                            border-radius: 8px;
+                        }
+                        .message.sent {
+                            background: #f0f0f0;
+                            margin-left: 20%;
+                        }
+                        .message.received {
+                            background: #e8f4f8;
+                            margin-right: 20%;
+                        }
+                        .message-header {
+                            font-weight: 600;
+                            margin-bottom: 4px;
+                            font-size: 0.9rem;
+                        }
+                        .message-time {
+                            color: #666;
+                            font-size: 0.8rem;
+                            margin-top: 4px;
+                        }
+                        .date-separator {
+                            text-align: center;
+                            margin: 30px 0;
+                            color: #999;
+                            font-size: 0.85rem;
+                            font-weight: 600;
+                        }
+                        @media print {
+                            body { padding: 10px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Message Transcript</h1>
+                        <div class="meta">
+                            <strong>Conversation:</strong> ${contactName}${isTeam ? ' (Team Chat)' : ''}<br>
+                            <strong>Printed by:</strong> ${userName}<br>
+                            <strong>Date:</strong> ${printDate}
+                        </div>
+                    </div>
+                    <div class="messages">
+            `;
+            
+            let lastDate = '';
+            conversation.messages.forEach(msg => {
+                if (msg.date !== lastDate) {
+                    transcriptHTML += `<div class="date-separator">${formatDate(msg.date)}</div>`;
+                    lastDate = msg.date;
+                }
+                
+                const isSent = msg.sender === 'You';
+                transcriptHTML += `
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        <div class="message-header">${isSent ? userName : msg.sender}</div>
+                        <div class="message-body">${msg.text}</div>
+                        <div class="message-time">${msg.time}</div>
+                    </div>
+                `;
+            });
+            
+            transcriptHTML += `
+                    </div>
+                    <div class="no-print" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center;">
+                        <button onclick="window.print()" style="padding: 10px 20px; font-size: 1rem; cursor: pointer;">🖨️ Print / Save as PDF</button>
+                        <button onclick="window.close()" style="padding: 10px 20px; font-size: 1rem; margin-left: 10px; cursor: pointer;">Close</button>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            // Open in new window
+            const printWindow = window.open('', '_blank', 'width=800,height=600');
+            printWindow.document.write(transcriptHTML);
+            printWindow.document.close();
         }
         
         function updateMessageBadge() {
