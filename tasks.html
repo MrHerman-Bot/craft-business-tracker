@@ -643,6 +643,17 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>👥 Assign To Team (Optional)</label>
+                    <select id="taskTeam">
+                        <option value="">No team assignment</option>
+                        <option value="Production">Production Team</option>
+                        <option value="Sales">Sales Team</option>
+                        <option value="Warehouse">Warehouse Team</option>
+                        <option value="Admin">Admin Team</option>
+                    </select>
+                    <small style="color: var(--text-secondary); font-size: 0.8rem; display: block; margin-top: 4px;">Team leaders can delegate team tasks to members</small>
+                </div>
+                <div class="form-group">
                     <label>Due Date</label>
                     <input type="date" id="taskDue">
                 </div>
@@ -913,7 +924,7 @@
                 <div class="task-card-meta">
                     <div class="task-assignee">
                         <div class="task-avatar">${getInitials(task.assignee)}</div>
-                        <span>${task.assignee || 'Unassigned'}</span>
+                        <span>${task.assignee || (task.team ? `[${task.team}]` : 'Unassigned')}</span>
                     </div>
                     <div class="task-due ${isOverdue ? 'overdue' : ''}">${formatDate(task.due)}</div>
                 </div>
@@ -938,6 +949,7 @@
             document.getElementById('editingTaskId').value = '';
             document.getElementById('taskTitle').value = '';
             document.getElementById('taskAssignee').value = '';
+            document.getElementById('taskTeam').value = '';
             document.getElementById('taskDue').value = '';
             document.getElementById('taskRecurring').value = '';
             document.getElementById('deleteTaskBtn').style.display = 'none';
@@ -965,7 +977,8 @@
             document.getElementById('modalTitle').textContent = 'Edit Task';
             document.getElementById('editingTaskId').value = id;
             document.getElementById('taskTitle').value = task.title;
-            document.getElementById('taskAssignee').value = task.assignee;
+            document.getElementById('taskAssignee').value = task.assignee || '';
+            document.getElementById('taskTeam').value = task.team || '';
             document.getElementById('taskDue').value = task.due;
             document.getElementById('deleteTaskBtn').style.display = 'inline-block';
             
@@ -1096,6 +1109,7 @@
             const id = document.getElementById('editingTaskId').value;
             const title = document.getElementById('taskTitle').value.trim();
             const assignee = document.getElementById('taskAssignee').value;
+            const team = document.getElementById('taskTeam').value;
             const due = document.getElementById('taskDue').value;
             const recurring = getRecurringData();
             
@@ -1110,6 +1124,7 @@
                 if (task) {
                     task.title = title;
                     task.assignee = assignee;
+                    task.team = team;
                     task.due = due;
                     task.status = currentStatus;
                     task.recurring = recurring;
@@ -1120,6 +1135,7 @@
                     id: Date.now(),
                     title: title,
                     assignee: assignee,
+                    team: team,
                     due: due,
                     status: currentStatus,
                     recurring: recurring
