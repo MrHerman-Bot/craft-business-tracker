@@ -1266,11 +1266,42 @@
         }
         
         function updateMessageBadge() {
-            const totalUnread = Object.values(conversations).reduce((sum, conv) => sum + (conv.unread || 0), 0);
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            if (user) {
-                localStorage.setItem(`badge_messages_${user.email}`, totalUnread.toString());
-            }
+            const currentUserLocal = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUserLocal) return;
+            
+            const currentUserEmp = employees.find(e => e.email === currentUserLocal.email);
+            const userRole = currentUserEmp?.role || 'Employee';
+            const userTeam = currentUserEmp?.team;
+            
+            // Only count unread messages relevant to current user:
+            // 1. Individual conversations where user is the recipient
+            // 2. Team conversations where user is a member of that team
+            let relevantUnread = 0;
+            
+            Object.entries(conversations).forEach(([id, conv]) => {
+                if (conv.unread <= 0) return;
+                
+                if (conv.isTeam) {
+                    // For team messages: only count if user is on this team
+                    const teamMembers = teams.find(t => t.id === id)?.members || [];
+                    const isOnTeam = teamMembers.some(m => {
+                        const emp = employees.find(e => e.name === m);
+                        return emp?.email === currentUserLocal.email;
+                    }) || userTeam?.toLowerCase() === id;
+                    
+                    if (isOnTeam) {
+                        relevantUnread += conv.unread;
+                    }
+                } else {
+                    // For individual messages: only count if user is the recipient
+                    // The recipient is determined by the conversation ID (email)
+                    if (id === currentUserLocal.email) {
+                        relevantUnread += conv.unread;
+                    }
+                }
+            });
+            
+            localStorage.setItem(`badge_messages_${currentUserLocal.email}`, relevantUnread.toString());
         }
         
         // Close modal on outside click
