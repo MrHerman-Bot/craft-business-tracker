@@ -802,6 +802,11 @@
                     card.addEventListener('dragleave', handleDragLeave);
                     card.addEventListener('drop', handleDrop);
                     
+                    // Add touch events for mobile
+                    card.addEventListener('touchstart', handleTouchStart, { passive: false });
+                    card.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    card.addEventListener('touchend', handleTouchEnd);
+                    
                     // Add drag handle
                     if (!card.querySelector('.drag-handle')) {
                         const handle = document.createElement('div');
@@ -830,11 +835,111 @@
                     card.removeEventListener('dragover', handleDragOver);
                     card.removeEventListener('dragleave', handleDragLeave);
                     card.removeEventListener('drop', handleDrop);
+                    
+                    // Remove touch events
+                    card.removeEventListener('touchstart', handleTouchStart);
+                    card.removeEventListener('touchmove', handleTouchMove);
+                    card.removeEventListener('touchend', handleTouchEnd);
                 });
                 
                 // Save the layout
                 saveUserLayout();
             }
+        }
+        
+        // Touch event handlers for mobile drag-and-drop
+        let touchStartY = 0;
+        let touchCurrentCard = null;
+        let touchClone = null;
+        
+        function handleTouchStart(e) {
+            if (!isEditingLayout) return;
+            
+            const touch = e.touches[0];
+            touchStartY = touch.clientY;
+            touchCurrentCard = this;
+            
+            // Create a visual clone for dragging
+            touchClone = this.cloneNode(true);
+            touchClone.style.position = 'fixed';
+            touchClone.style.width = this.offsetWidth + 'px';
+            touchClone.style.height = this.offsetHeight + 'px';
+            touchClone.style.opacity = '0.8';
+            touchClone.style.zIndex = '9999';
+            touchClone.style.pointerEvents = 'none';
+            touchClone.style.left = (touch.clientX - this.offsetWidth / 2) + 'px';
+            touchClone.style.top = (touch.clientY - this.offsetHeight / 2) + 'px';
+            document.body.appendChild(touchClone);
+            
+            this.classList.add('dragging');
+            e.preventDefault();
+        }
+        
+        function handleTouchMove(e) {
+            if (!isEditingLayout || !touchClone) return;
+            
+            const touch = e.touches[0];
+            
+            // Move the clone with the finger
+            touchClone.style.left = (touch.clientX - touchClone.offsetWidth / 2) + 'px';
+            touchClone.style.top = (touch.clientY - touchClone.offsetHeight / 2) + 'px';
+            
+            // Find element below the touch point
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const cardBelow = elementBelow?.closest('.nav-card');
+            
+            // Remove drag-over from all cards
+            document.querySelectorAll('.nav-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
+            
+            // Add drag-over to card below (if it's not the current card)
+            if (cardBelow && cardBelow !== touchCurrentCard) {
+                cardBelow.classList.add('drag-over');
+            }
+            
+            e.preventDefault();
+        }
+        
+        function handleTouchEnd(e) {
+            if (!isEditingLayout || !touchClone) return;
+            
+            // Get the final touch position
+            const touch = e.changedTouches[0];
+            
+            // Find the card below the drop point
+            touchClone.remove();
+            touchClone = null;
+            
+            // Temporarily hide the dragged card to find what's below
+            touchCurrentCard.style.display = 'none';
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            touchCurrentCard.style.display = '';
+            touchCurrentCard.classList.remove('dragging');
+            
+            const cardBelow = elementBelow?.closest('.nav-card');
+            
+            if (cardBelow && cardBelow !== touchCurrentCard) {
+                const grid = document.querySelector('.nav-grid');
+                const cards = Array.from(grid.querySelectorAll('.nav-card'));
+                const draggedIndex = cards.indexOf(touchCurrentCard);
+                const dropIndex = cards.indexOf(cardBelow);
+                
+                if (draggedIndex !== -1 && dropIndex !== -1) {
+                    if (draggedIndex < dropIndex) {
+                        grid.insertBefore(touchCurrentCard, cardBelow.nextSibling);
+                    } else {
+                        grid.insertBefore(touchCurrentCard, cardBelow);
+                    }
+                }
+            }
+            
+            // Remove drag-over from all cards
+            document.querySelectorAll('.nav-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
+            
+            touchCurrentCard = null;
         }
         
         function handleDragStart(e) {
