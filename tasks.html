@@ -455,6 +455,79 @@
             color: var(--text-secondary);
         }
         
+        .form-group input[type="date"] {
+            width: auto;
+            min-width: 140px;
+            max-width: 200px;
+        }
+        
+        .recurring-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .recurring-select {
+            padding: 10px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .recurring-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .recurring-custom {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .recurring-custom input[type="number"] {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .recurring-custom select {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        .recurring-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .recurring-badge.daily { background: #dbeafe; color: #1d4ed8; }
+        .recurring-badge.weekly { background: #dcfce7; color: #15803d; }
+        .recurring-badge.monthly { background: #fef3c7; color: #b45309; }
+        
         .status-option:hover,
         .status-option.active {
             border-color: #667eea;
@@ -572,6 +645,45 @@
                 <div class="form-group">
                     <label>Due Date</label>
                     <input type="date" id="taskDue">
+                </div>
+                <div class="form-group">
+                    <label>🔁 Recurring Task</label>
+                    <select class="recurring-select" id="taskRecurring" onchange="toggleRecurringOptions()">
+                        <option value="">One-time task</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Bi-weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="custom">Custom...</option>
+                    </select>
+                    <div class="recurring-options" id="recurringOptions" style="display: none;">
+                        <div class="recurring-custom" id="customWeekly" style="display: none;">
+                            <label>Every</label>
+                            <select id="customDay">
+                                <option value="1">Monday</option>
+                                <option value="2">Tuesday</option>
+                                <option value="3">Wednesday</option>
+                                <option value="4">Thursday</option>
+                                <option value="5">Friday</option>
+                                <option value="6">Saturday</option>
+                                <option value="0">Sunday</option>
+                            </select>
+                        </div>
+                        <div class="recurring-custom" id="customMonthly" style="display: none;">
+                            <label>Every</label>
+                            <input type="number" id="customWeekNum" min="1" max="5" value="1">
+                            <select id="customMonthDay">
+                                <option value="1">Monday</option>
+                                <option value="2">Tuesday</option>
+                                <option value="3">Wednesday</option>
+                                <option value="4">Thursday</option>
+                                <option value="5">Friday</option>
+                                <option value="6">Saturday</option>
+                                <option value="0">Sunday</option>
+                            </select>
+                            <span>of the month</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Status</label>
@@ -721,7 +833,7 @@
             const isOverdue = task.due && task.due < today && task.status !== 'done';
             
             div.innerHTML = `
-                <div class="task-card-title">${task.title}</div>
+                <div class="task-card-title">${task.title} ${formatRecurringBadge(task.recurring)}</div>
                 <div class="task-card-meta">
                     <div class="task-assignee">
                         <div class="task-avatar">${getInitials(task.assignee)}</div>
@@ -751,7 +863,12 @@
             document.getElementById('taskTitle').value = '';
             document.getElementById('taskAssignee').value = '';
             document.getElementById('taskDue').value = '';
+            document.getElementById('taskRecurring').value = '';
             document.getElementById('deleteTaskBtn').style.display = 'none';
+            
+            // Hide recurring options
+            document.getElementById('recurringOptions').style.display = 'none';
+            document.getElementById('customWeekly').style.display = 'none';
             
             // Set status selection
             document.querySelectorAll('.status-option').forEach(opt => {
@@ -776,6 +893,21 @@
             document.getElementById('taskDue').value = task.due;
             document.getElementById('deleteTaskBtn').style.display = 'inline-block';
             
+            // Set recurring values
+            if (task.recurring) {
+                document.getElementById('taskRecurring').value = task.recurring.type;
+                document.getElementById('recurringOptions').style.display = 'flex';
+                
+                if (task.recurring.type === 'custom' && task.recurring.dayOfWeek !== undefined) {
+                    document.getElementById('customDay').value = task.recurring.dayOfWeek;
+                    document.getElementById('customWeekly').style.display = 'flex';
+                }
+            } else {
+                document.getElementById('taskRecurring').value = '';
+                document.getElementById('recurringOptions').style.display = 'none';
+                document.getElementById('customWeekly').style.display = 'none';
+            }
+            
             // Set status selection
             document.querySelectorAll('.status-option').forEach(opt => {
                 opt.classList.remove('active');
@@ -785,6 +917,93 @@
             });
             
             document.getElementById('taskModal').classList.add('active');
+        }
+        
+        // Recurring task functions
+        function toggleRecurringOptions() {
+            const select = document.getElementById('taskRecurring');
+            const options = document.getElementById('recurringOptions');
+            const customWeekly = document.getElementById('customWeekly');
+            const customMonthly = document.getElementById('customMonthly');
+            
+            if (select.value === '') {
+                options.style.display = 'none';
+            } else {
+                options.style.display = 'flex';
+                customWeekly.style.display = 'none';
+                customMonthly.style.display = 'none';
+                
+                if (select.value === 'custom') {
+                    customWeekly.style.display = 'flex';
+                }
+            }
+        }
+        
+        function getRecurringData() {
+            const type = document.getElementById('taskRecurring').value;
+            if (!type) return null;
+            
+            const data = { type };
+            
+            if (type === 'custom') {
+                data.dayOfWeek = parseInt(document.getElementById('customDay').value);
+            }
+            
+            return data;
+        }
+        
+        function formatRecurringBadge(recurring) {
+            if (!recurring) return '';
+            
+            const icons = {
+                daily: '↻',
+                weekly: '↻',
+                biweekly: '↻',
+                monthly: '↻',
+                custom: '↻'
+            };
+            
+            const labels = {
+                daily: 'Daily',
+                weekly: 'Weekly',
+                biweekly: 'Bi-weekly',
+                monthly: 'Monthly',
+                custom: 'Custom'
+            };
+            
+            return `<span class="recurring-badge ${recurring.type}">${icons[recurring.type]} ${labels[recurring.type]}</span>`;
+        }
+        
+        function generateNextOccurrence(recurring, currentDue) {
+            if (!recurring || !currentDue) return null;
+            
+            const date = new Date(currentDue);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            switch (recurring.type) {
+                case 'daily':
+                    date.setDate(date.getDate() + 1);
+                    break;
+                case 'weekly':
+                    date.setDate(date.getDate() + 7);
+                    break;
+                case 'biweekly':
+                    date.setDate(date.getDate() + 14);
+                    break;
+                case 'monthly':
+                    date.setMonth(date.getMonth() + 1);
+                    break;
+                case 'custom':
+                    if (recurring.dayOfWeek !== undefined) {
+                        // Find next occurrence of specific day
+                        const daysUntil = (recurring.dayOfWeek + 7 - date.getDay()) % 7;
+                        date.setDate(date.getDate() + (daysUntil || 7));
+                    }
+                    break;
+            }
+            
+            return date.toISOString().split('T')[0];
         }
         
         function selectStatus(status) {
@@ -802,6 +1021,7 @@
             const title = document.getElementById('taskTitle').value.trim();
             const assignee = document.getElementById('taskAssignee').value;
             const due = document.getElementById('taskDue').value;
+            const recurring = getRecurringData();
             
             if (!title) {
                 alert('Please enter a task title');
@@ -816,6 +1036,7 @@
                     task.assignee = assignee;
                     task.due = due;
                     task.status = currentStatus;
+                    task.recurring = recurring;
                 }
             } else {
                 // Add new
@@ -824,7 +1045,8 @@
                     title: title,
                     assignee: assignee,
                     due: due,
-                    status: currentStatus
+                    status: currentStatus,
+                    recurring: recurring
                 };
                 tasks.push(newTask);
             }
