@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Team</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #f5f7fa;
+            --bg-secondary: white;
+            --text-primary: #2d3748;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: rgba(0,0,0,0.05);
+            --card-bg: #f8fafc;
+            --accent: #667eea;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body.dark-mode {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: rgba(0,0,0,0.3);
+            --card-bg: #1e293b;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        /* Header */
+        .page-header {
+            background: var(--bg-secondary);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            color: var(--text-secondary);
+        }
+        
+        .page-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 60px;
+            z-index: 99;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 15px 10px;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn.active {
+            color: var(--accent);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Dashboard Tab */
+        .manager-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .manager-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .manager-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .manager-schedule {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .team-section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 24px 0 12px;
+        }
+        
+        .employee-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .employee-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .employee-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .employee-info {
+            flex: 1;
+        }
+        
+        .employee-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .employee-role {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .employee-schedule {
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .schedule-time {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        /* Time Clock Tab */
+        .time-clock-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .timezone-display {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .digital-clock {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'SF Mono', monospace;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        
+        .current-date {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+        
+        .clock-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .clock-btn {
+            padding: 20px 40px;
+            border-radius: 16px;
+            border: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .clock-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .clock-btn.primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .clock-btn.primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        .clock-btn.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+        }
+        
+        .clock-btn.danger:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+        
+        .clock-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            font-size: 1.1rem;
+            padding: 16px 32px;
+        }
+        
+        .clock-btn.secondary:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: var(--card-bg);
+        }
+        
+        .time-log {
+            margin-top: 40px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+        }
+        
+        .time-log h3 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-entry .action {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .log-entry .action.clock-in { color: var(--success); }
+        .log-entry .action.clock-out { color: var(--danger); }
+        .log-entry .action.lunch-out { color: var(--warning); }
+        .log-entry .action.lunch-in { color: var(--success); }
+        
+        .log-entry .time {
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+        
+        /* Schedule Tab */
+        .schedule-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .month-nav button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .current-month {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .request-time-off-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .calendar-grid {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--card-bg);
+            padding: 12px 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            font-size: 0.85rem;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .calendar-day:hover {
+            background: var(--card-bg);
+        }
+        
+        .calendar-day.other-month {
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+        }
+        
+        .calendar-day.today {
+            background: #e0e7ff;
+            font-weight: 700;
+        }
+        
+        body.dark-mode .calendar-day.today {
+            background: #312e81;
+        }
+        
+        .day-number {
+            margin-bottom: 4px;
+        }
+        
+        .day-shifts {
+            font-size: 0.65rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .day-shift {
+            background: var(--accent);
+            color: white;
+            padding: 1px 4px;
+            border-radius: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .day-shift.vacation {
+            background: var(--success);
+        }
+        
+        .day-shift.sick {
+            background: var(--danger);
+        }
+        
+        /* Time Off Balances */
+        .balances-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .balance-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .balance-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .balance-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .balance-unit {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.05) translateY(-2px);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .status-badge.clockedin {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-badge.onbreak {
+            background: #fef3c7;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+        <span class="icon" id="themeIcon">🌙</span>
+        <span id="themeText">Dark</span>
+    </button>
+    
+    <header class="page-header">
+        <button class="back-btn" onclick="window.location.href='index.html'">←</button>
+        <h2>Team</h2>
+    </header>
+    
+    <nav class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('dashboard')" id="tab-dashboard">Dashboard</button>
+        <button class="tab-btn" onclick="switchTab('clock')" id="tab-clock">Time Clock</button>
+        <button class="tab-btn" onclick="switchTab('schedule')" id="tab-schedule">Schedule</button>
+    </nav>
+    
+    <!-- Dashboard Tab -->
+    <div class="tab-content active" id="content-dashboard">
+        <div id="managerSection"></div>
+        <div class="team-section-title">Team Members</div>
+        <div id="teamMembersList"></div>
+    </div>
+    
+    <!-- Time Clock Tab -->
+    <div class="tab-content" id="content-clock">
+        <div class="time-clock-container">
+            <div class="timezone-display" id="timezoneDisplay">Loading timezone...</div>
+            <div class="digital-clock" id="digitalClock">--:--:--</div>
+            <div class="current-date" id="currentDate">Loading...</div>
+            
+            <div class="clock-buttons">
+                <button class="clock-btn primary" id="mainClockBtn" onclick="handleMainClockAction()">
+                    <span id="mainClockBtnText">Clock In</span>
+                </button>
+                <button class="clock-btn secondary" id="lunchBtn" onclick="handleLunchAction()" style="display: none;">
+                    <span id="lunchBtnText">Clock Out for Lunch</span>
+                </button>
+            </div>
+            
+            <div class="time-log" id="timeLog">
+                <h3>Today's Activity</h3>
+                <div id="logEntries"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Schedule Tab -->
+    <div class="tab-content" id="content-schedule">
+        <div class="schedule-controls">
+            <div class="month-nav">
+                <button onclick="changeMonth(-1)">←</button>
+                <span class="current-month" id="currentMonthLabel">Month Year</span>
+                <button onclick="changeMonth(1)">→</button>
+            </div>
+            <button class="request-time-off-btn" onclick="showTimeOffModal()">Request Time Off</button>
+        </div>
+        
+        <div class="calendar-grid">
+            <div class="calendar-header">
+                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+            <div class="calendar-days" id="calendarDays"></div>
+        </div>
+        
+        <div class="balances-section">
+            <div class="balance-card">
+                <div class="balance-label">Vacation Balance</div>
+                <div class="balance-value" id="vacationBalance">--</div>
+                <div class="balance-unit">hours</div>
+            </div>
+            <div class="balance-card">
+                <div class="balance-label">Sick Time Balance</div>
+                <div class="balance-value" id="sickBalance">--</div>
+                <div class="balance-unit">hours</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Time Off Request Modal -->
+    <div class="modal-overlay" id="timeOffModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Request Time Off</h3>
+                <button class="modal-close" onclick="closeTimeOffModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="submitTimeOffRequest(event)">
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="timeOffType" required>
+                            <option value="vacation">Vacation</option>
+                            <option value="sick">Sick Time</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Dates</label>
+                        <div class="date-range">
+                            <input type="date" id="timeOffStart" required>
+                            <input type="date" id="timeOffEnd" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea id="timeOffNotes" placeholder="Add any additional details..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const isDark = savedTheme === 'dark';
+            
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeText').textContent = 'Light';
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
+        }
+        
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark-mode');
+            
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeText').textContent = isDark ? 'Light' : 'Dark';
+            document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+        }
+        
+        initTheme();
+        
+        // Current user
+        const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Alex Thompson', email: 'owner@company.com' };
+        
+        // Demo employees data with schedules
+        const employees = [
+            { name: 'Jordan Smith', email: 'manager@company.com', role: 'Manager', team: 'Production', timezone: 'America/New_York' },
+            { name: 'Casey Johnson', email: 'employee@company.com', role: 'Employee', team: 'Production', timezone: 'America/New_York' },
+            { name: 'Taylor Reed', email: 'lead@company.com', role: 'Team Lead', team: 'Production', timezone: 'America/New_York' },
+            { name: 'Morgan Lee', email: 'warehouse@company.com', role: 'Employee', team: 'Production', timezone: 'America/Chicago' }
+        ];
+        
+        // Get current user's team
+        function getCurrentUserTeam() {
+            const emp = employees.find(e => e.email === currentUser.email);
+            return emp?.team || 'Production';
+        }
+        
+        // Get team members
+        function getTeamMembers() {
+            const team = getCurrentUserTeam();
+            return employees.filter(e => e.team === team);
+        }
+        
+        // Get manager for current team
+        function getTeamManager() {
+            const team = getCurrentUserTeam();
+            return employees.find(e => e.team === team && (e.role === 'Manager' || e.role === 'Owner')) || employees[0];
+        }
+        
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.getElementById(`content-${tabName}`).classList.add('active');
+            
+            if (tabName === 'schedule') {
+                renderCalendar();
+                updateBalances();
+            }
+        }
+        
+        // Generate today's schedule for an employee
+        function getTodaySchedule(employee) {
+            const schedules = JSON.parse(localStorage.getItem('employeeSchedules')) || {};
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (schedules[employee.email]?.[today]) {
+                return schedules[employee.email][today];
+            }
+            
+            // Default schedules based on role
+            const defaults = {
+                'Manager': { start: '08:00', end: '17:00' },
+                'Team Lead': { start: '09:00', end: '18:00' },
+                'Employee': { start: '10:00', end: '19:00' }
+            };
+            
+            return defaults[employee.role] || { start: '09:00', end: '17:00' };
+        }
+        
+        // Format schedule display
+        function formatSchedule(schedule) {
+            if (!schedule) return 'Off';
+            return `${formatTime(schedule.start)} - ${formatTime(schedule.end)}`;
+        }
+        
+        function formatTime(time) {
+            if (!time) return '';
+            const [hours, minutes] = time.split(':');
+            const h = parseInt(hours);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const h12 = h % 12 || 12;
+            return `${h12}:${minutes} ${ampm}`;
+        }
+        
+        // Sort employees by schedule (then alphabetically)
+        function sortEmployeesBySchedule(employeesList) {
+            return [...employeesList].sort((a, b) => {
+                const schedA = getTodaySchedule(a);
+                const schedB = getTodaySchedule(b);
+                
+                if (schedA.start !== schedB.start) {
+                    return schedA.start.localeCompare(schedB.start);
+                }
+                
+                return a.name.localeCompare(b.name);
+            });
+        }
+        
+        // Render Dashboard
+        function renderDashboard() {
+            const manager = getTeamManager();
+            const teamMembers = getTeamMembers().filter(e => e.email !== manager.email);
+            const sortedMembers = sortEmployeesBySchedule(teamMembers);
+            
+            // Render Manager Card
+            const managerSection = document.getElementById('managerSection');
+            const managerSchedule = getTodaySchedule(manager);
+            
+            managerSection.innerHTML = `
+                <div class="manager-card">
+                    <div class="manager-label">Team Manager</div>
+                    <div class="manager-name">${manager.name}</div>
+                    <div class="manager-schedule">${formatSchedule(managerSchedule)}</div>
+                </div>
+            `;
+            
+            // Render Team Members
+            const membersList = document.getElementById('teamMembersList');
+            membersList.innerHTML = sortedMembers.map(emp => {
+                const schedule = getTodaySchedule(emp);
+                return `
+                    <div class="employee-card">
+                        <div class="employee-avatar">${getInitials(emp.name)}</div>
+                        <div class="employee-info">
+                            <div class="employee-name">${emp.name}</div>
+                            <div class="employee-role">${emp.role}</div>
+                        </div>
+                        <div class="employee-schedule">
+                            <div class="schedule-time">${formatTime(schedule.start)}</div>
+                            <div>${formatTime(schedule.end)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+        
+        // Clock functionality
+        let clockInterval;
+        let currentTimezone = 'America/New_York';
+        
+        function initClock() {
+            const emp = employees.find(e => e.email === currentUser.email);
+            currentTimezone = emp?.timezone || 'America/New_York';
+            
+            document.getElementById('timezoneDisplay').textContent = `Timezone: ${currentTimezone.replace(/_/g, ' ')}`;
+            
+            updateClock();
+            clockInterval = setInterval(updateClock, 1000);
+            
+            updateClockButtons();
+            renderTimeLog();
+        }
+        
+        function updateClock() {
+            const now = new Date();
+            const options = { 
+                timeZone: currentTimezone,
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const timeString = now.toLocaleTimeString('en-US', options);
+            document.getElementById('digitalClock').textContent = timeString;
+            
+            const dateOptions = { 
+                timeZone: currentTimezone,
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
+        }
+        
+        // Time clock state
+        function getTodaysTimeEntries() {
+            const today = new Date().toISOString().split('T')[0];
+            const allEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+            const userEntries = allEntries[currentUser.email] || {};
+            return userEntries[today] || [];
+        }
+        
+        function addTimeEntry(action) {
+            const today = new Date().toISOString().split('T')[0];
+            const allEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+            
+            if (!allEntries[currentUser.email]) {
+                allEntries[currentUser.email] = {};
+            }
+            if (!allEntries[currentUser.email][today]) {
+                allEntries[currentUser.email][today] = [];
+            }
+            
+            const now = new Date();
+            const entry = {
+                action: action,
+                timestamp: now.toISOString(),
+                time: now.toLocaleTimeString('en-US', { 
+                    timeZone: currentTimezone,
+                    hour: 'numeric',
+                    minute: '2-digit'
+                })
+            };
+            
+            allEntries[currentUser.email][today].push(entry);
+            localStorage.setItem('timeEntries', JSON.stringify(allEntries));
+            
+            updateClockButtons();
+            renderTimeLog();
+        }
+        
+        function getCurrentClockStatus() {
+            const entries = getTodaysTimeEntries();
+            if (entries.length === 0) return 'out';
+            
+            const lastEntry = entries[entries.length - 1];
+            if (lastEntry.action === 'clockout') return 'out';
+            if (lastEntry.action === 'lunchout') return 'lunch';
+            if (lastEntry.action === 'lunchin') return 'in';
+            if (lastEntry.action === 'clockin') return 'in';
+            return 'out';
+        }
+        
+        function updateClockButtons() {
+            const status = getCurrentClockStatus();
+            const mainBtn = document.getElementById('mainClockBtn');
+            const mainBtnText = document.getElementById('mainClockBtnText');
+            const lunchBtn = document.getElementById('lunchBtn');
+            const lunchBtnText = document.getElementById('lunchBtnText');
+            
+            if (status === 'out') {
+                mainBtn.className = 'clock-btn primary';
+                mainBtnText.textContent = 'Clock In';
+                lunchBtn.style.display = 'none';
+            } else if (status === 'in') {
+                mainBtn.className = 'clock-btn danger';
+                mainBtnText.textContent = 'Clock Out';
+                lunchBtn.style.display = 'flex';
+                lunchBtnText.textContent = 'Clock Out for Lunch';
+            } else if (status === 'lunch') {
+                mainBtn.className = 'clock-btn primary';
+                mainBtnText.textContent = 'Clock In from Lunch';
+                lunchBtn.style.display = 'none';
+            }
+        }
+        
+        function handleMainClockAction() {
+            const status = getCurrentClockStatus();
+            if (status === 'out') {
+                addTimeEntry('clockin');
+            } else if (status === 'in') {
+                addTimeEntry('clockout');
+            } else if (status === 'lunch') {
+                addTimeEntry('lunchin');
+            }
+        }
+        
+        function handleLunchAction() {
+            const status = getCurrentClockStatus();
+            if (status === 'in') {
+                addTimeEntry('lunchout');
+            }
+        }
+        
+        function renderTimeLog() {
+            const entries = getTodaysTimeEntries();
+            const container = document.getElementById('logEntries');
+            
+            if (entries.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No activity yet today</p>';
+                return;
+            }
+            
+            container.innerHTML = entries.slice().reverse().map(entry => {
+                const actionLabels = {
+                    'clockin': 'Clocked In',
+                    'clockout': 'Clocked Out',
+                    'lunchout': 'Lunch Break Started',
+                    'lunchin': 'Lunch Break Ended'
+                };
+                
+                const actionClasses = {
+                    'clockin': 'clock-in',
+                    'clockout': 'clock-out',
+                    'lunchout': 'lunch-out',
+                    'lunchin': 'lunch-in'
+                };
+                
+                return `
+                    <div class="log-entry">
+                        <span class="action ${actionClasses[entry.action]}">${actionLabels[entry.action]}</span>
+                        <span class="time">${entry.time}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Calendar functionality
+        let currentCalendarDate = new Date();
+        
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            document.getElementById('currentMonthLabel').textContent = 
+                currentCalendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDayOfWeek = firstDay.getDay();
+            
+            const container = document.getElementById('calendarDays');
+            container.innerHTML = '';
+            
+            // Previous month days
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            for (let i = startDayOfWeek - 1; i >= 0; i--) {
+                const day = prevMonthLastDay - i;
+                container.innerHTML += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
+            }
+            
+            // Current month days
+            const today = new Date().toISOString().split('T')[0];
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isToday = dateStr === today;
+                
+                let shiftsHtml = '';
+                const teamMembers = getTeamMembers();
+                teamMembers.forEach(emp => {
+                    const sched = getDaySchedule(emp, dateStr);
+                    if (sched && !sched.off) {
+                        const isVacation = sched.type === 'vacation';
+                        const isSick = sched.type === 'sick';
+                        const className = isVacation ? 'day-shift vacation' : isSick ? 'day-shift sick' : 'day-shift';
+                        const label = isVacation ? 'VAC' : isSick ? 'SICK' : getInitials(emp.name);
+                        shiftsHtml += `<div class="${className}">${label}</div>`;
+                    }
+                });
+                
+                container.innerHTML += `
+                    <div class="calendar-day ${isToday ? 'today' : ''}">
+                        <div class="day-number">${day}</div>
+                        <div class="day-shifts">${shiftsHtml}</div>
+                    </div>
+                `;
+            }
+            
+            // Next month days
+            const remainingCells = 42 - (startDayOfWeek + daysInMonth);
+            for (let day = 1; day <= remainingCells; day++) {
+                container.innerHTML += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
+            }
+        }
+        
+        function getDaySchedule(employee, dateStr) {
+            // Check for time off requests first
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const approvedRequest = requests.find(r => 
+                r.employeeEmail === employee.email &&
+                r.status === 'approved' &&
+                dateStr >= r.startDate &&
+                dateStr <= r.endDate
+            );
+            
+            if (approvedRequest) {
+                return { off: true, type: approvedRequest.type };
+            }
+            
+            // Regular schedule
+            const schedules = JSON.parse(localStorage.getItem('employeeSchedules')) || {};
+            return schedules[employee.email]?.[dateStr];
+        }
+        
+        function changeMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+        
+        // Time Off functionality
+        function showTimeOffModal() {
+            document.getElementById('timeOffModal').classList.add('active');
+            document.getElementById('timeOffStart').value = '';
+            document.getElementById('timeOffEnd').value = '';
+            document.getElementById('timeOffNotes').value = '';
+        }
+        
+        function closeTimeOffModal() {
+            document.getElementById('timeOffModal').classList.remove('active');
+        }
+        
+        function submitTimeOffRequest(event) {
+            event.preventDefault();
+            
+            const type = document.getElementById('timeOffType').value;
+            const startDate = document.getElementById('timeOffStart').value;
+            const endDate = document.getElementById('timeOffEnd').value;
+            const notes = document.getElementById('timeOffNotes').value;
+            
+            // Calculate hours requested
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            const hoursRequested = days * 8; // Assuming 8 hour days
+            
+            // Check balance
+            const balances = getTimeOffBalances();
+            const available = type === 'vacation' ? balances.vacation : balances.sick;
+            
+            if (hoursRequested > available) {
+                alert(`Insufficient ${type} balance. You have ${available} hours available but requested ${hoursRequested} hours.`);
+                return;
+            }
+            
+            const request = {
+                id: Date.now(),
+                employeeEmail: currentUser.email,
+                employeeName: currentUser.name,
+                type: type,
+                startDate: startDate,
+                endDate: endDate,
+                hoursRequested: hoursRequested,
+                notes: notes,
+                status: 'pending',
+                submittedAt: new Date().toISOString()
+            };
+            
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            requests.push(request);
+            localStorage.setItem('timeOffRequests', JSON.stringify(requests));
+            
+            closeTimeOffModal();
+            alert('Time off request submitted for approval!');
+            renderCalendar();
+            updateBalances();
+        }
+        
+        function getTimeOffBalances() {
+            const balances = JSON.parse(localStorage.getItem('timeOffBalances')) || {};
+            const userBalance = balances[currentUser.email] || { vacation: 80, sick: 40 }; // Default: 2 weeks vacation, 1 week sick
+            
+            // Calculate used time
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const approvedRequests = requests.filter(r => 
+                r.employeeEmail === currentUser.email && 
+                r.status === 'approved'
+            );
+            
+            const usedVacation = approvedRequests
+                .filter(r => r.type === 'vacation')
+                .reduce((sum, r) => sum + r.hoursRequested, 0);
+            
+            const usedSick = approvedRequests
+                .filter(r => r.type === 'sick')
+                .reduce((sum, r) => sum + r.hoursRequested, 0);
+            
+            return {
+                vacation: Math.max(0, userBalance.vacation - usedVacation),
+                sick: Math.max(0, userBalance.sick - usedSick)
+            };
+        }
+        
+        function updateBalances() {
+            const balances = getTimeOffBalances();
+            document.getElementById('vacationBalance').textContent = balances.vacation;
+            document.getElementById('sickBalance').textContent = balances.sick;
+        }
+        
+        // Close modal on outside click
+        document.getElementById('timeOffModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTimeOffModal();
+            }
+        });
+        
+        // Initialize
+        renderDashboard();
+        initClock();
+        
+        // Update clock buttons when tab becomes visible
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                updateClockButtons();
+                renderTimeLog();
+            }
+        });
+    </script>
+</body>
+</html>
