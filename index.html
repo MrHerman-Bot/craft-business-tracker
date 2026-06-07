@@ -473,9 +473,55 @@
             font-size: 0.85rem;
             color: var(--text-secondary);
         }
+        
+        /* Pull to refresh */
+        .pull-refresh-indicator {
+            position: fixed;
+            top: -60px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: transform 0.2s ease-out;
+            z-index: 200;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+        
+        .pull-refresh-indicator.visible {
+            transform: translateY(60px);
+        }
+        
+        .pull-refresh-indicator.refreshing {
+            color: var(--accent);
+        }
+        
+        .pull-refresh-indicator .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: refreshSpinner 0.8s linear infinite;
+        }
+        
+        @keyframes refreshSpinner {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+    <!-- Pull to Refresh Indicator -->
+    <div class="pull-refresh-indicator" id="pullRefreshIndicator">
+        <div class="spinner" id="refreshSpinner" style="display: none;"></div>
+        <span id="refreshText">Pull down to refresh</span>
+    </div>
+    
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
         <span class="icon">🌙</span>
         <span id="themeText">Dark</span>
@@ -1057,6 +1103,81 @@
             document.getElementById('appContainer').classList.remove('active');
             document.getElementById('loginForm').reset();
             document.getElementById('loginError').style.display = 'none';
+        }
+        
+        // Pull to refresh functionality
+        let pullStartY = 0;
+        let pullCurrentY = 0;
+        let isPulling = false;
+        const PULL_THRESHOLD = 80;
+        
+        const pullIndicator = document.getElementById('pullRefreshIndicator');
+        const refreshSpinner = document.getElementById('refreshSpinner');
+        const refreshText = document.getElementById('refreshText');
+        
+        // Only enable pull-to-refresh on touch devices
+        if ('ontouchstart' in window) {
+            document.addEventListener('touchstart', handlePullStart, { passive: true });
+            document.addEventListener('touchmove', handlePullMove, { passive: true });
+            document.addEventListener('touchend', handlePullEnd, { passive: true });
+        }
+        
+        function handlePullStart(e) {
+            // Only trigger if at top of page
+            if (window.scrollY > 10) return;
+            
+            pullStartY = e.touches[0].clientY;
+            isPulling = true;
+        }
+        
+        function handlePullMove(e) {
+            if (!isPulling) return;
+            
+            pullCurrentY = e.touches[0].clientY;
+            const pullDistance = pullCurrentY - pullStartY;
+            
+            // Only show indicator if pulling down
+            if (pullDistance > 0 && window.scrollY <= 10) {
+                pullIndicator.classList.add('visible');
+                
+                if (pullDistance >= PULL_THRESHOLD) {
+                    refreshText.textContent = 'Release to refresh';
+                } else {
+                    refreshText.textContent = 'Pull down to refresh';
+                }
+            }
+        }
+        
+        function handlePullEnd(e) {
+            if (!isPulling) return;
+            
+            const pullDistance = pullCurrentY - pullStartY;
+            
+            if (pullDistance >= PULL_THRESHOLD && window.scrollY <= 10) {
+                // Trigger refresh
+                performRefresh();
+            } else {
+                // Hide indicator
+                pullIndicator.classList.remove('visible');
+            }
+            
+            isPulling = false;
+            pullStartY = 0;
+            pullCurrentY = 0;
+        }
+        
+        function performRefresh() {
+            pullIndicator.classList.add('refreshing');
+            refreshSpinner.style.display = 'block';
+            refreshText.textContent = 'Refreshing...';
+            
+            // Clear any cached data
+            localStorage.removeItem('cachedData');
+            
+            // Reload the page after a brief delay to show the spinner
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 800);
         }
     </script>
 </body>
