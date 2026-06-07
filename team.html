@@ -464,8 +464,116 @@
             background: var(--success);
         }
         
-        .day-shift.sick {
-            background: var(--danger);
+        .day-shift.pending {
+            background: var(--warning);
+        }
+        
+        .calendar-day.has-timeoff {
+            border: 2px solid var(--accent);
+        }
+        
+        /* Day Detail Modal */
+        .day-detail-content {
+            min-height: 200px;
+        }
+        
+        .day-detail-date {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .timeoff-section {
+            margin-bottom: 24px;
+        }
+        
+        .timeoff-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .timeoff-item {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .timeoff-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .timeoff-info {
+            flex: 1;
+        }
+        
+        .timeoff-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        
+        .timeoff-type {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .timeoff-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .timeoff-status.approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .timeoff-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        body.dark-mode .timeoff-status.approved {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+        
+        body.dark-mode .timeoff-status.pending {
+            background: #451a03;
+            color: #fcd34d;
+        }
+        
+        .no-timeoff {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .no-timeoff-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
         }
         
         /* Time Off Balances */
@@ -773,6 +881,20 @@
                     </div>
                     <button type="submit" class="submit-btn">Submit Request</button>
                 </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Day Detail Modal -->
+    <div class="modal-overlay" id="dayDetailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Schedule Details</h3>
+                <button class="modal-close" onclick="closeDayDetailModal()">×</button>
+            </div>
+            <div class="modal-body day-detail-content" id="dayDetailContent">
+                <div class="day-detail-date" id="dayDetailDate"></div>
+                <div id="dayTimeOffList"></div>
             </div>
         </div>
     </div>
@@ -1116,9 +1238,15 @@
             
             // Previous month days
             const prevMonthLastDay = new Date(year, month, 0).getDate();
+            const prevMonth = month === 0 ? 11 : month - 1;
+            const prevYear = month === 0 ? year - 1 : year;
             for (let i = startDayOfWeek - 1; i >= 0; i--) {
                 const day = prevMonthLastDay - i;
-                container.innerHTML += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
+                const dateStr = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const timeOff = getTimeOffForDay(dateStr);
+                const hasTimeOff = timeOff.length > 0;
+                const timeOffHtml = hasTimeOff ? `<div class="day-shifts">${timeOff.length}</div>` : '';
+                container.innerHTML += `<div class="calendar-day other-month ${hasTimeOff ? 'has-timeoff' : ''}" onclick="showDayDetail('${dateStr}')" style="cursor: pointer;"><div class="day-number">${day}</div>${timeOffHtml}</div>`;
             }
             
             // Current month days
@@ -1140,8 +1268,23 @@
                     }
                 });
                 
+                // Get time off for this day
+                const timeOff = getTimeOffForDay(dateStr);
+                const hasTimeOff = timeOff.length > 0;
+                
+                // Add time off indicators
+                timeOff.forEach(req => {
+                    const className = req.status === 'approved' 
+                        ? `day-shift ${req.type === 'vacation' ? 'vacation' : 'sick'}` 
+                        : 'day-shift pending';
+                    const label = req.status === 'approved' 
+                        ? (req.type === 'vacation' ? 'VAC' : 'SICK') 
+                        : 'PEND';
+                    shiftsHtml += `<div class="${className}">${label}</div>`;
+                });
+                
                 container.innerHTML += `
-                    <div class="calendar-day ${isToday ? 'today' : ''}">
+                    <div class="calendar-day ${isToday ? 'today' : ''} ${hasTimeOff ? 'has-timeoff' : ''}" onclick="showDayDetail('${dateStr}')" style="cursor: pointer;">
                         <div class="day-number">${day}</div>
                         <div class="day-shifts">${shiftsHtml}</div>
                     </div>
@@ -1150,8 +1293,14 @@
             
             // Next month days
             const remainingCells = 42 - (startDayOfWeek + daysInMonth);
+            const nextMonth = month === 11 ? 0 : month + 1;
+            const nextYear = month === 11 ? year + 1 : year;
             for (let day = 1; day <= remainingCells; day++) {
-                container.innerHTML += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
+                const dateStr = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}'}`;
+                const timeOff = getTimeOffForDay(dateStr);
+                const hasTimeOff = timeOff.length > 0;
+                const timeOffHtml = hasTimeOff ? `<div class="day-shifts">${timeOff.length}</div>` : '';
+                container.innerHTML += `<div class="calendar-day other-month ${hasTimeOff ? 'has-timeoff' : ''}" onclick="showDayDetail('${dateStr}')" style="cursor: pointer;"><div class="day-number">${day}</div>${timeOffHtml}</div>`;
             }
         }
         
@@ -1218,6 +1367,7 @@
                 id: Date.now(),
                 employeeEmail: currentUser.email,
                 employeeName: currentUser.name,
+                team: getCurrentUserTeam(),
                 type: type,
                 startDate: startDate,
                 endDate: endDate,
@@ -1268,7 +1418,96 @@
             document.getElementById('sickBalance').textContent = balances.sick;
         }
         
+        // Get time off requests for a specific day
+        function getTimeOffForDay(dateStr) {
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            return requests.filter(req => 
+                req.team === getCurrentUserTeam() &&
+                dateStr >= req.startDate && 
+                dateStr <= req.endDate
+            );
+        }
+        
+        // Show day detail modal
+        function showDayDetail(dateStr) {
+            const timeOff = getTimeOffForDay(dateStr);
+            const date = new Date(dateStr);
+            const dateDisplay = date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+            
+            document.getElementById('dayDetailDate').textContent = dateDisplay;
+            
+            const container = document.getElementById('dayTimeOffList');
+            
+            if (timeOff.length === 0) {
+                container.innerHTML = `
+                    <div class="no-timeoff">
+                        <div class="no-timeoff-icon">📅</div>
+                        <p>No time off scheduled for this day</p>
+                    </div>
+                `;
+            } else {
+                const types = { vacation: 'Vacation', sick: 'Sick Time' };
+                const statusLabels = { approved: 'Approved', pending: 'Pending' };
+                
+                // Group by status
+                const approved = timeOff.filter(r => r.status === 'approved');
+                const pending = timeOff.filter(r => r.status === 'pending');
+                
+                let html = '';
+                
+                if (approved.length > 0) {
+                    html += '<div class="timeoff-section">';
+                    html += '<div class="timeoff-section-title">Approved</div>';
+                    html += approved.map(req => `
+                        <div class="timeoff-item">
+                            <div class="timeoff-avatar">${getInitials(req.employeeName)}</div>
+                            <div class="timeoff-info">
+                                <div class="timeoff-name">${req.employeeName}</div>
+                                <div class="timeoff-type">${types[req.type]} (${req.hoursRequested} hours)</div>
+                            </div>
+                            <span class="timeoff-status approved">${statusLabels[req.status]}</span>
+                        </div>
+                    `).join('');
+                    html += '</div>';
+                }
+                
+                if (pending.length > 0) {
+                    html += '<div class="timeoff-section">';
+                    html += '<div class="timeoff-section-title">Pending Approval</div>';
+                    html += pending.map(req => `
+                        <div class="timeoff-item">
+                            <div class="timeoff-avatar">${getInitials(req.employeeName)}</div>
+                            <div class="timeoff-info">
+                                <div class="timeoff-name">${req.employeeName}</div>
+                                <div class="timeoff-type">${types[req.type]} (${req.hoursRequested} hours)</div>
+                            </div>
+                            <span class="timeoff-status pending">${statusLabels[req.status]}</span>
+                        </div>
+                    `).join('');
+                    html += '</div>';
+                }
+                
+                container.innerHTML = html;
+            }
+            
+            document.getElementById('dayDetailModal').classList.add('active');
+        }
+        
+        function closeDayDetailModal() {
+            document.getElementById('dayDetailModal').classList.remove('active');
+        }
+        
         // Close modal on outside click
+        document.getElementById('dayDetailModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDayDetailModal();
+            }
+        });
         document.getElementById('timeOffModal')?.addEventListener('click', function(e) {
             if (e.target === this) {
                 closeTimeOffModal();
