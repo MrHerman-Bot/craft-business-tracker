@@ -595,15 +595,13 @@
         }
         
         .date-range {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 12px;
         }
         
-        @media (min-width: 400px) {
-            .date-range {
-                grid-template-columns: 1fr 1fr;
-            }
+        .date-range input {
+            width: 100%;
         }
         
         .submit-btn {
@@ -758,13 +756,14 @@
                             <option value="sick">Sick Time</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Dates</label>
-                        <div class="date-range">
-                            <input type="date" id="timeOffStart" required>
-                            <input type="date" id="timeOffEnd" required>
-                        </div>
-                    </div>
+        <div class="form-group">
+            <label>Start Date</label>
+            <input type="date" id="timeOffStart" required>
+        </div>
+        <div class="form-group">
+            <label>End Date</label>
+            <input type="date" id="timeOffEnd" required>
+        </div>
                     <div class="form-group">
                         <label>Notes (Optional)</label>
                         <textarea id="timeOffNotes" placeholder="Add any additional details..."></textarea>
