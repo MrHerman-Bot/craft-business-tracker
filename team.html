@@ -596,8 +596,14 @@
         
         .date-range {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 12px;
+        }
+        
+        @media (min-width: 400px) {
+            .date-range {
+                grid-template-columns: 1fr 1fr;
+            }
         }
         
         .submit-btn {
