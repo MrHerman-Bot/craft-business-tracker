@@ -1363,6 +1363,11 @@
                 return;
             }
             
+            // Determine status based on role
+            const currentUserRole = employees.find(e => e.email === currentUser.email)?.role || 'Employee';
+            const isOwner = currentUserRole === 'Owner';
+            const status = isOwner ? 'approved' : 'pending';
+            
             const request = {
                 id: Date.now(),
                 employeeEmail: currentUser.email,
@@ -1373,7 +1378,7 @@
                 endDate: endDate,
                 hoursRequested: hoursRequested,
                 notes: notes,
-                status: 'pending',
+                status: status,
                 submittedAt: new Date().toISOString()
             };
             
@@ -1382,7 +1387,13 @@
             localStorage.setItem('timeOffRequests', JSON.stringify(requests));
             
             closeTimeOffModal();
-            alert('Time off request submitted for approval!');
+            
+            if (isOwner) {
+                alert('Time off approved! Hours have been deducted from your balance.');
+            } else {
+                alert('Time off request submitted for approval!');
+            }
+            
             renderCalendar();
             updateBalances();
         }
