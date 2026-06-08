@@ -928,8 +928,10 @@
         
         // Demo employees data with schedules
         const employees = [
+            { name: 'Alex Thompson', email: 'owner@company.com', role: 'Owner', team: 'Admin', timezone: 'America/New_York' },
             { name: 'Jordan Smith', email: 'manager@company.com', role: 'Manager', team: 'Production', timezone: 'America/New_York' },
             { name: 'Casey Johnson', email: 'employee@company.com', role: 'Employee', team: 'Production', timezone: 'America/New_York' },
+            { name: 'Sam Parker', email: 'hr@company.com', role: 'HR', team: 'Admin', timezone: 'America/New_York' },
             { name: 'Taylor Reed', email: 'lead@company.com', role: 'Team Lead', team: 'Production', timezone: 'America/New_York' },
             { name: 'Morgan Lee', email: 'warehouse@company.com', role: 'Employee', team: 'Production', timezone: 'America/Chicago' }
         ];
@@ -1296,7 +1298,7 @@
             const nextMonth = month === 11 ? 0 : month + 1;
             const nextYear = month === 11 ? year + 1 : year;
             for (let day = 1; day <= remainingCells; day++) {
-                const dateStr = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}'}`;
+                const dateStr = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const timeOff = getTimeOffForDay(dateStr);
                 const hasTimeOff = timeOff.length > 0;
                 const timeOffHtml = hasTimeOff ? `<div class="day-shifts">${timeOff.length}</div>` : '';
