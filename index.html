@@ -571,6 +571,890 @@
             font-size: 3rem;
             margin-bottom: 12px;
         }
+        /* Team Section Styles */
+        .team-tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+            gap: 4px;
+            overflow-x: auto;
+        }
+        
+        .team-tab {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        .team-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .team-tab-content {
+            display: none;
+        }
+        
+        .team-tab-content.active {
+            display: block;
+        }
+        
+        .team-section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 24px 0 12px;
+        }
+        
+        .manager-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .manager-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .manager-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .manager-schedule {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .employee-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .employee-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .employee-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .employee-info {
+            flex: 1;
+        }
+        
+        .employee-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .employee-role {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .employee-schedule {
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .schedule-time {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        /* Time Clock Styles */
+        .time-clock-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .timezone-display {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .digital-clock {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'SF Mono', monospace;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        
+        .current-date {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+        
+        .clock-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .clock-btn {
+            padding: 20px 40px;
+            border-radius: 16px;
+            border: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .clock-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .clock-btn.primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .clock-btn.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+        }
+        
+        .clock-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            font-size: 1.1rem;
+            padding: 16px 32px;
+        }
+        
+        .time-log {
+            margin-top: 40px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+        }
+        
+        .time-log h3 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-entry .action {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .log-entry .action.clock-in { color: var(--success); }
+        .log-entry .action.clock-out { color: var(--danger); }
+        .log-entry .action.lunch-out { color: var(--warning); }
+        .log-entry .action.lunch-in { color: var(--success); }
+        
+        .log-entry .time {
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+        
+        /* Schedule & Calendar Styles */
+        .schedule-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .month-nav button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+        }
+        
+        .current-month {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .request-time-off-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .balance-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .balance-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .balance-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .balance-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .balance-unit {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .calendar-grid {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--card-bg);
+            padding: 12px 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            font-size: 0.85rem;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .calendar-day:hover {
+            background: var(--card-bg);
+        }
+        
+        .calendar-day.other-month {
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+        }
+        
+        .calendar-day.today {
+            background: #e0e7ff;
+            font-weight: 700;
+        }
+        
+        body.dark-mode .calendar-day.today {
+            background: #312e81;
+        }
+        
+        .day-number {
+            margin-bottom: 4px;
+        }
+        
+        .day-shifts {
+            font-size: 0.65rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .day-shift {
+            background: var(--accent);
+            color: white;
+            padding: 1px 4px;
+            border-radius: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .day-shift.vacation { background: var(--success); }
+        .day-shift.sick { background: var(--danger); }
+        .day-shift.pending { background: var(--warning); }
+        
+        .calendar-day.has-timeoff {
+            border: 2px solid var(--accent);
+        }
+        
+        /* Time Off Item */
+        .timeoff-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .timeoff-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .timeoff-info {
+            flex: 1;
+        }
+        
+        .timeoff-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+        
+        .timeoff-type {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .timeoff-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .timeoff-status.approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .timeoff-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        body.dark-mode .timeoff-status.approved {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+        
+        body.dark-mode .timeoff-status.pending {
+            background: #451a03;
+            color: #fcd34d;
+        }
+        
+        .no-timeoff {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .no-timeoff-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+        
+        /* Messages Section Styles */
+        .messages-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .messages-header h3 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        
+        .new-message-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .contacts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px;
+            padding: 0 8px;
+        }
+        
+        .contact-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+            border-color: #667eea;
+        }
+        
+        .contact-card.unread {
+            border-left: 4px solid #667eea;
+        }
+        
+        .contact-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .contact-avatar.team {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 16px;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .contact-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .team-badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            background: #e0e7ff;
+            color: #667eea;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        body.dark-mode .team-badge {
+            background: #312e81;
+            color: #a5b4fc;
+        }
+        
+        .last-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .last-message.unread {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .contact-meta {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        
+        .unread-count {
+            background: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 11px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+        }
+        
+        /* Conversation View */
+        .conversation-view {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 140px);
+        }
+        
+        .conversation-header {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin: -20px -20px 0;
+        }
+        
+        .conversation-header .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+        }
+        
+        .conversation-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .conversation-avatar.team {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 12px;
+        }
+        
+        .conversation-info {
+            flex: 1;
+        }
+        
+        .conversation-info h3 {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .conversation-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .print-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 8px;
+        }
+        
+        .messages-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .message-bubble.sent {
+            align-self: flex-end;
+            background: var(--accent);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message-bubble.received {
+            align-self: flex-start;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .message-bubble .sender-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+        
+        .message-bubble .msg-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 4px;
+            text-align: right;
+        }
+        
+        .date-separator {
+            text-align: center;
+            margin: 16px 0;
+            position: relative;
+        }
+        
+        .date-separator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+        }
+        
+        .date-separator span {
+            background: var(--bg-primary);
+            padding: 0 16px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            position: relative;
+        }
+        
+        .message-input-container {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            margin: 0 -20px -20px;
+        }
+        
+        .message-input {
+            flex: 1;
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            resize: none;
+            min-height: 48px;
+            max-height: 120px;
+            font-family: inherit;
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Contact Option (New Message Modal) */
+        .contact-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .contact-option:hover {
+            background: var(--bg-primary);
+        }
+        
+        .contact-option .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .contact-option .avatar.team {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 12px;
+        }
+        
+        .contact-option .info {
+            flex: 1;
+        }
+        
+        .contact-option .name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .contact-option .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Read-only banner for team chats */
+        .read-only-banner {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            text-align: center;
+            border-bottom: 1px solid #fcd34d;
+            margin: 0 -20px;
+        }
+        
+        body.dark-mode .read-only-banner {
+            background: #451a03;
+            color: #fcd34d;
+            border-bottom-color: #78350f;
+        }
     </style>
 </head>
 <body>
@@ -688,19 +1572,116 @@
             
             <!-- Team Section -->
             <section class="section" id="section-team">
-                <div class="empty-state">
-                    <div class="empty-state-icon">👥</div>
-                    <h3>Team</h3>
-                    <p>This section will be added in Phase 4</p>
+                <!-- Team Tab Navigation -->
+                <div class="team-tabs">
+                    <button class="team-tab active" onclick="switchTeamTab('dashboard')" id="team-tab-dashboard">Dashboard</button>
+                    <button class="team-tab" onclick="switchTeamTab('clock')" id="team-tab-clock">Time Clock</button>
+                    <button class="team-tab" onclick="switchTeamTab('schedule')" id="team-tab-schedule">Schedule</button>
+                    <button class="team-tab hr-admin-tab" onclick="switchTeamTab('hr')" id="team-tab-hr" style="display: none;">HR Admin</button>
+                </div>
+                
+                <!-- Dashboard Tab -->
+                <div class="team-tab-content active" id="team-content-dashboard">
+                    <div id="managerSection"></div>
+                    <div class="team-section-title">Team Members</div>
+                    <div id="teamMembersList"></div>
+                </div>
+                
+                <!-- Time Clock Tab -->
+                <div class="team-tab-content" id="team-content-clock">
+                    <div class="time-clock-container">
+                        <div class="timezone-display" id="timezoneDisplay">Timezone: America/New York</div>
+                        <div class="digital-clock" id="digitalClock">00:00:00</div>
+                        <div class="current-date" id="currentDate">Loading...</div>
+                        
+                        <div class="clock-buttons">
+                            <button class="clock-btn primary" id="mainClockBtn" onclick="handleMainClockAction()">
+                                <span id="mainClockBtnText">Clock In</span>
+                            </button>
+                            <button class="clock-btn secondary" id="lunchBtn" style="display: none;" onclick="handleLunchAction()">
+                                <span id="lunchBtnText">Clock Out for Lunch</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="time-log">
+                        <h3>Today's Activity</h3>
+                        <div id="logEntries">
+                            <p style="color: var(--text-secondary); text-align: center;">No activity yet today</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Schedule Tab -->
+                <div class="team-tab-content" id="team-content-schedule">
+                    <div class="schedule-controls">
+                        <div class="month-nav">
+                            <button onclick="changeMonth(-1)">←</button>
+                            <span class="current-month" id="currentMonthLabel">June 2026</span>
+                            <button onclick="changeMonth(1)">→</button>
+                        </div>
+                        <button class="request-time-off-btn" onclick="showTimeOffModal()">Request Time Off</button>
+                    </div>
+                    
+                    <div class="balance-cards">
+                        <div class="balance-card">
+                            <div class="balance-label">Vacation Balance</div>
+                            <div class="balance-value" id="vacationBalance">80</div>
+                            <div class="balance-unit">hours</div>
+                        </div>
+                        <div class="balance-card">
+                            <div class="balance-label">Sick Time Balance</div>
+                            <div class="balance-value" id="sickBalance">40</div>
+                            <div class="balance-unit">hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <div class="calendar-header">
+                            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                        </div>
+                        <div class="calendar-days" id="calendarDays"></div>
+                    </div>
+                </div>
+                
+                <!-- HR Admin Tab -->
+                <div class="team-tab-content" id="team-content-hr">
+                    <h3 style="margin-bottom: 16px;">Time Off Requests</h3>
+                    <div id="hrTimeOffRequests"></div>
                 </div>
             </section>
             
             <!-- Messages Section -->
             <section class="section" id="section-messages">
-                <div class="empty-state">
-                    <div class="empty-state-icon">💬</div>
-                    <h3>Messages</h3>
-                    <p>This section will be added in Phase 5</p>
+                <!-- Messages List View -->
+                <div class="messages-list-view" id="messagesListView">
+                    <div class="messages-header">
+                        <h3>💬 Messages</h3>
+                        <button class="new-message-btn" onclick="showNewMessageModal()">+ New</button>
+                    </div>
+                    <div class="contacts-list" id="contactsList">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Conversation View -->
+                <div class="conversation-view" id="conversationView" style="display: none;">
+                    <div class="conversation-header">
+                        <button class="back-btn" onclick="showMessagesList()">←</button>
+                        <div class="conversation-avatar" id="conversationAvatar">AT</div>
+                        <div class="conversation-info">
+                            <h3 id="conversationName">Alex Thompson</h3>
+                            <p id="conversationStatus">Online</p>
+                        </div>
+                        <button class="print-btn" onclick="printTranscript()" title="Print Transcript">🖨️</button>
+                    </div>
+                    <div class="messages-scroll" id="messagesScroll">
+                        <!-- Messages populated by JavaScript -->
+                    </div>
+                    <div class="message-input-container">
+                        <textarea class="message-input" id="messageInput" placeholder="Type a message..." rows="1"></textarea>
+                        <button class="send-btn" onclick="sendMessage()">➤</button>
+                    </div>
                 </div>
             </section>
             
@@ -767,6 +1748,70 @@
                         <input type="date" id="taskDue" style="width: auto; min-width: 140px; max-width: 200px; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
                     </div>
                     <button class="btn btn-primary" onclick="saveTask()" style="margin-top: 24px;">Save Task</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Time Off Request Modal -->
+        <div class="modal-overlay" id="timeOffModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 80vh; overflow: hidden;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Request Time Off</h3>
+                    <button class="modal-close" onclick="closeTimeOffModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto;">
+                    <form onsubmit="submitTimeOffRequest(event)">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select id="timeOffType" required style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                                <option value="vacation">Vacation</option>
+                                <option value="sick">Sick Time</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-top: 16px;">
+                            <label>Start Date</label>
+                            <input type="date" id="timeOffStart" required style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-top: 16px;">
+                            <label>End Date</label>
+                            <input type="date" id="timeOffEnd" required style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-top: 16px;">
+                            <label>Notes (Optional)</label>
+                            <textarea id="timeOffNotes" placeholder="Add any additional details..." style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px; min-height: 80px; resize: vertical;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 24px;">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Day Detail Modal -->
+        <div class="modal-overlay" id="dayDetailModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 80vh; overflow: hidden;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Schedule Details</h3>
+                    <button class="modal-close" onclick="closeDayDetailModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto;">
+                    <div class="day-detail-date" id="dayDetailDate" style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border-color);"></div>
+                    <div id="dayTimeOffList"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- New Message Modal -->
+        <div class="modal-overlay" id="newMessageModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>New Message</h3>
+                    <button class="modal-close" onclick="closeNewMessageModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-search" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                    <input type="text" id="contactSearch" placeholder="Search contacts..." oninput="filterContacts()" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary);">
+                </div>
+                <div class="modal-body" id="newMessageContacts" style="padding: 0 20px 20px; overflow-y: auto; flex: 1;">
+                    <!-- Populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -922,6 +1967,17 @@
             // Refresh tasks when showing tasks
             if (sectionName === 'tasks') {
                 renderTasks();
+            }
+            
+            // Initialize team section
+            if (sectionName === 'team') {
+                initHRAdminTab();
+                renderTeamDashboard();
+            }
+            
+            // Initialize messages section
+            if (sectionName === 'messages') {
+                initMessages();
             }
         }
         
@@ -1139,10 +2195,1270 @@
             return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
         }
         
+        // ==========================================
+        // TEAM SECTION FUNCTIONS
+        // ==========================================
+        
+        // Employee data
+        const teamEmployees = [
+            { name: 'Alex Thompson', email: 'owner@company.com', role: 'Owner', team: 'Admin', timezone: 'America/New_York' },
+            { name: 'Jordan Smith', email: 'manager@company.com', role: 'Manager', team: 'Production', timezone: 'America/New_York' },
+            { name: 'Casey Johnson', email: 'employee@company.com', role: 'Employee', team: 'Production', timezone: 'America/New_York' },
+            { name: 'Sam Parker', email: 'hr@company.com', role: 'HR', team: 'Admin', timezone: 'America/New_York' },
+            { name: 'Taylor Reed', email: 'lead@company.com', role: 'Team Lead', team: 'Production', timezone: 'America/New_York' },
+            { name: 'Morgan Lee', email: 'warehouse@company.com', role: 'Employee', team: 'Production', timezone: 'America/Chicago' }
+        ];
+        
+        // Get current user's team
+        function getCurrentUserTeam() {
+            const emp = teamEmployees.find(e => e.email === currentUser.email);
+            return emp?.team || 'Production';
+        }
+        
+        function getCurrentUserRole() {
+            const emp = teamEmployees.find(e => e.email === currentUser.email);
+            return emp?.role || 'Employee';
+        }
+        
+        // Check if user can see HR Admin tab
+        function canAccessHRAdmin() {
+            const role = getCurrentUserRole();
+            return ['Owner', 'HR'].includes(role);
+        }
+        
+        // Get team members
+        function getTeamMembers() {
+            const team = getCurrentUserTeam();
+            return teamEmployees.filter(e => e.team === team);
+        }
+        
+        // Get manager for current team
+        function getTeamManager() {
+            const team = getCurrentUserTeam();
+            return teamEmployees.find(e => e.team === team && (e.role === 'Manager' || e.role === 'Owner')) || teamEmployees[0];
+        }
+        
+        // Team Tab Switching
+        function switchTeamTab(tabName) {
+            document.querySelectorAll('.team-tab').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.team-tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.getElementById(`team-tab-${tabName}`).classList.add('active');
+            document.getElementById(`team-content-${tabName}`).classList.add('active');
+            
+            if (tabName === 'schedule') {
+                renderCalendar();
+                updateBalances();
+            } else if (tabName === 'hr') {
+                renderHRTimeOffRequests();
+            } else if (tabName === 'clock') {
+                initClock();
+            } else if (tabName === 'dashboard') {
+                renderTeamDashboard();
+            }
+        }
+        
+        // Generate today's schedule for an employee
+        function getTodaySchedule(employee) {
+            const schedules = JSON.parse(localStorage.getItem('employeeSchedules')) || {};
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (schedules[employee.email]?.[today]) {
+                return schedules[employee.email][today];
+            }
+            
+            const defaults = {
+                'Manager': { start: '08:00', end: '17:00' },
+                'Team Lead': { start: '09:00', end: '18:00' },
+                'Employee': { start: '10:00', end: '19:00' }
+            };
+            
+            return defaults[employee.role] || { start: '09:00', end: '17:00' };
+        }
+        
+        function formatScheduleTime(schedule) {
+            if (!schedule) return 'Off';
+            return `${formatTimeDisplay(schedule.start)} - ${formatTimeDisplay(schedule.end)}`;
+        }
+        
+        function formatTimeDisplay(time) {
+            if (!time) return '';
+            const [hours, minutes] = time.split(':');
+            const h = parseInt(hours);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const h12 = h % 12 || 12;
+            return `${h12}:${minutes} ${ampm}`;
+        }
+        
+        function sortEmployeesBySchedule(employeesList) {
+            return [...employeesList].sort((a, b) => {
+                const schedA = getTodaySchedule(a);
+                const schedB = getTodaySchedule(b);
+                if (schedA.start !== schedB.start) {
+                    return schedA.start.localeCompare(schedB.start);
+                }
+                return a.name.localeCompare(b.name);
+            });
+        }
+        
+        // Render Team Dashboard
+        function renderTeamDashboard() {
+            const manager = getTeamManager();
+            const teamMembers = getTeamMembers().filter(e => e.email !== manager.email);
+            const sortedMembers = sortEmployeesBySchedule(teamMembers);
+            
+            // Render Manager Card
+            const managerSection = document.getElementById('managerSection');
+            const managerSchedule = getTodaySchedule(manager);
+            
+            managerSection.innerHTML = `
+                <div class="manager-card">
+                    <div class="manager-label">Team Manager</div>
+                    <div class="manager-name">${manager.name}</div>
+                    <div class="manager-schedule">${formatScheduleTime(managerSchedule)}</div>
+                </div>
+            `;
+            
+            // Render Team Members
+            const membersList = document.getElementById('teamMembersList');
+            membersList.innerHTML = sortedMembers.map(emp => {
+                const schedule = getTodaySchedule(emp);
+                return `
+                    <div class="employee-card">
+                        <div class="employee-avatar">${getInitials(emp.name)}</div>
+                        <div class="employee-info">
+                            <div class="employee-name">${emp.name}</div>
+                            <div class="employee-role">${emp.role}</div>
+                        </div>
+                        <div class="employee-schedule">
+                            <div class="schedule-time">${formatTimeDisplay(schedule.start)}</div>
+                            <div>${formatTimeDisplay(schedule.end)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Clock functionality
+        let clockInterval;
+        let currentTimezone = 'America/New_York';
+        
+        function initClock() {
+            const emp = teamEmployees.find(e => e.email === currentUser.email);
+            currentTimezone = emp?.timezone || 'America/New_York';
+            
+            document.getElementById('timezoneDisplay').textContent = `Timezone: ${currentTimezone.replace(/_/g, ' ')}`;
+            
+            updateClock();
+            if (clockInterval) clearInterval(clockInterval);
+            clockInterval = setInterval(updateClock, 1000);
+            
+            updateClockButtons();
+            renderTimeLog();
+        }
+        
+        function updateClock() {
+            const now = new Date();
+            const options = { 
+                timeZone: currentTimezone,
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const timeString = now.toLocaleTimeString('en-US', options);
+            document.getElementById('digitalClock').textContent = timeString;
+            
+            const dateOptions = { 
+                timeZone: currentTimezone,
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
+        }
+        
+        function getTodaysTimeEntries() {
+            const today = new Date().toISOString().split('T')[0];
+            const allEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+            const userEntries = allEntries[currentUser.email] || {};
+            return userEntries[today] || [];
+        }
+        
+        function addTimeEntry(action) {
+            const today = new Date().toISOString().split('T')[0];
+            const allEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+            
+            if (!allEntries[currentUser.email]) {
+                allEntries[currentUser.email] = {};
+            }
+            if (!allEntries[currentUser.email][today]) {
+                allEntries[currentUser.email][today] = [];
+            }
+            
+            const now = new Date();
+            const entry = {
+                action: action,
+                timestamp: now.toISOString(),
+                time: now.toLocaleTimeString('en-US', { 
+                    timeZone: currentTimezone,
+                    hour: 'numeric',
+                    minute: '2-digit'
+                })
+            };
+            
+            allEntries[currentUser.email][today].push(entry);
+            localStorage.setItem('timeEntries', JSON.stringify(allEntries));
+            
+            updateClockButtons();
+            renderTimeLog();
+        }
+        
+        function getCurrentClockStatus() {
+            const entries = getTodaysTimeEntries();
+            if (entries.length === 0) return 'out';
+            
+            const lastEntry = entries[entries.length - 1];
+            if (lastEntry.action === 'clockout') return 'out';
+            if (lastEntry.action === 'lunchout') return 'lunch';
+            if (lastEntry.action === 'lunchin') return 'in';
+            if (lastEntry.action === 'clockin') return 'in';
+            return 'out';
+        }
+        
+        function updateClockButtons() {
+            const status = getCurrentClockStatus();
+            const mainBtn = document.getElementById('mainClockBtn');
+            const mainBtnText = document.getElementById('mainClockBtnText');
+            const lunchBtn = document.getElementById('lunchBtn');
+            const lunchBtnText = document.getElementById('lunchBtnText');
+            
+            if (status === 'out') {
+                mainBtn.className = 'clock-btn primary';
+                mainBtnText.textContent = 'Clock In';
+                lunchBtn.style.display = 'none';
+            } else if (status === 'in') {
+                mainBtn.className = 'clock-btn danger';
+                mainBtnText.textContent = 'Clock Out';
+                lunchBtn.style.display = 'flex';
+                lunchBtnText.textContent = 'Clock Out for Lunch';
+            } else if (status === 'lunch') {
+                mainBtn.className = 'clock-btn primary';
+                mainBtnText.textContent = 'Clock In from Lunch';
+                lunchBtn.style.display = 'none';
+            }
+        }
+        
+        function handleMainClockAction() {
+            const status = getCurrentClockStatus();
+            if (status === 'out') {
+                addTimeEntry('clockin');
+            } else if (status === 'in') {
+                addTimeEntry('clockout');
+            } else if (status === 'lunch') {
+                addTimeEntry('lunchin');
+            }
+        }
+        
+        function handleLunchAction() {
+            const status = getCurrentClockStatus();
+            if (status === 'in') {
+                addTimeEntry('lunchout');
+            }
+        }
+        
+        function renderTimeLog() {
+            const entries = getTodaysTimeEntries();
+            const container = document.getElementById('logEntries');
+            
+            if (entries.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No activity yet today</p>';
+                return;
+            }
+            
+            const actionLabels = {
+                'clockin': 'Clocked In',
+                'clockout': 'Clocked Out',
+                'lunchout': 'Lunch Break Started',
+                'lunchin': 'Lunch Break Ended'
+            };
+            
+            const actionClasses = {
+                'clockin': 'clock-in',
+                'clockout': 'clock-out',
+                'lunchout': 'lunch-out',
+                'lunchin': 'lunch-in'
+            };
+            
+            container.innerHTML = entries.slice().reverse().map(entry => `
+                <div class="log-entry">
+                    <span class="action ${actionClasses[entry.action]}">${actionLabels[entry.action]}</span>
+                    <span class="time">${entry.time}</span>
+                </div>
+            `).join('');
+        }
+        
+        // Calendar functionality
+        let currentCalendarDate = new Date();
+        
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            document.getElementById('currentMonthLabel').textContent = 
+                currentCalendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDayOfWeek = firstDay.getDay();
+            
+            const container = document.getElementById('calendarDays');
+            container.innerHTML = '';
+            
+            // Previous month days
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            const prevMonth = month === 0 ? 11 : month - 1;
+            const prevYear = month === 0 ? year - 1 : year;
+            for (let i = startDayOfWeek - 1; i >= 0; i--) {
+                const day = prevMonthLastDay - i;
+                container.innerHTML += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
+            }
+            
+            // Current month days
+            const today = new Date().toISOString().split('T')[0];
+            const teamMembers = getTeamMembers();
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isToday = dateStr === today;
+                
+                let shiftsHtml = '';
+                teamMembers.forEach(emp => {
+                    const sched = getDaySchedule(emp, dateStr);
+                    if (sched && !sched.off) {
+                        const label = getInitials(emp.name);
+                        shiftsHtml += `<div class="day-shift">${label}</div>`;
+                    }
+                });
+                
+                const timeOff = getTimeOffForDay(dateStr);
+                const hasTimeOff = timeOff.length > 0;
+                
+                timeOff.forEach(req => {
+                    const className = req.status === 'approved' 
+                        ? `day-shift ${req.type === 'vacation' ? 'vacation' : 'sick'}` 
+                        : 'day-shift pending';
+                    const label = req.status === 'approved' 
+                        ? (req.type === 'vacation' ? 'VAC' : 'SICK') 
+                        : 'PEND';
+                    shiftsHtml += `<div class="${className}">${label}</div>`;
+                });
+                
+                container.innerHTML += `
+                    <div class="calendar-day ${isToday ? 'today' : ''} ${hasTimeOff ? 'has-timeoff' : ''}" onclick="showDayDetail('${dateStr}')">
+                        <div class="day-number">${day}</div>
+                        <div class="day-shifts">${shiftsHtml}</div>
+                    </div>
+                `;
+            }
+            
+            // Next month days
+            const remainingCells = 42 - (startDayOfWeek + daysInMonth);
+            const nextMonth = month === 11 ? 0 : month + 1;
+            const nextYear = month === 11 ? year + 1 : year;
+            for (let day = 1; day <= remainingCells; day++) {
+                container.innerHTML += `<div class="calendar-day other-month"><div class="day-number">${day}</div></div>`;
+            }
+        }
+        
+        function getDaySchedule(employee, dateStr) {
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const approvedRequest = requests.find(r => 
+                r.employeeEmail === employee.email &&
+                r.status === 'approved' &&
+                dateStr >= r.startDate &&
+                dateStr <= r.endDate
+            );
+            
+            if (approvedRequest) {
+                return { off: true, type: approvedRequest.type };
+            }
+            
+            const schedules = JSON.parse(localStorage.getItem('employeeSchedules')) || {};
+            return schedules[employee.email]?.[dateStr];
+        }
+        
+        function changeMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+        
+        function showTimeOffModal() {
+            document.getElementById('timeOffModal').style.display = 'flex';
+            document.getElementById('timeOffStart').value = '';
+            document.getElementById('timeOffEnd').value = '';
+            document.getElementById('timeOffNotes').value = '';
+        }
+        
+        function closeTimeOffModal() {
+            document.getElementById('timeOffModal').style.display = 'none';
+        }
+        
+        function submitTimeOffRequest(event) {
+            event.preventDefault();
+            
+            const type = document.getElementById('timeOffType').value;
+            const startDate = document.getElementById('timeOffStart').value;
+            const endDate = document.getElementById('timeOffEnd').value;
+            const notes = document.getElementById('timeOffNotes').value;
+            
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            const hoursRequested = days * 8;
+            
+            const balances = getTimeOffBalances();
+            const available = type === 'vacation' ? balances.vacation : balances.sick;
+            
+            if (hoursRequested > available) {
+                alert(`Insufficient ${type} balance. You have ${available} hours available but requested ${hoursRequested} hours.`);
+                return;
+            }
+            
+            const isOwner = getCurrentUserRole() === 'Owner';
+            const status = isOwner ? 'approved' : 'pending';
+            
+            const request = {
+                id: Date.now(),
+                employeeEmail: currentUser.email,
+                employeeName: currentUser.name,
+                team: getCurrentUserTeam(),
+                type: type,
+                startDate: startDate,
+                endDate: endDate,
+                hoursRequested: hoursRequested,
+                notes: notes,
+                status: status,
+                submittedAt: new Date().toISOString()
+            };
+            
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            requests.push(request);
+            localStorage.setItem('timeOffRequests', JSON.stringify(requests));
+            
+            closeTimeOffModal();
+            
+            if (isOwner) {
+                alert('Time off approved! Hours have been deducted from your balance.');
+            } else {
+                alert('Time off request submitted for approval!');
+            }
+            
+            renderCalendar();
+            updateBalances();
+        }
+        
+        function getTimeOffBalances() {
+            const balances = JSON.parse(localStorage.getItem('timeOffBalances')) || {};
+            const userBalance = balances[currentUser.email] || { vacation: 80, sick: 40 };
+            
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const approvedRequests = requests.filter(r => 
+                r.employeeEmail === currentUser.email && 
+                r.status === 'approved'
+            );
+            
+            const usedVacation = approvedRequests
+                .filter(r => r.type === 'vacation')
+                .reduce((sum, r) => sum + r.hoursRequested, 0);
+            
+            const usedSick = approvedRequests
+                .filter(r => r.type === 'sick')
+                .reduce((sum, r) => sum + r.hoursRequested, 0);
+            
+            return {
+                vacation: Math.max(0, userBalance.vacation - usedVacation),
+                sick: Math.max(0, userBalance.sick - usedSick)
+            };
+        }
+        
+        function updateBalances() {
+            const balances = getTimeOffBalances();
+            document.getElementById('vacationBalance').textContent = balances.vacation;
+            document.getElementById('sickBalance').textContent = balances.sick;
+        }
+        
+        function getTimeOffForDay(dateStr) {
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            return requests.filter(req => 
+                req.team === getCurrentUserTeam() &&
+                dateStr >= req.startDate && 
+                dateStr <= req.endDate
+            );
+        }
+        
+        function showDayDetail(dateStr) {
+            const timeOff = getTimeOffForDay(dateStr);
+            const date = new Date(dateStr);
+            const dateDisplay = date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+            
+            document.getElementById('dayDetailDate').textContent = dateDisplay;
+            
+            const container = document.getElementById('dayTimeOffList');
+            
+            if (timeOff.length === 0) {
+                container.innerHTML = `
+                    <div class="no-timeoff">
+                        <div class="no-timeoff-icon">📅</div>
+                        <p>No time off scheduled for this day</p>
+                    </div>
+                `;
+            } else {
+                const types = { vacation: 'Vacation', sick: 'Sick Time' };
+                const statusLabels = { approved: 'Approved', pending: 'Pending' };
+                
+                const approved = timeOff.filter(r => r.status === 'approved');
+                const pending = timeOff.filter(r => r.status === 'pending');
+                
+                let html = '';
+                
+                if (approved.length > 0) {
+                    html += '<div style="margin-bottom: 24px;">';
+                    html += '<div class="team-section-title">Approved</div>';
+                    html += approved.map(req => `
+                        <div class="timeoff-item">
+                            <div class="timeoff-avatar">${getInitials(req.employeeName)}</div>
+                            <div class="timeoff-info">
+                                <div class="timeoff-name">${req.employeeName}</div>
+                                <div class="timeoff-type">${types[req.type]} (${req.hoursRequested} hours)</div>
+                            </div>
+                            <span class="timeoff-status approved">${statusLabels[req.status]}</span>
+                        </div>
+                    `).join('');
+                    html += '</div>';
+                }
+                
+                if (pending.length > 0) {
+                    html += '<div style="margin-bottom: 24px;">';
+                    html += '<div class="team-section-title">Pending Approval</div>';
+                    html += pending.map(req => `
+                        <div class="timeoff-item">
+                            <div class="timeoff-avatar">${getInitials(req.employeeName)}</div>
+                            <div class="timeoff-info">
+                                <div class="timeoff-name">${req.employeeName}</div>
+                                <div class="timeoff-type">${types[req.type]} (${req.hoursRequested} hours)</div>
+                            </div>
+                            <span class="timeoff-status pending">${statusLabels[req.status]}</span>
+                        </div>
+                    `).join('');
+                    html += '</div>';
+                }
+                
+                container.innerHTML = html;
+            }
+            
+            document.getElementById('dayDetailModal').style.display = 'flex';
+        }
+        
+        function closeDayDetailModal() {
+            document.getElementById('dayDetailModal').style.display = 'none';
+        }
+        
+        // HR Admin functions
+        function renderHRTimeOffRequests() {
+            const container = document.getElementById('hrTimeOffRequests');
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const pendingRequests = requests.filter(r => r.status === 'pending' && r.team === getCurrentUserTeam());
+            
+            if (pendingRequests.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <p>No pending time off requests</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const types = { vacation: 'Vacation', sick: 'Sick Time' };
+            
+            container.innerHTML = pendingRequests.map(req => `
+                <div class="timeoff-item" style="margin-bottom: 12px;">
+                    <div class="timeoff-avatar">${getInitials(req.employeeName)}</div>
+                    <div class="timeoff-info">
+                        <div class="timeoff-name">${req.employeeName}</div>
+                        <div class="timeoff-type">${types[req.type]} - ${req.startDate} to ${req.endDate} (${req.hoursRequested} hours)</div>
+                        ${req.notes ? `<div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">${req.notes}</div>` : ''}
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <button onclick="approveTimeOff(${req.id})" style="flex: 1; padding: 8px; background: var(--success); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Approve</button>
+                    <button onclick="denyTimeOff(${req.id})" style="flex: 1; padding: 8px; background: var(--danger); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Deny</button>
+                </div>
+            `).join('');
+        }
+        
+        function approveTimeOff(requestId) {
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const request = requests.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'approved';
+                localStorage.setItem('timeOffRequests', JSON.stringify(requests));
+                renderHRTimeOffRequests();
+                alert(`Approved ${request.employeeName}'s ${request.type} request!`);
+            }
+        }
+        
+        function denyTimeOff(requestId) {
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const request = requests.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'denied';
+                localStorage.setItem('timeOffRequests', JSON.stringify(requests));
+                renderHRTimeOffRequests();
+                alert(`Denied ${request.employeeName}'s ${request.type} request.`);
+            }
+        }
+        
+        // Initialize HR Admin tab visibility
+        function initHRAdminTab() {
+            const hrTab = document.getElementById('team-tab-hr');
+            if (hrTab && canAccessHRAdmin()) {
+                hrTab.style.display = 'block';
+            }
+        }
+        
+        // Close modal on outside click
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'timeOffModal') {
+                closeTimeOffModal();
+            }
+            if (e.target.id === 'dayDetailModal') {
+                closeDayDetailModal();
+            }
+        });
+        
+        // Update Home Data for clocked-in team members
+        function updateHomeData() {
+            // Update task count
+            const tasks = getTasks();
+            const myTasks = tasks.filter(t => t.assignee === currentUser.email || t.createdBy === currentUser.email);
+            document.getElementById('taskCount').textContent = myTasks.length;
+            
+            // Update clocked-in list
+            const allEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+            const today = new Date().toISOString().split('T')[0];
+            const teamMembers = getTeamMembers();
+            
+            const clockedInMembers = teamMembers.filter(emp => {
+                const userEntries = allEntries[emp.email]?.[today] || [];
+                if (userEntries.length === 0) return false;
+                const lastEntry = userEntries[userEntries.length - 1];
+                return lastEntry.action === 'clockin' || lastEntry.action === 'lunchin';
+            });
+            
+            const clockedInList = document.getElementById('clockedInList');
+            if (clockedInMembers.length === 0) {
+                clockedInList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">😴</div>
+                        <p>No one is clocked in on your team right now</p>
+                    </div>
+                `;
+            } else {
+                clockedInList.innerHTML = clockedInMembers.map(emp => `
+                    <div class="employee-card" style="margin-bottom: 8px;">
+                        <div class="employee-avatar" style="width: 40px; height: 40px; font-size: 1rem;">${getInitials(emp.name)}</div>
+                        <div class="employee-info">
+                            <div class="employee-name" style="font-size: 0.95rem;">${emp.name}</div>
+                            <div class="employee-role" style="font-size: 0.8rem;">${emp.role}</div>
+                        </div>
+                        <div style="color: var(--success); font-size: 0.85rem; font-weight: 600;">🟢 On</div>
+                    </div>
+                `).join('');
+            }
+        }
+        
         // Check if already logged in
         if (currentUser) {
             showApp();
         }
+        
+        // ==========================================
+        // MESSAGES SECTION FUNCTIONS
+        // ==========================================
+        
+        // Teams data for messaging
+        const msgTeams = [
+            { name: 'Production Team', id: 'production', members: ['Jordan Smith', 'Casey Johnson', 'Taylor Reed', 'Morgan Lee'] },
+            { name: 'Admin Team', id: 'admin', members: ['Alex Thompson', 'Sam Parker'] }
+        ];
+        
+        // Messages storage
+        let conversations = JSON.parse(localStorage.getItem('conversations')) || {};
+        let currentConversationId = null;
+        
+        // Check permissions
+        function canSendToTeams() {
+            const role = getCurrentUserRole();
+            return ['Owner', 'Manager', 'HR'].includes(role);
+        }
+        
+        function canViewTeamConversation(teamId) {
+            const role = getCurrentUserRole();
+            if (['Owner', 'Manager', 'HR'].includes(role)) return true;
+            const userTeam = getCurrentUserTeam().toLowerCase();
+            return userTeam === teamId;
+        }
+        
+        // Initialize demo conversations
+        function initDemoConversations() {
+            if (Object.keys(conversations).length === 0) {
+                const today = new Date().toISOString().split('T')[0];
+                const now = new Date();
+                const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                
+                conversations = {
+                    'manager@company.com': {
+                        contact: { name: 'Jordan Smith', email: 'manager@company.com', role: 'Manager' },
+                        messages: [
+                            { id: 1, sender: 'Jordan Smith', text: 'Hey, can we talk about the inventory?', time: '10:30 AM', date: today },
+                            { id: 2, sender: 'You', text: 'Sure, what\'s up?', time: '10:32 AM', date: today }
+                        ],
+                        unread: 0
+                    }
+                };
+                
+                // Only add team conversation if user can view it
+                const userTeam = getCurrentUserTeam().toLowerCase();
+                if (canViewTeamConversation('production')) {
+                    conversations['production'] = {
+                        contact: { name: 'Production Team', id: 'production' },
+                        isTeam: true,
+                        messages: [
+                            { id: 1, sender: 'Alex Thompson', text: 'Team meeting at 3 PM today', time: '9:00 AM', date: today },
+                            { id: 2, sender: 'Casey Johnson', text: 'Got it, I\'ll be there', time: '9:05 AM', date: today }
+                        ],
+                        unread: 1
+                    };
+                }
+                
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+            }
+        }
+        
+        // Render contacts list
+        function renderContactsList() {
+            initDemoConversations();
+            const container = document.getElementById('contactsList');
+            container.innerHTML = '';
+            
+            // Sort conversations by most recent message
+            const sortedConversations = Object.entries(conversations).sort((a, b) => {
+                const aLast = a[1].messages[a[1].messages.length - 1];
+                const bLast = b[1].messages[b[1].messages.length - 1];
+                return (bLast?.id || 0) - (aLast?.id || 0);
+            });
+            
+            // Filter visible conversations based on role
+            const visibleConversations = sortedConversations.filter(([id, conv]) => {
+                if (!conv.isTeam) return true;
+                return canViewTeamConversation(id);
+            });
+            
+            // Team Conversations Section
+            const teamConversations = visibleConversations.filter(([_, conv]) => conv.isTeam);
+            if (teamConversations.length > 0) {
+                container.innerHTML += '<div class="section-header">Team Conversations</div>';
+                teamConversations.forEach(([id, conv]) => {
+                    container.appendChild(createContactCard(id, conv));
+                });
+            }
+            
+            // Individual Conversations Section
+            const individualConversations = visibleConversations.filter(([_, conv]) => !conv.isTeam);
+            if (individualConversations.length > 0) {
+                container.innerHTML += '<div class="section-header">Direct Messages</div>';
+                individualConversations.forEach(([id, conv]) => {
+                    container.appendChild(createContactCard(id, conv));
+                });
+            }
+            
+            // Empty state
+            if (visibleConversations.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💬</div>
+                        <h3>No messages yet</h3>
+                        <p>Start a conversation by clicking "New"</p>
+                    </div>
+                `;
+            }
+            
+            updateMessageBadge();
+        }
+        
+        // Create contact card element
+        function createContactCard(id, conversation) {
+            const lastMsg = conversation.messages[conversation.messages.length - 1];
+            const isTeam = conversation.isTeam;
+            
+            const card = document.createElement('div');
+            card.className = `contact-card ${conversation.unread > 0 ? 'unread' : ''}`;
+            card.onclick = () => openConversation(id);
+            
+            card.innerHTML = `
+                <div class="contact-avatar ${isTeam ? 'team' : ''}">
+                    ${getInitials(conversation.contact.name)}
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">
+                        ${conversation.contact.name}
+                        ${isTeam ? '<span class="team-badge">Team</span>' : ''}
+                    </div>
+                    <div class="last-message ${conversation.unread > 0 ? 'unread' : ''}">
+                        ${lastMsg ? (lastMsg.sender === 'You' ? 'You: ' : '') + lastMsg.text : 'No messages'}
+                    </div>
+                </div>
+                <div class="contact-meta">
+                    <div class="message-time">${lastMsg?.time || ''}</div>
+                    ${conversation.unread > 0 ? `<span class="unread-count">${conversation.unread}</span>` : ''}
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Open conversation
+        function openConversation(conversationId) {
+            currentConversationId = conversationId;
+            const conversation = conversations[conversationId];
+            
+            if (!conversation) return;
+            
+            // Mark as read
+            if (conversation.unread > 0) {
+                conversation.unread = 0;
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+                renderContactsList();
+            }
+            
+            // Update header
+            const isTeam = conversation.isTeam;
+            document.getElementById('conversationAvatar').textContent = getInitials(conversation.contact.name);
+            document.getElementById('conversationAvatar').className = `conversation-avatar ${isTeam ? 'team' : ''}`;
+            document.getElementById('conversationName').textContent = conversation.contact.name;
+            document.getElementById('conversationStatus').textContent = isTeam ? 'Team Chat' : 'Online';
+            
+            // Check if user can send to this conversation
+            const canSend = !isTeam || canSendToTeams();
+            const inputContainer = document.querySelector('#conversationView .message-input-container');
+            
+            // Remove existing read-only banner
+            const existingBanner = document.getElementById('readOnlyBanner');
+            if (existingBanner) existingBanner.remove();
+            
+            if (isTeam && !canSend) {
+                const banner = document.createElement('div');
+                banner.id = 'readOnlyBanner';
+                banner.className = 'read-only-banner';
+                banner.textContent = '🔒 Read-only: Only Owners, Managers, and HR can send team messages';
+                const conversationView = document.getElementById('conversationView');
+                conversationView.insertBefore(banner, conversationView.children[1]);
+                if (inputContainer) inputContainer.style.display = 'none';
+            } else {
+                if (inputContainer) inputContainer.style.display = 'flex';
+            }
+            
+            // Render messages
+            renderMessages(conversation);
+            
+            // Show conversation view
+            document.getElementById('messagesListView').style.display = 'none';
+            document.getElementById('conversationView').style.display = 'flex';
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                const messagesScroll = document.getElementById('messagesScroll');
+                messagesScroll.scrollTop = messagesScroll.scrollHeight;
+            }, 50);
+        }
+        
+        // Render messages
+        function renderMessages(conversation) {
+            const container = document.getElementById('messagesScroll');
+            container.innerHTML = '';
+            
+            let lastDate = '';
+            
+            conversation.messages.forEach(msg => {
+                // Add date separator if new date
+                if (msg.date !== lastDate) {
+                    const dateSep = document.createElement('div');
+                    dateSep.className = 'date-separator';
+                    dateSep.innerHTML = `<span>${formatMessageDate(msg.date)}</span>`;
+                    container.appendChild(dateSep);
+                    lastDate = msg.date;
+                }
+                
+                const isSent = msg.sender === 'You';
+                const bubble = document.createElement('div');
+                bubble.className = `message-bubble ${isSent ? 'sent' : 'received'}`;
+                
+                // Show sender name for team messages (except if it's you)
+                let senderHtml = '';
+                if (conversation.isTeam && !isSent) {
+                    senderHtml = `<div class="sender-name">${msg.sender}</div>`;
+                }
+                
+                bubble.innerHTML = `
+                    ${senderHtml}
+                    ${msg.text}
+                    <div class="msg-time">${msg.time}</div>
+                `;
+                
+                container.appendChild(bubble);
+            });
+        }
+        
+        // Show messages list
+        function showMessagesList() {
+            currentConversationId = null;
+            document.getElementById('messagesListView').style.display = 'block';
+            document.getElementById('conversationView').style.display = 'none';
+            renderContactsList();
+        }
+        
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || !currentConversationId) return;
+            
+            const conversation = conversations[currentConversationId];
+            
+            // Check permissions for team messages
+            if (conversation.isTeam && !canSendToTeams()) {
+                alert('Only Owners, Managers, and HR can send messages to teams.');
+                return;
+            }
+            
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            const date = now.toISOString().split('T')[0];
+            
+            const message = {
+                id: Date.now(),
+                sender: 'You',
+                text: text,
+                time: time,
+                date: date
+            };
+            
+            conversation.messages.push(message);
+            localStorage.setItem('conversations', JSON.stringify(conversations));
+            
+            input.value = '';
+            input.style.height = 'auto';
+            
+            renderMessages(conversation);
+            
+            // Scroll to bottom
+            const messagesScroll = document.getElementById('messagesScroll');
+            messagesScroll.scrollTop = messagesScroll.scrollHeight;
+            
+            // Simulate reply after 1 second for demo
+            setTimeout(() => {
+                const replyMsg = {
+                    id: Date.now(),
+                    sender: conversation.contact.name,
+                    text: 'Got it, thanks!',
+                    time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+                    date: date
+                };
+                conversation.messages.push(replyMsg);
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+                renderMessages(conversation);
+                messagesScroll.scrollTop = messagesScroll.scrollHeight;
+            }, 1000);
+        }
+        
+        // Auto-resize textarea
+        document.addEventListener('DOMContentLoaded', function() {
+            const msgInput = document.getElementById('messageInput');
+            if (msgInput) {
+                msgInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+                });
+                
+                msgInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
+        });
+        
+        // New Message Modal
+        function showNewMessageModal() {
+            document.getElementById('newMessageModal').style.display = 'flex';
+            document.getElementById('contactSearch').value = '';
+            renderNewMessageContacts();
+        }
+        
+        function closeNewMessageModal() {
+            document.getElementById('newMessageModal').style.display = 'none';
+        }
+        
+        function renderNewMessageContacts(filter = '') {
+            const container = document.getElementById('newMessageContacts');
+            container.innerHTML = '';
+            
+            const filterLower = filter.toLowerCase();
+            
+            // Teams section - only show if user can send to teams
+            if (canSendToTeams()) {
+                const filteredTeams = msgTeams.filter(t => t.name.toLowerCase().includes(filterLower));
+                if (filteredTeams.length > 0) {
+                    container.innerHTML += '<div class="section-header">Teams</div>';
+                    filteredTeams.forEach(team => {
+                        const option = createContactOption(team, true);
+                        container.appendChild(option);
+                    });
+                }
+            }
+            
+            // Individuals section
+            const filteredEmployees = teamEmployees.filter(e => 
+                e.name.toLowerCase().includes(filterLower) && 
+                e.email !== currentUser.email
+            );
+            if (filteredEmployees.length > 0) {
+                container.innerHTML += '<div class="section-header">People</div>';
+                filteredEmployees.forEach(emp => {
+                    const option = createContactOption(emp, false);
+                    container.appendChild(option);
+                });
+            }
+        }
+        
+        function createContactOption(contact, isTeam) {
+            const div = document.createElement('div');
+            div.className = 'contact-option';
+            div.onclick = () => startNewConversation(contact, isTeam);
+            
+            const id = isTeam ? contact.id : contact.email;
+            const hasConversation = conversations[id];
+            
+            div.innerHTML = `
+                <div class="avatar ${isTeam ? 'team' : ''}">${getInitials(contact.name)}</div>
+                <div class="info">
+                    <div class="name">${contact.name}</div>
+                    <div class="subtitle">${isTeam ? `${contact.members.length} members` : contact.role}</div>
+                </div>
+            `;
+            
+            return div;
+        }
+        
+        function startNewConversation(contact, isTeam) {
+            const id = isTeam ? contact.id : contact.email;
+            
+            if (!conversations[id]) {
+                conversations[id] = {
+                    contact: contact,
+                    isTeam: isTeam,
+                    messages: [],
+                    unread: 0
+                };
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+            }
+            
+            closeNewMessageModal();
+            openConversation(id);
+        }
+        
+        function filterContacts() {
+            const filter = document.getElementById('contactSearch').value;
+            renderNewMessageContacts(filter);
+        }
+        
+        function formatMessageDate(dateStr) {
+            if (!dateStr) return '';
+            const today = new Date().toISOString().split('T')[0];
+            const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+            
+            if (dateStr === today) return 'Today';
+            if (dateStr === yesterday) return 'Yesterday';
+            
+            return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+        
+        // Print transcript
+        function printTranscript() {
+            if (!currentConversationId) return;
+            
+            const conversation = conversations[currentConversationId];
+            if (!conversation) return;
+            
+            const isTeam = conversation.isTeam;
+            const contactName = conversation.contact.name;
+            const userName = currentUser.name || currentUser.email;
+            const printDate = new Date().toLocaleString('en-US', { 
+                month: 'long', day: 'numeric', year: 'numeric', 
+                hour: 'numeric', minute: '2-digit' 
+            });
+            
+            let transcriptHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Message Transcript - ${contactName}</title>
+                    <style>
+                        body {
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            max-width: 800px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            background: white;
+                            color: #333;
+                        }
+                        .header {
+                            border-bottom: 2px solid #333;
+                            padding-bottom: 20px;
+                            margin-bottom: 30px;
+                        }
+                        .header h1 { margin: 0 0 10px 0; font-size: 1.5rem; }
+                        .header .meta { color: #666; font-size: 0.9rem; }
+                        .message {
+                            margin-bottom: 16px;
+                            padding: 12px;
+                            border-radius: 8px;
+                        }
+                        .message.sent {
+                            background: #f0f0f0;
+                            margin-left: 20%;
+                        }
+                        .message.received {
+                            background: #e8f4f8;
+                            margin-right: 20%;
+                        }
+                        .message-header {
+                            font-weight: 600;
+                            margin-bottom: 4px;
+                            font-size: 0.9rem;
+                        }
+                        .message-time {
+                            color: #666;
+                            font-size: 0.8rem;
+                            margin-top: 4px;
+                        }
+                        .date-separator {
+                            text-align: center;
+                            margin: 30px 0;
+                            color: #999;
+                            font-size: 0.85rem;
+                            font-weight: 600;
+                        }
+                        @media print {
+                            body { padding: 10px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Message Transcript</h1>
+                        <div class="meta">
+                            <strong>Conversation:</strong> ${contactName}${isTeam ? ' (Team Chat)' : ''}<br>
+                            <strong>Printed by:</strong> ${userName}<br>
+                            <strong>Date:</strong> ${printDate}
+                        </div>
+                    </div>
+                    <div class="messages">
+            `;
+            
+            let lastDate = '';
+            conversation.messages.forEach(msg => {
+                if (msg.date !== lastDate) {
+                    transcriptHTML += `<div class="date-separator">${formatMessageDate(msg.date)}</div>`;
+                    lastDate = msg.date;
+                }
+                
+                const isSent = msg.sender === 'You';
+                transcriptHTML += `
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        <div class="message-header">${isSent ? userName : msg.sender}</div>
+                        <div class="message-body">${msg.text}</div>
+                        <div class="message-time">${msg.time}</div>
+                    </div>
+                `;
+            });
+            
+            transcriptHTML += `
+                    </div>
+                    <div class="no-print" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center;">
+                        <button onclick="window.print()" style="padding: 10px 20px; font-size: 1rem; cursor: pointer;">🖨️ Print / Save as PDF</button>
+                        <button onclick="window.close()" style="padding: 10px 20px; font-size: 1rem; margin-left: 10px; cursor: pointer;">Close</button>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank', 'width=800,height=600');
+            printWindow.document.write(transcriptHTML);
+            printWindow.document.close();
+        }
+        
+        function updateMessageBadge() {
+            let relevantUnread = 0;
+            
+            Object.entries(conversations).forEach(([id, conv]) => {
+                if (conv.unread <= 0) return;
+                
+                if (conv.isTeam) {
+                    if (canViewTeamConversation(id)) {
+                        relevantUnread += conv.unread;
+                    }
+                } else {
+                    // For individual messages
+                    if (id === currentUser.email) {
+                        relevantUnread += conv.unread;
+                    }
+                }
+            });
+            
+            const badge = document.getElementById('msg-badge');
+            if (badge) {
+                badge.textContent = relevantUnread;
+                badge.style.display = relevantUnread > 0 ? 'flex' : 'none';
+            }
+            
+            localStorage.setItem(`badge_messages_${currentUser.email}`, relevantUnread.toString());
+        }
+        
+        // Initialize messages when section is shown
+        function initMessages() {
+            initDemoConversations();
+            renderContactsList();
+        }
+        
+        // Close modal on outside click
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'newMessageModal') {
+                closeNewMessageModal();
+            }
+        });
     </script>
 </body>
 </html>
