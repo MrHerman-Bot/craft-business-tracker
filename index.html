@@ -206,6 +206,156 @@
             color: white;
         }
         
+        /* Task Board Styles */
+        .tasks-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .tasks-header h3 {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+        }
+        
+        .add-task-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .board-columns {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        
+        .board-column {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .board-column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .board-column-header h4 {
+            font-size: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .task-count {
+            background: var(--bg-primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 100px;
+        }
+        
+        .task-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: grab;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .task-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .task-card.dragging {
+            opacity: 0.5;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .task-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .task-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .task-badge.due-soon { background: #fee2e2; color: #991b1b; }
+        .task-badge.due-later { background: #dbeafe; color: #1e40af; }
+        .task-badge.recurring { background: #d1fae5; color: #065f46; }
+        .task-badge.team { background: #fef3c7; color: #92400e; }
+        
+        body.dark-mode .task-badge.due-soon { background: #7f1d1d; color: #fecaca; }
+        body.dark-mode .task-badge.due-later { background: #1e3a8a; color: #bfdbfe; }
+        body.dark-mode .task-badge.recurring { background: #064e3b; color: #6ee7b7; }
+        body.dark-mode .task-badge.team { background: #78350f; color: #fcd34d; }
+        
+        .task-assignee {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .task-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .empty-column {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-column-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
         .user-info {
             display: flex;
             flex-direction: column;
@@ -489,10 +639,50 @@
             
             <!-- Tasks Section -->
             <section class="section" id="section-tasks">
-                <div class="empty-state">
-                    <div class="empty-state-icon">📋</div>
-                    <h3>Tasks</h3>
-                    <p>This section will be added in Phase 3</p>
+                <div class="tasks-header">
+                    <h3>📋 Tasks</h3>
+                    <button class="add-task-btn" onclick="showAddTaskModal()">+ New Task</button>
+                </div>
+                
+                <div class="board-columns">
+                    <div class="board-column">
+                        <div class="board-column-header">
+                            <h4>📝 To Do</h4>
+                            <span class="task-count" id="countTodo">0</span>
+                        </div>
+                        <div class="task-list" id="todoList">
+                            <div class="empty-column">
+                                <div class="empty-column-icon">📝</div>
+                                <p>No tasks yet</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="board-column">
+                        <div class="board-column-header">
+                            <h4>🔄 In Progress</h4>
+                            <span class="task-count" id="countDoing">0</span>
+                        </div>
+                        <div class="task-list" id="doingList">
+                            <div class="empty-column">
+                                <div class="empty-column-icon">🔄</div>
+                                <p>No tasks in progress</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="board-column">
+                        <div class="board-column-header">
+                            <h4>✅ Done</h4>
+                            <span class="task-count" id="countDone">0</span>
+                        </div>
+                        <div class="task-list" id="doneList">
+                            <div class="empty-column">
+                                <div class="empty-column-icon">✅</div>
+                                <p>No completed tasks</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
             
@@ -527,8 +717,59 @@
                         </button>
                     </div>
                 </div>
+                
+                <div class="home-card">
+                    <div class="home-card-title">Account</div>
+                    <button class="btn" style="width: 100%; background: var(--danger); color: white; margin-top: 8px;" onclick="logout()">
+                        🚪 Logout
+                    </button>
+                </div>
             </section>
         </main>
+        
+        <!-- Task Modal -->
+        <div class="modal-overlay" id="taskModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 80vh; overflow: hidden;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 id="taskModalTitle">Add Task</h3>
+                    <button class="modal-close" onclick="closeTaskModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto;">
+                    <input type="hidden" id="editingTaskId">
+                    <div class="form-group">
+                        <label>Task Title</label>
+                        <input type="text" id="taskTitle" placeholder="Enter task title" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Assign To</label>
+                        <select id="taskAssignee" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                            <option value="">Select person...</option>
+                            <option value="owner@company.com">Alex Thompson</option>
+                            <option value="manager@company.com">Jordan Smith</option>
+                            <option value="employee@company.com">Casey Johnson</option>
+                            <option value="hr@company.com">Sam Parker</option>
+                            <option value="lead@company.com">Taylor Reed</option>
+                            <option value="warehouse@company.com">Morgan Lee</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>👥 or Assign To Team</label>
+                        <select id="taskTeam" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                            <option value="">No team</option>
+                            <option value="Production">Production Team</option>
+                            <option value="Sales">Sales Team</option>
+                            <option value="Warehouse">Warehouse Team</option>
+                            <option value="Admin">Admin Team</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Due Date</label>
+                        <input type="date" id="taskDue" style="width: auto; min-width: 140px; max-width: 200px; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveTask()" style="margin-top: 24px;">Save Task</button>
+                </div>
+            </div>
+        </div>
         
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
@@ -677,6 +918,225 @@
                 updateGreeting();
                 updateHomeData();
             }
+            
+            // Refresh tasks when showing tasks
+            if (sectionName === 'tasks') {
+                renderTasks();
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('appContainer').classList.remove('active');
+            document.getElementById('loginForm').reset();
+            document.getElementById('loginError').style.display = 'none';
+            showSection('home');
+        }
+        
+        // Task Functions
+        function getTasks() {
+            return JSON.parse(localStorage.getItem('tasks')) || [];
+        }
+        
+        function saveTasks(tasks) {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+        
+        function showAddTaskModal(taskId = null) {
+            document.getElementById('taskModal').style.display = 'flex';
+            document.getElementById('taskModalTitle').textContent = taskId ? 'Edit Task' : 'Add Task';
+            
+            if (taskId) {
+                const tasks = getTasks();
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    document.getElementById('editingTaskId').value = taskId;
+                    document.getElementById('taskTitle').value = task.title;
+                    document.getElementById('taskAssignee').value = task.assignee || '';
+                    document.getElementById('taskTeam').value = task.team || '';
+                    document.getElementById('taskDue').value = task.due || '';
+                }
+            } else {
+                document.getElementById('editingTaskId').value = '';
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskAssignee').value = '';
+                document.getElementById('taskTeam').value = '';
+                document.getElementById('taskDue').value = '';
+            }
+        }
+        
+        function closeTaskModal() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+        
+        function saveTask() {
+            const taskId = document.getElementById('editingTaskId').value;
+            const title = document.getElementById('taskTitle').value.trim();
+            const assignee = document.getElementById('taskAssignee').value;
+            const team = document.getElementById('taskTeam').value;
+            const due = document.getElementById('taskDue').value;
+            
+            if (!title) {
+                alert('Please enter a task title');
+                return;
+            }
+            
+            const tasks = getTasks();
+            
+            if (taskId) {
+                // Edit existing
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.title = title;
+                    task.assignee = assignee;
+                    task.team = team;
+                    task.due = due;
+                }
+            } else {
+                // Add new
+                const newTask = {
+                    id: 'task_' + Date.now(),
+                    title: title,
+                    assignee: assignee,
+                    team: team,
+                    due: due,
+                    status: 'todo',
+                    createdBy: currentUser.email,
+                    createdAt: new Date().toISOString()
+                };
+                tasks.push(newTask);
+            }
+            
+            saveTasks(tasks);
+            closeTaskModal();
+            renderTasks();
+            updateHomeData();
+        }
+        
+        function deleteTask(taskId) {
+            if (!confirm('Delete this task?')) return;
+            const tasks = getTasks().filter(t => t.id !== taskId);
+            saveTasks(tasks);
+            renderTasks();
+            updateHomeData();
+        }
+        
+        function moveTask(taskId, newStatus) {
+            const tasks = getTasks();
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.status = newStatus;
+                saveTasks(tasks);
+                renderTasks();
+                updateHomeData();
+            }
+        }
+        
+        function renderTasks() {
+            const tasks = getTasks();
+            const filteredTasks = tasks.filter(t => {
+                // Show tasks assigned to user, user's team, or created by user
+                if (t.assignee === currentUser.email) return true;
+                if (t.team && getUserTeam() === t.team) return true;
+                if (t.createdBy === currentUser.email) return true;
+                return false;
+            });
+            
+            const todo = filteredTasks.filter(t => t.status === 'todo');
+            const doing = filteredTasks.filter(t => t.status === 'doing');
+            const done = filteredTasks.filter(t => t.status === 'done');
+            
+            document.getElementById('countTodo').textContent = todo.length;
+            document.getElementById('countDoing').textContent = doing.length;
+            document.getElementById('countDone').textContent = done.length;
+            
+            renderTaskList('todoList', todo);
+            renderTaskList('doingList', doing);
+            renderTaskList('doneList', done);
+        }
+        
+        function renderTaskList(containerId, tasks) {
+            const container = document.getElementById(containerId);
+            
+            if (tasks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-column">
+                        <div class="empty-column-icon">${containerId === 'todoList' ? '📝' : containerId === 'doingList' ? '🔄' : '✅'}</div>
+                        <p>No tasks ${containerId === 'doneList' ? 'completed' : containerId === 'doingList' ? 'in progress' : 'yet'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = tasks.map(task => {
+                const dueDate = task.due ? new Date(task.due) : null;
+                const today = new Date();
+                const isOverdue = dueDate && dueDate < today && task.status !== 'done';
+                const isDueSoon = dueDate && !isOverdue && (dueDate - today) < 2 * 24 * 60 * 60 * 1000;
+                
+                let dueBadge = '';
+                if (task.due) {
+                    const dueClass = isOverdue ? 'due-soon' : isDueSoon ? 'due-soon' : 'due-later';
+                    const dueText = isOverdue ? 'Overdue' : isDueSoon ? 'Due Soon' : formatDate(task.due);
+                    dueBadge = `<span class="task-badge ${dueClass}">${dueText}</span>`;
+                }
+                
+                const teamBadge = task.team ? `<span class="task-badge team">[${task.team}]</span>` : '';
+                const assigneeName = task.assignee ? getUserName(task.assignee) : (task.team ? `[${task.team}]` : 'Unassigned');
+                
+                const moveButtons = task.status !== 'done' ? `
+                    <button onclick="moveTask('${task.id}', '${task.status === 'todo' ? 'doing' : 'done'}')" style="background: var(--success); color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">
+                        ${task.status === 'todo' ? 'Start →' : 'Complete ✓'}
+                    </button>
+                ` : `
+                    <button onclick="moveTask('${task.id}', 'todo')" style="background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">
+                        ↩ Reopen
+                    </button>
+                `;
+                
+                return `
+                    <div class="task-card" style="position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 4px;">
+                            <button onclick="showAddTaskModal('${task.id}')" style="background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px;">✏️</button>
+                            <button onclick="deleteTask('${task.id}')" style="background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px;">🗑️</button>
+                        </div>
+                        <div class="task-title" style="padding-right: 60px;">${task.title}</div>
+                        <div class="task-meta">
+                            ${dueBadge}
+                            ${teamBadge}
+                            <span class="task-assignee">
+                                <div class="task-avatar">${getInitials(assigneeName)}</div>
+                                ${assigneeName}
+                            </span>
+                        </div>
+                        <div style="margin-top: 12px; display: flex; gap: 8px;">
+                            ${moveButtons}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function getUserTeam() {
+            const teams = { 'owner@company.com': 'Admin', 'hr@company.com': 'Admin' };
+            return teams[currentUser.email] || 'Production';
+        }
+        
+        function getUserName(email) {
+            const user = users[email];
+            return user ? user.name : email;
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+        
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
         }
         
         // Check if already logged in
