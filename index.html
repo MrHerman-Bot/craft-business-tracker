@@ -19,6 +19,10 @@
             --border-color: #e2e8f0;
             --shadow: rgba(0,0,0,0.05);
             --card-bg: white;
+            --accent: #667eea;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
         
         body.dark-mode {
@@ -37,36 +41,8 @@
             min-height: 100vh;
             color: var(--text-primary);
             transition: background 0.3s, color 0.3s;
-        }
-        
-        /* Dark Mode Toggle */
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 50px;
-            padding: 14px 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: white;
-            transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .theme-toggle:hover {
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-        
-        .theme-toggle .icon {
-            font-size: 1.3rem;
+            padding-top: 60px;
+            padding-bottom: 70px;
         }
         
         /* Login Screen */
@@ -104,19 +80,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
             font-size: 40px;
         }
         
         .login-logo h1 {
             font-size: 1.5rem;
             color: var(--text-primary);
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
         .login-logo p {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
         
         .form-group {
@@ -125,21 +101,21 @@
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 0.9rem;
+            margin-bottom: 8px;
         }
         
         .form-group input {
             width: 100%;
-            padding: 15px;
+            padding: 14px 16px;
             border: 2px solid var(--border-color);
             border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.2s;
-            background: var(--bg-secondary);
+            font-size: 1rem;
+            background: var(--bg-primary);
             color: var(--text-primary);
+            transition: border-color 0.2s;
         }
         
         .form-group input:focus {
@@ -147,22 +123,15 @@
             border-color: #667eea;
         }
         
-        .form-group input::placeholder {
-            color: var(--text-secondary);
-        }
-        
         .btn {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border: none;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
+            transition: transform 0.2s;
         }
         
         .btn-primary {
@@ -170,363 +139,291 @@
             color: white;
         }
         
-        .btn-primary:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
         
         .error-message {
-            color: #e53e3e;
+            color: #ef4444;
             font-size: 0.9rem;
-            margin-top: 15px;
-            text-align: center;
+            margin-top: 12px;
             display: none;
+            text-align: center;
         }
         
-        /* Main App */
+        /* App Container */
         .app-container {
             display: none;
-            min-height: 100vh;
         }
         
         .app-container.active {
             display: block;
         }
         
-        /* Header */
-        .app-header {
-            background: var(--bg-secondary);
-            padding: 20px;
-            box-shadow: 0 2px 10px var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        
-        .company-branding {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .company-logo {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-        
-        .company-info h1 {
-            font-size: 1.3rem;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-        
-        .company-info p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-align: right;
-        }
-        
-        .user-info h3 {
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-        
-        .user-info p {
-            font-size: 0.8rem;
-            color: #667eea;
-            font-weight: 600;
-        }
-        
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .logout-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
-        
-        .logout-btn:hover {
-            color: #e53e3e;
-        }
-        
-        /* Navigation Grid */
-        .dashboard-nav {
-            padding: 30px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-        
-        .nav-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            box-shadow: 0 4px 6px var(--shadow);
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            position: relative;
-            user-select: none;
-        }
-        
-        .nav-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px var(--shadow);
-            border-color: #667eea;
-        }
-        
-        .card-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            min-width: 24px;
-            height: 24px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 8px;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-            animation: badgePulse 2s infinite;
-            z-index: 10;
-        }
-        
-        .card-badge:empty,
-        .card-badge[data-count="0"],
-        .card-badge[style*="display: none"] {
-            display: none !important;
-        }
-        
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .nav-card.dragging {
-            opacity: 0.5;
-            transform: scale(1.02);
-            z-index: 100;
-        }
-        
-        .nav-card.drag-over {
-            border: 2px dashed #667eea;
-            transform: scale(1.02);
-        }
-        
-        .nav-card.editing-mode {
-            cursor: grab;
-        }
-        
-        .nav-card.editing-mode:active {
-            cursor: grabbing;
-        }
-        
-        .drag-handle {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            cursor: grab;
-            padding: 4px 8px;
-            border-radius: 6px;
-            opacity: 0;
-            transition: all 0.2s;
-            font-size: 14px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-        }
-        
-        .nav-card.editing-mode .drag-handle {
-            opacity: 0.6;
-        }
-        
-        .drag-handle:hover {
-            opacity: 1 !important;
-            background: #667eea;
-            color: white;
-        }
-        
-        .drag-handle:active {
-            cursor: grabbing;
-        }
-        
-        .edit-layout-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s;
-            margin-top: 20px;
-        }
-        
-        .edit-layout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        .edit-layout-btn.editing {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-        }
-        
-        .layout-controls {
-            text-align: center;
-            padding: 10px 0 30px;
-        }
-        
-        .layout-hint {
-            background: var(--card-bg);
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 12px var(--shadow);
-            opacity: 0;
-            transition: opacity 0.3s;
-            margin-bottom: 10px;
-            display: inline-block;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .layout-hint.show {
-            opacity: 1;
-        }
-        
-        .nav-card .icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 28px;
-        }
-        
-        .nav-card.tasks .icon { background: #e0e7ff; }
-        .nav-card.team .icon { background: #d1fae5; }
-        .nav-card.org .icon { background: #fef3c7; }
-        .nav-card.hr .icon { background: #fce7f3; }
-        .nav-card.inventory .icon { background: #dbeafe; }
-        .nav-card.messages .icon { background: #f3e8ff; }
-        
-        .nav-card h3 {
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
-        
-        .nav-card p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        /* Pull to refresh */
-        .pull-refresh-indicator {
+        /* Top Navigation */
+        .top-nav {
             position: fixed;
-            top: -60px;
+            top: 0;
             left: 0;
             right: 0;
             height: 60px;
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            transition: transform 0.2s ease-out;
-            z-index: 200;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
             box-shadow: 0 2px 10px var(--shadow);
         }
         
-        .pull-refresh-indicator.visible {
-            transform: translateY(60px);
+        .top-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
-        .pull-refresh-indicator.refreshing {
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: background 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: var(--bg-primary);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        
+        .user-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 100;
+            box-shadow: 0 -2px 10px var(--shadow);
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        
+        .bottom-nav-btn {
+            flex: 1;
+            height: 100%;
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .bottom-nav-btn .icon {
+            font-size: 1.5rem;
+        }
+        
+        .bottom-nav-btn.active {
             color: var(--accent);
         }
         
-        .pull-refresh-indicator .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border-color);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: refreshSpinner 0.8s linear infinite;
+        .bottom-nav-btn.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 0 0 3px 3px;
         }
         
-        @keyframes refreshSpinner {
-            to { transform: rotate(360deg); }
+        .nav-badge {
+            position: absolute;
+            top: 8px;
+            right: calc(50% - 16px);
+            background: var(--danger);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+        
+        /* Sections */
+        .section {
+            display: none;
+            padding: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        /* Home Section */
+        .greeting {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+        
+        .home-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .home-card-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        
+        .task-count {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .task-count-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .task-count-label {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .clocked-in-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .clocked-in-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+        
+        .clocked-in-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: relative;
+        }
+        
+        .clocked-in-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 10px;
+            height: 10px;
+            background: #10b981;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+        
+        body.dark-mode .clocked-in-avatar::after {
+            border-color: var(--bg-primary);
+        }
+        
+        .clocked-in-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .clocked-in-status {
+            font-size: 0.85rem;
+            color: var(--success);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
         }
     </style>
 </head>
 <body>
-    <!-- Pull to Refresh Indicator -->
-    <div class="pull-refresh-indicator" id="pullRefreshIndicator">
-        <div class="spinner" id="refreshSpinner" style="display: none;"></div>
-        <span id="refreshText">Pull down to refresh</span>
-    </div>
-    
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
-        <span class="icon">🌙</span>
-        <span id="themeText">Dark</span>
-    </button>
-    
     <!-- Login Screen -->
     <div class="login-screen" id="loginScreen">
         <div class="login-container">
@@ -553,82 +450,103 @@
     
     <!-- Main App -->
     <div class="app-container" id="appContainer">
-        <header class="app-header">
-            <div class="header-top">
-                <div class="company-branding">
-                    <div class="company-logo">🏢</div>
-                    <div class="company-info">
-                        <h1>Company Name</h1>
-                        <p>Business Management System</p>
-                    </div>
-                </div>
-                <div class="user-profile">
-                    <div class="user-info">
-                        <h3 id="userName">User Name</h3>
-                        <p id="userRole">Role</p>
-                        <button class="logout-btn" onclick="logout()">Logout</button>
-                    </div>
-                    <div class="user-avatar" id="userAvatar">UN</div>
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="top-nav-left">
+                <button class="nav-btn" onclick="showSection('home')" id="top-home">🏠</button>
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">User Name</span>
+                    <span class="user-title" id="navUserRole">Role</span>
                 </div>
             </div>
-        </header>
+            <button class="nav-btn" onclick="showSection('settings')">⚙️</button>
+        </nav>
         
-        <div class="dashboard-nav">
-            <div class="nav-grid">
-                <a href="tasks.html" class="nav-card tasks" id="card-tasks">
-                    <span class="card-badge" id="badge-tasks"></span>
-                    <div class="icon">📋</div>
-                    <h3>Tasks</h3>
-                    <p>Kanban board & assignments</p>
-                </a>
+        <!-- Sections -->
+        <main class="sections-container">
+            <!-- Home Section -->
+            <section class="section active" id="section-home">
+                <div class="greeting" id="homeGreeting">Good Morning!</div>
                 
-                <a href="team.html" class="nav-card team" id="card-team">
-                    <span class="card-badge" id="badge-team"></span>
-                    <div class="icon">👥</div>
-                    <h3>Team</h3>
-                    <p>Clock in/out & team view</p>
-                </a>
-                
-                <a href="org.html" class="nav-card org" id="card-org">
-                    <span class="card-badge" id="badge-org"></span>
-                    <div class="icon">🏢</div>
-                    <h3>Org Chart</h3>
-                    <p>Company hierarchy & profile</p>
-                </a>
-                
-                <a href="hr.html" class="nav-card hr" id="hrNav" style="display: none;">
-                    <span class="card-badge" id="badge-hr"></span>
-                    <div class="icon">⚙️</div>
-                    <h3>HR Admin</h3>
-                    <p>Manage employees & roles</p>
-                </a>
-                
-                <a href="inventory.html" class="nav-card inventory" id="card-inventory">
-                    <span class="card-badge" id="badge-inventory"></span>
-                    <div class="icon">📦</div>
-                    <h3>Inventory</h3>
-                    <p>Track stock & materials</p>
-                </a>
-                
-                <a href="messages.html" class="nav-card messages" id="card-messages">
-                    <span class="card-badge" id="badge-messages"></span>
-                    <div class="icon">💬</div>
-                    <h3>Messages</h3>
-                    <p>Team chat & channels</p>
-                </a>
-            </div>
-            
-            <div class="layout-controls" id="layoutControls" style="display: none;">
-                <div class="layout-hint" id="layoutHint">
-                    Drag cards to reorder your dashboard
+                <div class="home-card">
+                    <div class="home-card-title">Your Tasks</div>
+                    <div class="task-count">
+                        <div class="task-count-number" id="taskCount">0</div>
+                        <div class="task-count-label">tasks assigned to you</div>
+                    </div>
                 </div>
-                <br>
-                <button class="edit-layout-btn" id="editLayoutBtn" onclick="toggleLayoutEdit()">
-                    <span>✏️</span>
-                    <span id="editLayoutText">Edit Layout</span>
-                </button>
-            </div>
-        </div>
+                
+                <div class="home-card">
+                    <div class="home-card-title">Clocked In</div>
+                    <div class="clocked-in-list" id="clockedInList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">😴</div>
+                            <p>No one is clocked in on your team right now</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Tasks Section -->
+            <section class="section" id="section-tasks">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <h3>Tasks</h3>
+                    <p>This section will be added in Phase 3</p>
+                </div>
+            </section>
+            
+            <!-- Team Section -->
+            <section class="section" id="section-team">
+                <div class="empty-state">
+                    <div class="empty-state-icon">👥</div>
+                    <h3>Team</h3>
+                    <p>This section will be added in Phase 4</p>
+                </div>
+            </section>
+            
+            <!-- Messages Section -->
+            <section class="section" id="section-messages">
+                <div class="empty-state">
+                    <div class="empty-state-icon">💬</div>
+                    <h3>Messages</h3>
+                    <p>This section will be added in Phase 5</p>
+                </div>
+            </section>
+            
+            <!-- Settings Section -->
+            <section class="section" id="section-settings">
+                <h2 style="margin-bottom: 24px;">Settings</h2>
+                
+                <div class="home-card">
+                    <div class="home-card-title">Appearance</div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0;">
+                        <span style="font-size: 1rem; color: var(--text-primary);">Dark Mode</span>
+                        <button class="btn" style="width: auto; padding: 8px 16px;" onclick="toggleTheme()" id="themeToggleBtn">
+                            🌙 Toggle
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="bottom-nav-btn" onclick="showSection('messages')" id="bottom-messages">
+                <span class="icon">💬</span>
+                <span>Messages</span>
+                <span class="nav-badge" id="msg-badge" style="display: none;">0</span>
+            </button>
+            <button class="bottom-nav-btn" onclick="showSection('tasks')" id="bottom-tasks">
+                <span class="icon">📋</span>
+                <span>Tasks</span>
+                <span class="nav-badge" id="task-badge" style="display: none;">0</span>
+            </button>
+            <button class="bottom-nav-btn" onclick="showSection('team')" id="bottom-team">
+                <span class="icon">👥</span>
+                <span>Team</span>
+            </button>
+        </nav>
     </div>
     
     <script>
@@ -639,140 +557,30 @@
             
             if (isDark) {
                 document.body.classList.add('dark-mode');
-                document.getElementById('themeText').textContent = 'Light';
-                document.querySelector('#themeToggle .icon').textContent = '☀️';
             }
         }
         
         function toggleTheme() {
             const body = document.body;
             const isDark = body.classList.toggle('dark-mode');
-            
-            // Save preference
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            
-            // Update button
-            document.getElementById('themeText').textContent = isDark ? 'Light' : 'Dark';
-            document.querySelector('#themeToggle .icon').textContent = isDark ? '☀️' : '🌙';
         }
         
-        // Initialize theme on load
         initTheme();
         
-        // User Database
+        // User data
         const users = {
-            'owner@company.com': {
-                password: 'owner123',
-                name: 'Alex Thompson',
-                role: 'Owner',
-                avatar: 'AT'
-            },
-            'manager@company.com': {
-                password: 'manager123',
-                name: 'Jordan Smith',
-                role: 'Manager',
-                avatar: 'JS'
-            },
-            'employee@company.com': {
-                password: 'employee123',
-                name: 'Casey Johnson',
-                role: 'Employee',
-                avatar: 'CJ'
-            },
-            'hr@company.com': {
-                password: 'hr123',
-                name: 'Sam Parker',
-                role: 'HR',
-                avatar: 'SP'
-            }
+            'owner@company.com': { password: 'owner123', name: 'Alex Thompson', role: 'Owner', avatar: 'AT' },
+            'manager@company.com': { password: 'manager123', name: 'Jordan Smith', role: 'Manager', avatar: 'JS' },
+            'employee@company.com': { password: 'employee123', name: 'Casey Johnson', role: 'Employee', avatar: 'CJ' },
+            'hr@company.com': { password: 'hr123', name: 'Sam Parker', role: 'HR', avatar: 'SP' },
+            'lead@company.com': { password: 'lead123', name: 'Taylor Reed', role: 'Team Lead', avatar: 'TR' },
+            'warehouse@company.com': { password: 'warehouse123', name: 'Morgan Lee', role: 'Employee', avatar: 'ML' }
         };
         
-        let currentUser = null;
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         
-        // Badge Management System
-        const BADGE_TYPES = ['tasks', 'team', 'org', 'hr', 'inventory', 'messages'];
-        
-        // Initialize demo badge data if not exists
-        function initBadgeData() {
-            if (!localStorage.getItem('badges_initialized')) {
-                // Set some demo counts for different user types
-                setBadgeCount('messages', 3);
-                setBadgeCount('tasks', 5);
-                setBadgeCount('hr', 2);
-                setBadgeCount('inventory', 1);
-                localStorage.setItem('badges_initialized', 'true');
-            }
-        }
-        
-        // Get badge count for a specific type
-        function getBadgeCount(type) {
-            const key = `badge_${type}_${currentUser?.email || 'guest'}`;
-            const count = localStorage.getItem(key);
-            return count ? parseInt(count, 10) : 0;
-        }
-        
-        // Listen for message badge updates from messages page
-        window.addEventListener('storage', function(e) {
-            if (e.key && e.key.startsWith('badge_messages_')) {
-                updateAllBadges();
-            }
-        });
-        
-        // Set badge count for a specific type
-        function setBadgeCount(type, count) {
-            if (!currentUser) return;
-            const key = `badge_${type}_${currentUser.email}`;
-            localStorage.setItem(key, count.toString());
-            updateBadgeDisplay(type, count);
-        }
-        
-        // Increment badge count
-        function incrementBadge(type) {
-            const current = getBadgeCount(type);
-            setBadgeCount(type, current + 1);
-        }
-        
-        // Decrement badge count
-        function decrementBadge(type) {
-            const current = getBadgeCount(type);
-            if (current > 0) {
-                setBadgeCount(type, current - 1);
-            }
-        }
-        
-        // Clear badge count
-        function clearBadge(type) {
-            setBadgeCount(type, 0);
-        }
-        
-        // Update badge display
-        function updateBadgeDisplay(type, count) {
-            const badge = document.getElementById(`badge-${type}`);
-            if (!badge) return;
-            
-            if (count > 0) {
-                badge.textContent = count > 99 ? '99+' : count;
-                badge.style.display = 'flex';
-            } else {
-                badge.textContent = '';
-                badge.style.display = 'none';
-            }
-        }
-        
-        // Update all badges for current user
-        function updateAllBadges() {
-            BADGE_TYPES.forEach(type => {
-                const count = getBadgeCount(type);
-                updateBadgeDisplay(type, count);
-            });
-        }
-        
-        // Check if already logged in
-        if (localStorage.getItem('currentUser')) {
-            currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            showApp();
-        }
-        
+        // Handle login
         function handleLogin(event) {
             event.preventDefault();
             const email = document.getElementById('email').value.toLowerCase();
@@ -788,396 +596,92 @@
             }
         }
         
+        // Show app
         function showApp() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.add('active');
             
             // Update user info
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userRole').textContent = currentUser.role;
-            document.getElementById('userAvatar').textContent = currentUser.avatar;
+            document.getElementById('navUserName').textContent = currentUser.name;
+            document.getElementById('navUserRole').textContent = currentUser.role;
             
-            // Show HR nav for admins
-            if (currentUser.role === 'Owner' || currentUser.role === 'HR') {
-                document.getElementById('hrNav').style.display = 'block';
-            }
+            // Set greeting
+            updateGreeting();
             
-            // Show edit layout controls
-            document.getElementById('layoutControls').style.display = 'block';
-            
-            // Initialize demo badge data and display
-            initBadgeData();
-            updateAllBadges();
-            
-            // Load user's saved layout
-            loadUserLayout();
+            // Load home data
+            updateHomeData();
         }
         
-        // Refresh badges when user returns to dashboard
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden && currentUser) {
-                updateAllBadges();
-            }
-        });
+        // Update greeting based on time
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            const name = currentUser.name.split(' ')[0];
+            const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+            document.getElementById('homeGreeting').textContent = `${greeting}, ${name}!`;
+        }
         
-        // Drag and Drop Layout Management
-        let isEditingLayout = false;
-        let draggedElement = null;
-        
-        function toggleLayoutEdit() {
-            isEditingLayout = !isEditingLayout;
-            const btn = document.getElementById('editLayoutBtn');
-            const btnText = document.getElementById('editLayoutText');
-            const hint = document.getElementById('layoutHint');
-            const cards = document.querySelectorAll('.nav-card');
+        // Update home data
+        function updateHomeData() {
+            // Get task count
+            const tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.email}`)) || [];
+            const userTasks = tasks.filter(t => t.assignee === currentUser.email && t.status !== 'done');
+            document.getElementById('taskCount').textContent = userTasks.length;
             
-            if (isEditingLayout) {
-                btn.classList.add('editing');
-                btnText.textContent = 'Done';
-                hint.classList.add('show');
-                
-                // Add editing mode to cards
-                cards.forEach(card => {
-                    card.classList.add('editing-mode');
-                    // Store href and remove it temporarily
-                    if (card.getAttribute('href')) {
-                        card.setAttribute('data-href', card.getAttribute('href'));
-                        card.removeAttribute('href');
-                    }
-                    card.draggable = true;
-                    card.addEventListener('dragstart', handleDragStart);
-                    card.addEventListener('dragend', handleDragEnd);
-                    card.addEventListener('dragover', handleDragOver);
-                    card.addEventListener('dragleave', handleDragLeave);
-                    card.addEventListener('drop', handleDrop);
-                    
-                    // Add touch events for mobile
-                    card.addEventListener('touchstart', handleTouchStart, { passive: false });
-                    card.addEventListener('touchmove', handleTouchMove, { passive: false });
-                    card.addEventListener('touchend', handleTouchEnd);
-                    
-                    // Add drag handle
-                    if (!card.querySelector('.drag-handle')) {
-                        const handle = document.createElement('div');
-                        handle.className = 'drag-handle';
-                        handle.innerHTML = '⋮⋮';
-                        handle.style.pointerEvents = 'none';
-                        card.appendChild(handle);
-                    }
-                });
-            } else {
-                btn.classList.remove('editing');
-                btnText.textContent = 'Edit Layout';
-                hint.classList.remove('show');
-                
-                // Remove editing mode from cards
-                cards.forEach(card => {
-                    card.classList.remove('editing-mode');
-                    card.draggable = false;
-                    // Restore href
-                    if (card.getAttribute('data-href')) {
-                        card.setAttribute('href', card.getAttribute('data-href'));
-                        card.removeAttribute('data-href');
-                    }
-                    card.removeEventListener('dragstart', handleDragStart);
-                    card.removeEventListener('dragend', handleDragEnd);
-                    card.removeEventListener('dragover', handleDragOver);
-                    card.removeEventListener('dragleave', handleDragLeave);
-                    card.removeEventListener('drop', handleDrop);
-                    
-                    // Remove touch events
-                    card.removeEventListener('touchstart', handleTouchStart);
-                    card.removeEventListener('touchmove', handleTouchMove);
-                    card.removeEventListener('touchend', handleTouchEnd);
-                });
-                
-                // Save the layout
-                saveUserLayout();
+            // Update badge
+            if (userTasks.length > 0) {
+                const badge = document.getElementById('task-badge');
+                badge.textContent = userTasks.length > 99 ? '99+' : userTasks.length;
+                badge.style.display = 'flex';
+            }
+            
+            // Get clocked in team members
+            const timeEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+            const today = new Date().toISOString().split('T')[0];
+            const clockedIn = [];
+            
+            // Demo: Check who is clocked in
+            // In real app, this would check timeEntries for each team member
+            // For now, show empty state unless there's data
+            
+            // This is a placeholder - actual logic will come when we port team.html
+            const list = document.getElementById('clockedInList');
+            list.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">😴</div>
+                    <p>No one is clocked in on your team right now</p>
+                </div>
+            `;
+        }
+        
+        // Section switching
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.top-nav .nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(`section-${sectionName}`).classList.add('active');
+            
+            // Update bottom nav
+            const bottomBtn = document.getElementById(`bottom-${sectionName}`);
+            if (bottomBtn) bottomBtn.classList.add('active');
+            
+            // Update top nav
+            if (sectionName === 'home') {
+                document.getElementById('top-home').classList.add('active');
+            }
+            
+            // Refresh data when showing home
+            if (sectionName === 'home') {
+                updateGreeting();
+                updateHomeData();
             }
         }
         
-        // Touch event handlers for mobile drag-and-drop
-        let touchStartY = 0;
-        let touchCurrentCard = null;
-        let touchClone = null;
-        
-        function handleTouchStart(e) {
-            if (!isEditingLayout) return;
-            
-            const touch = e.touches[0];
-            touchStartY = touch.clientY;
-            touchCurrentCard = this;
-            
-            // Create a visual clone for dragging
-            touchClone = this.cloneNode(true);
-            touchClone.style.position = 'fixed';
-            touchClone.style.width = this.offsetWidth + 'px';
-            touchClone.style.height = this.offsetHeight + 'px';
-            touchClone.style.opacity = '0.8';
-            touchClone.style.zIndex = '9999';
-            touchClone.style.pointerEvents = 'none';
-            touchClone.style.left = (touch.clientX - this.offsetWidth / 2) + 'px';
-            touchClone.style.top = (touch.clientY - this.offsetHeight / 2) + 'px';
-            document.body.appendChild(touchClone);
-            
-            this.classList.add('dragging');
-            e.preventDefault();
-        }
-        
-        function handleTouchMove(e) {
-            if (!isEditingLayout || !touchClone) return;
-            
-            const touch = e.touches[0];
-            
-            // Move the clone with the finger
-            touchClone.style.left = (touch.clientX - touchClone.offsetWidth / 2) + 'px';
-            touchClone.style.top = (touch.clientY - touchClone.offsetHeight / 2) + 'px';
-            
-            // Find element below the touch point
-            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-            const cardBelow = elementBelow?.closest('.nav-card');
-            
-            // Remove drag-over from all cards
-            document.querySelectorAll('.nav-card').forEach(card => {
-                card.classList.remove('drag-over');
-            });
-            
-            // Add drag-over to card below (if it's not the current card)
-            if (cardBelow && cardBelow !== touchCurrentCard) {
-                cardBelow.classList.add('drag-over');
-            }
-            
-            e.preventDefault();
-        }
-        
-        function handleTouchEnd(e) {
-            if (!isEditingLayout || !touchClone) return;
-            
-            // Get the final touch position
-            const touch = e.changedTouches[0];
-            
-            // Find the card below the drop point
-            touchClone.remove();
-            touchClone = null;
-            
-            // Temporarily hide the dragged card to find what's below
-            touchCurrentCard.style.display = 'none';
-            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-            touchCurrentCard.style.display = '';
-            touchCurrentCard.classList.remove('dragging');
-            
-            const cardBelow = elementBelow?.closest('.nav-card');
-            
-            if (cardBelow && cardBelow !== touchCurrentCard) {
-                const grid = document.querySelector('.nav-grid');
-                const cards = Array.from(grid.querySelectorAll('.nav-card'));
-                const draggedIndex = cards.indexOf(touchCurrentCard);
-                const dropIndex = cards.indexOf(cardBelow);
-                
-                if (draggedIndex !== -1 && dropIndex !== -1) {
-                    if (draggedIndex < dropIndex) {
-                        grid.insertBefore(touchCurrentCard, cardBelow.nextSibling);
-                    } else {
-                        grid.insertBefore(touchCurrentCard, cardBelow);
-                    }
-                }
-            }
-            
-            // Remove drag-over from all cards
-            document.querySelectorAll('.nav-card').forEach(card => {
-                card.classList.remove('drag-over');
-            });
-            
-            touchCurrentCard = null;
-        }
-        
-        function handleDragStart(e) {
-            draggedElement = this;
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-            // Required for Firefox/Chrome drag to work
-            e.dataTransfer.setData('text/plain', this.getAttribute('href') || 'hr');
-            // Set drag image to the element itself
-            if (e.dataTransfer.setDragImage) {
-                e.dataTransfer.setDragImage(this, 50, 30);
-            }
-        }
-        
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-            draggedElement = null;
-            document.querySelectorAll('.nav-card').forEach(card => {
-                card.classList.remove('drag-over');
-            });
-        }
-        
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            this.classList.add('drag-over');
-        }
-        
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-        
-        function handleDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-            
-            if (draggedElement && draggedElement !== this) {
-                const grid = document.querySelector('.nav-grid');
-                const cards = Array.from(grid.querySelectorAll('.nav-card'));
-                const draggedIndex = cards.indexOf(draggedElement);
-                const dropIndex = cards.indexOf(this);
-                
-                if (draggedIndex < dropIndex) {
-                    this.parentNode.insertBefore(draggedElement, this.nextSibling);
-                } else {
-                    this.parentNode.insertBefore(draggedElement, this);
-                }
-            }
-        }
-        
-        function saveUserLayout() {
-            if (!currentUser) return;
-            
-            const grid = document.querySelector('.nav-grid');
-            const cards = grid.querySelectorAll('.nav-card');
-            const layout = [];
-            
-            cards.forEach(card => {
-                // Get the card type from data-href (stored during edit) or href
-                const href = card.getAttribute('data-href') || card.getAttribute('href');
-                const id = card.id;
-                if (href) {
-                    layout.push(href.replace('.html', ''));
-                } else if (id === 'hrNav') {
-                    layout.push('hr');
-                }
-            });
-            
-            const layoutKey = `layout_${currentUser.email}`;
-            localStorage.setItem(layoutKey, JSON.stringify(layout));
-        }
-        
-        function loadUserLayout() {
-            if (!currentUser) return;
-            
-            const layoutKey = `layout_${currentUser.email}`;
-            const savedLayout = localStorage.getItem(layoutKey);
-            
-            if (savedLayout) {
-                try {
-                    const layout = JSON.parse(savedLayout);
-                    const grid = document.querySelector('.nav-grid');
-                    const cardsMap = {};
-                    
-                    // Build a map of current cards
-                    grid.querySelectorAll('.nav-card').forEach(card => {
-                        const href = card.getAttribute('href');
-                        const id = card.id;
-                        if (href) {
-                            cardsMap[href.replace('.html', '')] = card;
-                        } else if (id === 'hrNav') {
-                            cardsMap['hr'] = card;
-                        }
-                    });
-                    
-                    // Reorder based on saved layout
-                    layout.forEach(key => {
-                        if (cardsMap[key]) {
-                            grid.appendChild(cardsMap[key]);
-                        }
-                    });
-                } catch (e) {
-                    console.error('Error loading layout:', e);
-                }
-            }
-        }
-        
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('appContainer').classList.remove('active');
-            document.getElementById('loginForm').reset();
-            document.getElementById('loginError').style.display = 'none';
-        }
-        
-        // Pull to refresh functionality
-        let pullStartY = 0;
-        let pullCurrentY = 0;
-        let isPulling = false;
-        const PULL_THRESHOLD = 80;
-        
-        const pullIndicator = document.getElementById('pullRefreshIndicator');
-        const refreshSpinner = document.getElementById('refreshSpinner');
-        const refreshText = document.getElementById('refreshText');
-        
-        // Only enable pull-to-refresh on touch devices
-        if ('ontouchstart' in window) {
-            document.addEventListener('touchstart', handlePullStart, { passive: true });
-            document.addEventListener('touchmove', handlePullMove, { passive: true });
-            document.addEventListener('touchend', handlePullEnd, { passive: true });
-        }
-        
-        function handlePullStart(e) {
-            // Only trigger if at top of page
-            if (window.scrollY > 10) return;
-            
-            pullStartY = e.touches[0].clientY;
-            isPulling = true;
-        }
-        
-        function handlePullMove(e) {
-            if (!isPulling) return;
-            
-            pullCurrentY = e.touches[0].clientY;
-            const pullDistance = pullCurrentY - pullStartY;
-            
-            // Only show indicator if pulling down
-            if (pullDistance > 0 && window.scrollY <= 10) {
-                pullIndicator.classList.add('visible');
-                
-                if (pullDistance >= PULL_THRESHOLD) {
-                    refreshText.textContent = 'Release to refresh';
-                } else {
-                    refreshText.textContent = 'Pull down to refresh';
-                }
-            }
-        }
-        
-        function handlePullEnd(e) {
-            if (!isPulling) return;
-            
-            const pullDistance = pullCurrentY - pullStartY;
-            
-            if (pullDistance >= PULL_THRESHOLD && window.scrollY <= 10) {
-                // Trigger refresh
-                performRefresh();
-            } else {
-                // Hide indicator
-                pullIndicator.classList.remove('visible');
-            }
-            
-            isPulling = false;
-            pullStartY = 0;
-            pullCurrentY = 0;
-        }
-        
-        function performRefresh() {
-            pullIndicator.classList.add('refreshing');
-            refreshSpinner.style.display = 'block';
-            refreshText.textContent = 'Refreshing...';
-            
-            // Clear any cached data
-            localStorage.removeItem('cachedData');
-            
-            // Reload the page after a brief delay to show the spinner
-            setTimeout(() => {
-                window.location.reload(true);
-            }, 800);
+        // Check if already logged in
+        if (currentUser) {
+            showApp();
         }
     </script>
 </body>
