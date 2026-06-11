@@ -628,6 +628,83 @@
             font-size: 3rem;
             margin-bottom: 12px;
         }
+
+        /* Home Time Clock Styles */
+        .home-clock-container {
+            text-align: center;
+            padding: 16px 0;
+        }
+
+        .home-timezone {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .home-digital-clock {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'SF Mono', 'Monaco', monospace;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+
+        .home-current-date {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .home-clock-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .home-clock-btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-clock-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .home-clock-btn.primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .home-clock-btn.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .home-clock-btn.danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .home-clock-btn.secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .home-clock-btn.secondary:hover {
+            background: var(--border);
+        }
+
         /* Team Section Styles */
         .team-tabs {
             display: flex;
@@ -1576,7 +1653,24 @@
                         <div class="task-count-label">tasks assigned to you</div>
                     </div>
                 </div>
-                
+
+                <div class="home-card">
+                    <div class="home-card-title">Time Clock</div>
+                    <div class="home-clock-container">
+                        <div class="home-timezone" id="homeTimezone">America/New York</div>
+                        <div class="home-digital-clock" id="homeDigitalClock">00:00</div>
+                        <div class="home-current-date" id="homeCurrentDate">Loading...</div>
+                        <div class="home-clock-buttons">
+                            <button class="home-clock-btn primary" id="homeMainClockBtn" onclick="handleHomeClockAction()">
+                                <span id="homeMainClockBtnText">Clock In</span>
+                            </button>
+                            <button class="home-clock-btn secondary" id="homeLunchBtn" style="display: none;" onclick="handleHomeLunchAction()">
+                                <span id="homeLunchBtnText">Clock Out for Lunch</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="home-card">
                     <div class="home-card-title">Clocked In</div>
                     <div class="clocked-in-list" id="clockedInList">
@@ -2039,6 +2133,7 @@
             if (sectionName === 'home') {
                 updateGreeting();
                 updateHomeData();
+                initHomeClock();
             }
             
             // Refresh tasks when showing tasks
@@ -2440,8 +2535,7 @@
                 timeZone: currentTimezone,
                 hour12: false,
                 hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                minute: '2-digit'
             };
             const timeString = now.toLocaleTimeString('en-US', options);
             document.getElementById('digitalClock').textContent = timeString;
@@ -2544,7 +2638,79 @@
                 addTimeEntry('lunchout');
             }
         }
-        
+
+        // Home Clock Functions
+        function initHomeClock() {
+            const emp = teamEmployees.find(e => e.email === currentUser.email);
+            currentTimezone = emp?.timezone || 'America/New_York';
+
+            document.getElementById('homeTimezone').textContent = currentTimezone.replace(/_/g, ' ');
+
+            updateHomeClock();
+            if (homeClockInterval) clearInterval(homeClockInterval);
+            homeClockInterval = setInterval(updateHomeClock, 1000);
+
+            updateHomeClockButtons();
+        }
+
+        function updateHomeClock() {
+            const now = new Date();
+            const options = {
+                timeZone: currentTimezone,
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const timeString = now.toLocaleTimeString('en-US', options);
+            document.getElementById('homeDigitalClock').textContent = timeString;
+
+            const dateOptions = {
+                timeZone: currentTimezone,
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('homeCurrentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
+        }
+
+        function updateHomeClockButtons() {
+            const status = getCurrentClockStatus();
+            const mainBtn = document.getElementById('homeMainClockBtn');
+            const mainBtnText = document.getElementById('homeMainClockBtnText');
+            const lunchBtn = document.getElementById('homeLunchBtn');
+            const lunchBtnText = document.getElementById('homeLunchBtnText');
+
+            if (!mainBtn) return;
+
+            if (status === 'out') {
+                mainBtn.className = 'home-clock-btn primary';
+                mainBtnText.textContent = 'Clock In';
+                lunchBtn.style.display = 'none';
+            } else if (status === 'in') {
+                mainBtn.className = 'home-clock-btn danger';
+                mainBtnText.textContent = 'Clock Out';
+                lunchBtn.style.display = 'flex';
+                lunchBtnText.textContent = 'Clock Out for Lunch';
+            } else if (status === 'lunch') {
+                mainBtn.className = 'home-clock-btn primary';
+                mainBtnText.textContent = 'Clock In from Lunch';
+                lunchBtn.style.display = 'none';
+            }
+        }
+
+        function handleHomeClockAction() {
+            handleMainClockAction();
+            updateHomeClockButtons();
+        }
+
+        function handleHomeLunchAction() {
+            handleLunchAction();
+            updateHomeClockButtons();
+        }
+
+        let homeClockInterval;
+
         function renderTimeLog() {
             const entries = getTodaysTimeEntries();
             const container = document.getElementById('logEntries');
