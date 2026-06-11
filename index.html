@@ -2641,10 +2641,19 @@
 
         // Home Clock Functions
         function initHomeClock() {
+            // Check if user is logged in and home clock elements exist
+            if (!currentUser || !currentUser.email) return;
+
+            const homeClock = document.getElementById('homeDigitalClock');
+            if (!homeClock) return;
+
             const emp = teamEmployees.find(e => e.email === currentUser.email);
             currentTimezone = emp?.timezone || 'America/New_York';
 
-            document.getElementById('homeTimezone').textContent = currentTimezone.replace(/_/g, ' ');
+            const timezoneDisplay = document.getElementById('homeTimezone');
+            if (timezoneDisplay) {
+                timezoneDisplay.textContent = currentTimezone.replace(/_/g, ' ');
+            }
 
             updateHomeClock();
             if (homeClockInterval) clearInterval(homeClockInterval);
@@ -2654,6 +2663,12 @@
         }
 
         function updateHomeClock() {
+            const clockEl = document.getElementById('homeDigitalClock');
+            const dateEl = document.getElementById('homeCurrentDate');
+
+            // Skip if elements not on page
+            if (!clockEl) return;
+
             const now = new Date();
             const options = {
                 timeZone: currentTimezone,
@@ -2662,16 +2677,18 @@
                 minute: '2-digit'
             };
             const timeString = now.toLocaleTimeString('en-US', options);
-            document.getElementById('homeDigitalClock').textContent = timeString;
+            clockEl.textContent = timeString;
 
-            const dateOptions = {
-                timeZone: currentTimezone,
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            };
-            document.getElementById('homeCurrentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
+            if (dateEl) {
+                const dateOptions = {
+                    timeZone: currentTimezone,
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                };
+                dateEl.textContent = now.toLocaleDateString('en-US', dateOptions);
+            }
         }
 
         function updateHomeClockButtons() {
