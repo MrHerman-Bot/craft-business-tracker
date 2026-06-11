@@ -2989,8 +2989,7 @@
         }
         
         function canViewTeamConversation(teamId) {
-            const role = getCurrentUserRole();
-            if (['Owner', 'Manager', 'HR'].includes(role)) return true;
+            // All users (including Owners/Managers/HR) only see their own team's conversations
             const userTeam = getCurrentUserTeam().toLowerCase();
             return userTeam === teamId;
         }
@@ -3044,10 +3043,20 @@
                 return (bLast?.id || 0) - (aLast?.id || 0);
             });
             
-            // Filter visible conversations based on role
+            // Filter visible conversations
+            const currentUserEmail = currentUser.email;
             const visibleConversations = sortedConversations.filter(([id, conv]) => {
-                if (!conv.isTeam) return true;
-                return canViewTeamConversation(id);
+                if (conv.isTeam) {
+                    // Team conversations: only show user's own team
+                    return canViewTeamConversation(id);
+                } else {
+                    // Direct messages: only show if current user is involved
+                    // Check if the conversation ID matches current user email
+                    // or if current user has sent messages in this thread
+                    const isRecipient = id === currentUserEmail;
+                    const hasSentMessages = conv.messages.some(m => m.sender === 'You');
+                    return isRecipient || hasSentMessages;
+                }
             });
             
             // Team Conversations Section
