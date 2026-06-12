@@ -2098,19 +2098,43 @@
             const timeEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
             const today = new Date().toISOString().split('T')[0];
             const clockedIn = [];
+            const userTeam = getCurrentUserTeam();
             
-            // Demo: Check who is clocked in
-            // In real app, this would check timeEntries for each team member
-            // For now, show empty state unless there's data
+            // Check all team members to see who's clocked in
+            teamEmployees.forEach(emp => {
+                // Only show team members from the same team
+                if (emp.team !== userTeam) return;
+                
+                const userEntries = timeEntries[emp.email]?.[today] || [];
+                if (userEntries.length > 0) {
+                    const lastEntry = userEntries[userEntries.length - 1];
+                    // If last action was clockin or lunchin, they're clocked in
+                    if (lastEntry.action === 'clockin' || lastEntry.action === 'lunchin') {
+                        clockedIn.push(emp);
+                    }
+                }
+            });
             
-            // This is a placeholder - actual logic will come when we port team.html
+            // Render the clocked-in list
             const list = document.getElementById('clockedInList');
-            list.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">😴</div>
-                    <p>No one is clocked in on your team right now</p>
-                </div>
-            `;
+            if (clockedIn.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">😴</div>
+                        <p>No one is clocked in on your team right now</p>
+                    </div>
+                `;
+            } else {
+                list.innerHTML = clockedIn.map(emp => `
+                    <div class="clocked-in-item">
+                        <div class="clocked-in-avatar">${getInitials(emp.name)}</div>
+                        <div class="clocked-in-info">
+                            <div class="clocked-in-name">${emp.name}</div>
+                            <div class="clocked-in-status">Clocked In</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
         
         // Section switching
@@ -2722,11 +2746,15 @@
         function handleHomeClockAction() {
             handleMainClockAction();
             updateHomeClockButtons();
+            // Refresh the clocked-in list on the home page
+            updateHomeData();
         }
 
         function handleHomeLunchAction() {
             handleLunchAction();
             updateHomeClockButtons();
+            // Refresh the clocked-in list on the home page
+            updateHomeData();
         }
 
         let homeClockInterval;
