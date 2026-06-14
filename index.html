@@ -705,6 +705,57 @@
             background: var(--border);
         }
 
+        .task-count-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .soonest-task {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .home-card.clickable {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .home-card.clickable:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .home-card.clickable:active {
+            transform: translateY(0);
+        }
+
+        .click-hint {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .home-card.clickable:hover .click-hint {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .click-hint .icon-svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
         /* Team Section Styles */
         .team-tabs {
             display: flex;
@@ -1646,11 +1697,20 @@
             <section class="section active" id="section-home">
                 <div class="greeting" id="homeGreeting">Good Morning!</div>
                 
-                <div class="home-card">
+                <div class="home-card clickable" onclick="showSection('tasks')">
                     <div class="home-card-title">Your Tasks</div>
                     <div class="task-count">
                         <div class="task-count-number" id="taskCount">0</div>
-                        <div class="task-count-label">tasks assigned to you</div>
+                        <div class="task-count-details">
+                            <div class="task-count-label">tasks assigned to you</div>
+                            <div class="soonest-task" id="soonestTask">No upcoming tasks</div>
+                        </div>
+                    </div>
+                    <div class="click-hint">
+                        <svg class="icon-svg" viewBox="0 0 24 24">
+                            <path d="M9 18l6-6-6-6"></path>
+                        </svg>
+                        View all tasks
                     </div>
                 </div>
 
@@ -2086,6 +2146,38 @@
             const tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.email}`)) || [];
             const userTasks = tasks.filter(t => t.assignee === currentUser.email && t.status !== 'done');
             document.getElementById('taskCount').textContent = userTasks.length;
+            
+            // Find soonest due task
+            const soonestTaskEl = document.getElementById('soonestTask');
+            if (userTasks.length === 0) {
+                soonestTaskEl.textContent = 'No upcoming tasks';
+            } else {
+                // Filter tasks with due dates and sort by soonest
+                const tasksWithDueDate = userTasks.filter(t => t.dueDate && t.dueDate.trim() !== '');
+                if (tasksWithDueDate.length === 0) {
+                    soonestTaskEl.textContent = 'No due dates set';
+                } else {
+                    tasksWithDueDate.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+                    const soonest = tasksWithDueDate[0];
+                    const dueDate = new Date(soonest.dueDate);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    dueDate.setHours(0, 0, 0, 0);
+                    
+                    const daysDiff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+                    let dueText = '';
+                    if (daysDiff < 0) {
+                        dueText = `Overdue: ${soonest.title}`;
+                    } else if (daysDiff === 0) {
+                        dueText = `Due today: ${soonest.title}`;
+                    } else if (daysDiff === 1) {
+                        dueText = `Due tomorrow: ${soonest.title}`;
+                    } else {
+                        dueText = `Due in ${daysDiff} days: ${soonest.title}`;
+                    }
+                    soonestTaskEl.textContent = dueText;
+                }
+            }
             
             // Update badge
             if (userTasks.length > 0) {
@@ -3125,7 +3217,7 @@
                 hrTab.style.display = 'block';
             }
         }
-        
+
         // Close modal on outside click
         document.addEventListener('click', function(e) {
             if (e.target.id === 'timeOffModal') {
@@ -3135,48 +3227,7 @@
                 closeDayDetailModal();
             }
         });
-        
-        // Update Home Data for clocked-in team members
-        function updateHomeData() {
-            // Update task count
-            const tasks = getTasks();
-            const myTasks = tasks.filter(t => t.assignee === currentUser.email || t.createdBy === currentUser.email);
-            document.getElementById('taskCount').textContent = myTasks.length;
-            
-            // Update clocked-in list
-            const allEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
-            const today = new Date().toISOString().split('T')[0];
-            const teamMembers = getTeamMembers();
-            
-            const clockedInMembers = teamMembers.filter(emp => {
-                const userEntries = allEntries[emp.email]?.[today] || [];
-                if (userEntries.length === 0) return false;
-                const lastEntry = userEntries[userEntries.length - 1];
-                return lastEntry.action === 'clockin' || lastEntry.action === 'lunchin';
-            });
-            
-            const clockedInList = document.getElementById('clockedInList');
-            if (clockedInMembers.length === 0) {
-                clockedInList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">😴</div>
-                        <p>No one is clocked in on your team right now</p>
-                    </div>
-                `;
-            } else {
-                clockedInList.innerHTML = clockedInMembers.map(emp => `
-                    <div class="employee-card" style="margin-bottom: 8px;">
-                        <div class="employee-avatar" style="width: 40px; height: 40px; font-size: 1rem;">${getInitials(emp.name)}</div>
-                        <div class="employee-info">
-                            <div class="employee-name" style="font-size: 0.95rem;">${emp.name}</div>
-                            <div class="employee-role" style="font-size: 0.8rem;">${emp.role}</div>
-                        </div>
-                        <div style="color: var(--success); font-size: 0.85rem; font-weight: 600;">🟢 On</div>
-                    </div>
-                `).join('');
-            }
-        }
-        
+
         // Check if already logged in
         if (currentUser) {
             showApp();
