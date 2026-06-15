@@ -2142,8 +2142,8 @@
         
         // Update home data
         function updateHomeData() {
-            // Get task count
-            const tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.email}`)) || [];
+            // Get task count from shared tasks storage (same as Tasks page)
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
             const userTasks = tasks.filter(t => t.assignee === currentUser.email && t.status !== 'done');
             document.getElementById('taskCount').textContent = userTasks.length;
             
@@ -2180,10 +2180,12 @@
             }
             
             // Update badge
+            const taskBadge = document.getElementById('task-badge');
             if (userTasks.length > 0) {
-                const badge = document.getElementById('task-badge');
-                badge.textContent = userTasks.length > 99 ? '99+' : userTasks.length;
-                badge.style.display = 'flex';
+                taskBadge.textContent = userTasks.length > 99 ? '99+' : userTasks.length;
+                taskBadge.style.display = 'flex';
+            } else {
+                taskBadge.style.display = 'none';
             }
             
             // Get clocked in team members
