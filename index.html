@@ -2153,13 +2153,13 @@
                 soonestTaskEl.textContent = 'No upcoming tasks';
             } else {
                 // Filter tasks with due dates and sort by soonest
-                const tasksWithDueDate = userTasks.filter(t => t.dueDate && t.dueDate.trim() !== '');
+                const tasksWithDueDate = userTasks.filter(t => t.due && t.due.trim() !== '');
                 if (tasksWithDueDate.length === 0) {
                     soonestTaskEl.textContent = 'No due dates set';
                 } else {
-                    tasksWithDueDate.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+                    tasksWithDueDate.sort((a, b) => new Date(a.due) - new Date(b.due));
                     const soonest = tasksWithDueDate[0];
-                    const dueDate = new Date(soonest.dueDate);
+                    const dueDate = new Date(soonest.due);
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
                     dueDate.setHours(0, 0, 0, 0);
