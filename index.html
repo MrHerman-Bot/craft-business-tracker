@@ -2054,7 +2054,7 @@
                 </button>
             </section>
 
-            <!-- Profile Section (Placeholder) -->
+            <!-- Profile Section -->
             <section class="section" id="section-profile">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
                     <button class="nav-btn" onclick="showSection('settings')" style="background: none; border: none; cursor: pointer;">
@@ -2064,12 +2064,100 @@
                     </button>
                     <h2>Employee Profile</h2>
                 </div>
+
                 <div class="home-card">
-                    <p style="color: var(--text-secondary); text-align: center; padding: 40px 20px;">
-                        Employee Profile page - Coming Soon
-                    </p>
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="profileFirstName" placeholder="Enter first name" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Last Name</label>
+                        <input type="text" id="profileLastName" placeholder="Enter last name" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>E-mail Address</label>
+                        <input type="email" id="profileEmail" placeholder="Enter email address" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Start Date</label>
+                        <input type="date" id="profileStartDate" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Home Time Zone</label>
+                        <select id="profileTimezone" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                            <option value="">Select timezone...</option>
+                            <option value="America/New_York">Eastern Time (ET)</option>
+                            <option value="America/Chicago">Central Time (CT)</option>
+                            <option value="America/Denver">Mountain Time (MT)</option>
+                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                            <option value="America/Anchorage">Alaska Time (AKT)</option>
+                            <option value="Pacific/Honolulu">Hawaii-Aleutian Time (HT)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Birthdate (Month/Day)</label>
+                        <div style="display: flex; gap: 12px; margin-top: 8px;">
+                            <select id="profileBirthMonth" style="flex: 1; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary);">
+                                <option value="">Month</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            <select id="profileBirthDay" style="flex: 1; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary);">
+                                <option value="">Day</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                                <option value="31">31</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="saveProfile()" style="margin-top: 24px; width: 100%;">Save Profile</button>
                 </div>
             </section>
+
 
             <!-- Privacy Policy Section (Placeholder) -->
             <section class="section" id="section-privacy">
@@ -2306,6 +2394,54 @@
             // Placeholder - will be implemented when you provide details
             alert('Change Password - Coming Soon');
         }
+
+        // Profile Functions
+        function loadProfile() {
+            if (!currentUser) return;
+
+            const profileKey = `profile_${currentUser.email}`;
+            const profile = JSON.parse(localStorage.getItem(profileKey));
+
+            if (profile) {
+                document.getElementById('profileFirstName').value = profile.firstName || '';
+                document.getElementById('profileLastName').value = profile.lastName || '';
+                document.getElementById('profileEmail').value = profile.email || currentUser.email || '';
+                document.getElementById('profileStartDate').value = profile.startDate || '';
+                document.getElementById('profileTimezone').value = profile.timezone || '';
+                document.getElementById('profileBirthMonth').value = profile.birthMonth || '';
+                document.getElementById('profileBirthDay').value = profile.birthDay || '';
+            } else {
+                // Pre-fill with current user data if available
+                document.getElementById('profileEmail').value = currentUser.email || '';
+            }
+        }
+
+        function saveProfile() {
+            if (!currentUser) return;
+
+            const profile = {
+                firstName: document.getElementById('profileFirstName').value.trim(),
+                lastName: document.getElementById('profileLastName').value.trim(),
+                email: document.getElementById('profileEmail').value.trim(),
+                startDate: document.getElementById('profileStartDate').value,
+                timezone: document.getElementById('profileTimezone').value,
+                birthMonth: document.getElementById('profileBirthMonth').value,
+                birthDay: document.getElementById('profileBirthDay').value
+            };
+
+            const profileKey = `profile_${currentUser.email}`;
+            localStorage.setItem(profileKey, JSON.stringify(profile));
+
+            // Show success feedback
+            const btn = document.querySelector('#section-profile .btn-primary');
+            const originalText = btn.textContent;
+            btn.textContent = 'Saved!';
+            btn.style.background = 'var(--success)';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
         
         initTheme();
         
@@ -2499,6 +2635,11 @@
             // Initialize settings section
             if (sectionName === 'settings') {
                 initAfterHoursToggle();
+            }
+            
+            // Load profile data when showing profile
+            if (sectionName === 'profile') {
+                loadProfile();
             }
         }
         
