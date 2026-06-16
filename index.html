@@ -756,6 +756,76 @@
             fill: none;
         }
 
+        /* Settings Toggle Slider Styles */
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            gap: 16px;
+        }
+
+        .setting-label {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .toggle-slider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .toggle-track {
+            width: 50px;
+            height: 28px;
+            background: #9ca3af;
+            border-radius: 14px;
+            position: relative;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+        }
+
+        .toggle-slider[aria-checked="true"] .toggle-track,
+        .toggle-slider.active .toggle-track {
+            background: var(--accent, #10b981);
+        }
+
+        .toggle-thumb {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-slider[aria-checked="true"] .toggle-thumb,
+        .toggle-slider.active .toggle-thumb {
+            transform: translateX(22px);
+        }
+
+        .toggle-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            min-width: 24px;
+            text-align: left;
+        }
+
+        .toggle-slider[aria-checked="true"] .toggle-label,
+        .toggle-slider.active .toggle-label {
+            color: var(--accent, #10b981);
+        }
+
         /* Team Section Styles */
         .team-tabs {
             display: flex;
@@ -1912,10 +1982,13 @@
                 
                 <div class="home-card">
                     <div class="home-card-title">Appearance</div>
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0;">
-                        <span style="font-size: 1rem; color: var(--text-primary);">Dark Mode</span>
-                        <button class="btn" style="width: auto; padding: 8px 16px;" onclick="toggleTheme()" id="themeToggleBtn">
-                            🌙 Toggle
+                    <div class="setting-row">
+                        <span class="setting-label">Dark Mode</span>
+                        <button class="toggle-slider" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Dark Mode">
+                            <span class="toggle-track">
+                                <span class="toggle-thumb"></span>
+                            </span>
+                            <span class="toggle-label" id="themeToggleLabel">Off</span>
                         </button>
                     </div>
                 </div>
@@ -2071,16 +2144,41 @@
         function initTheme() {
             const savedTheme = localStorage.getItem('theme');
             const isDark = savedTheme === 'dark';
-            
+
             if (isDark) {
                 document.body.classList.add('dark-mode');
             }
+
+            // Update toggle button state
+            updateThemeToggleButton(isDark);
         }
-        
+
+        function updateThemeToggleButton(isDark) {
+            const toggleBtn = document.getElementById('themeToggleBtn');
+            const toggleLabel = document.getElementById('themeToggleLabel');
+
+            if (toggleBtn) {
+                if (isDark) {
+                    toggleBtn.classList.add('active');
+                    toggleBtn.setAttribute('aria-checked', 'true');
+                } else {
+                    toggleBtn.classList.remove('active');
+                    toggleBtn.setAttribute('aria-checked', 'false');
+                }
+            }
+
+            if (toggleLabel) {
+                toggleLabel.textContent = isDark ? 'On' : 'Off';
+            }
+        }
+
         function toggleTheme() {
             const body = document.body;
             const isDark = body.classList.toggle('dark-mode');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+            // Update toggle button state
+            updateThemeToggleButton(isDark);
         }
         
         initTheme();
