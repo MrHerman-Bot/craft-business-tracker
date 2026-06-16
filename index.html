@@ -2557,6 +2557,26 @@
                 </div>
             </div>
         </div>
+
+        <!-- Create New Team Modal -->
+        <div class="modal-overlay" id="createTeamModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 400px; overflow: hidden;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Create New Team</h3>
+                    <button class="modal-close" onclick="closeCreateTeamModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="form-group">
+                        <label>Team Name</label>
+                        <input type="text" id="newTeamName" placeholder="Enter team name (e.g., Marketing)" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button class="btn" onclick="closeCreateTeamModal()" style="flex: 1; background: var(--border-color); color: var(--text-primary);">Cancel</button>
+                        <button class="btn btn-primary" onclick="createNewTeam()" style="flex: 1;">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
@@ -2827,6 +2847,7 @@
         // Initialize Add Employee page when shown
         function initAddEmployeePage() {
             populateManagerDropdown();
+            populateTeamDropdown(); // Add this line
 
             // Set default start date to today
             const today = new Date().toISOString().split('T')[0];
@@ -2847,6 +2868,91 @@
             const btn = document.getElementById('addEmployeeBtn');
             btn.textContent = 'Create Employee';
             btn.style.background = '';
+        }
+
+        // Populate Team dropdown with default and custom teams
+        function populateTeamDropdown() {
+            const teamSelect = document.getElementById('newEmployeeTeam');
+            if (!teamSelect) return;
+
+            // Get custom teams from localStorage
+            const customTeams = JSON.parse(localStorage.getItem('customTeams')) || [];
+
+            // Clear and rebuild options
+            teamSelect.innerHTML = `
+                <option value="">Select team...</option>
+                <option value="Production">Production Team</option>
+                <option value="Sales">Sales Team</option>
+                <option value="Warehouse">Warehouse Team</option>
+                <option value="Admin">Admin Team</option>
+            `;
+
+            // Add custom teams
+            customTeams.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team;
+                option.textContent = team + ' Team';
+                teamSelect.appendChild(option);
+            });
+
+            // Add "Create New Team" option
+            const createOption = document.createElement('option');
+            createOption.value = 'CREATE_NEW';
+            createOption.textContent = '➕ Create New Team...';
+            createOption.style.fontWeight = 'bold';
+            teamSelect.appendChild(createOption);
+
+            // Add onchange handler
+            teamSelect.onchange = function() {
+                if (this.value === 'CREATE_NEW') {
+                    showCreateTeamModal();
+                    this.value = ''; // Reset selection
+                }
+            };
+        }
+
+        // Show Create Team Modal
+        function showCreateTeamModal() {
+            document.getElementById('createTeamModal').style.display = 'flex';
+            document.getElementById('newTeamName').value = '';
+            document.getElementById('newTeamName').focus();
+        }
+
+        // Close Create Team Modal
+        function closeCreateTeamModal() {
+            document.getElementById('createTeamModal').style.display = 'none';
+        }
+
+        // Create new team
+        function createNewTeam() {
+            const teamName = document.getElementById('newTeamName').value.trim();
+
+            if (!teamName) {
+                alert('Please enter a team name');
+                return;
+            }
+
+            // Get existing custom teams
+            const customTeams = JSON.parse(localStorage.getItem('customTeams')) || [];
+
+            // Check if team already exists (case insensitive)
+            const teamExists = customTeams.some(t => t.toLowerCase() === teamName.toLowerCase()) ||
+                ['Production', 'Sales', 'Warehouse', 'Admin'].some(t => t.toLowerCase() === teamName.toLowerCase());
+
+            if (teamExists) {
+                alert('A team with this name already exists');
+                return;
+            }
+
+            // Add new team
+            customTeams.push(teamName);
+            localStorage.setItem('customTeams', JSON.stringify(customTeams));
+
+            // Refresh dropdown and select the new team
+            populateTeamDropdown();
+            document.getElementById('newEmployeeTeam').value = teamName;
+
+            closeCreateTeamModal();
         }
 
         // Add new employee function
