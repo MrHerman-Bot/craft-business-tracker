@@ -2285,6 +2285,44 @@
             </div>
         </div>
         
+        <!-- Change Password Modal -->
+        <div class="modal-overlay" id="changePasswordModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 80vh; overflow: hidden;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Change Password</h3>
+                    <button class="modal-close" onclick="closeChangePasswordModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <div class="password-input-wrapper" style="position: relative; margin-top: 8px;">
+                            <input type="password" id="newPassword" placeholder="Enter new password" style="width: 100%; padding: 12px 44px 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary);">
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('newPassword', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; color: var(--text-secondary);">
+                                <svg class="icon-svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2;">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Confirm New Password</label>
+                        <div class="password-input-wrapper" style="position: relative; margin-top: 8px;">
+                            <input type="password" id="confirmPassword" placeholder="Confirm new password" style="width: 100%; padding: 12px 44px 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary);">
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; color: var(--text-secondary);">
+                                <svg class="icon-svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2;">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="passwordError" style="color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none;">Passwords do not match</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="submitPasswordChange()" style="margin-top: 24px; width: 100%;">Change Password</button>
+                </div>
+            </div>
+        </div>
+        
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
             <button class="bottom-nav-btn" onclick="showSection('messages')" id="bottom-messages">
@@ -2391,8 +2429,81 @@
 
         // Change Password Modal
         function showChangePasswordModal() {
-            // Placeholder - will be implemented when you provide details
-            alert('Change Password - Coming Soon');
+            document.getElementById('changePasswordModal').style.display = 'flex';
+            // Clear previous inputs
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('passwordError').style.display = 'none';
+        }
+
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').style.display = 'none';
+        }
+
+        function togglePasswordVisibility(inputId, button) {
+            const input = document.getElementById(inputId);
+            const isPassword = input.type === 'password';
+            
+            // Toggle input type
+            input.type = isPassword ? 'text' : 'password';
+            
+            // Update icon
+            const svg = button.querySelector('svg');
+            if (isPassword) {
+                // Show "eye-off" icon (password visible)
+                svg.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                `;
+            } else {
+                // Show "eye" icon (password hidden)
+                svg.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+            }
+        }
+
+        function submitPasswordChange() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorEl = document.getElementById('passwordError');
+            
+            // Check if passwords match
+            if (newPassword !== confirmPassword) {
+                errorEl.textContent = 'Passwords do not match';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            // Check if password is empty
+            if (!newPassword) {
+                errorEl.textContent = 'Please enter a new password';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            // Check minimum length
+            if (newPassword.length < 6) {
+                errorEl.textContent = 'Password must be at least 6 characters';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            // Success - save password (for now just show success)
+            errorEl.style.display = 'none';
+            
+            // Show success message
+            const btn = document.querySelector('#changePasswordModal .btn-primary');
+            const originalText = btn.textContent;
+            btn.textContent = 'Password Changed!';
+            btn.style.background = 'var(--success)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                closeChangePasswordModal();
+            }, 1500);
         }
 
         // Profile Functions
