@@ -821,12 +821,24 @@
             text-align: left;
         }
 
-        .toggle-slider[aria-checked="true"] .toggle-label,
-        .toggle-slider.active .toggle-label {
-            color: var(--accent, #10b981);
-        }
+.toggle-slider[aria-checked="true"] .toggle-label,
+.toggle-slider.active .toggle-label {
+    color: var(--accent, #10b981);
+}
 
-        /* Team Section Styles */
+.setting-row.clickable {
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 8px;
+    margin: 0 -8px;
+    padding: 12px 8px;
+}
+
+.setting-row.clickable:hover {
+    background: var(--bg-primary);
+}
+
+/* Team Section Styles */
         .team-tabs {
             display: flex;
             background: var(--bg-secondary);
@@ -1979,9 +1991,28 @@
             <!-- Settings Section -->
             <section class="section" id="section-settings">
                 <h2 style="margin-bottom: 24px;">Settings</h2>
-                
+
+                <!-- Profile Section -->
                 <div class="home-card">
-                    <div class="home-card-title">Appearance</div>
+                    <div class="home-card-title">Profile</div>
+
+                    <!-- Employee Profile -->
+                    <div class="setting-row clickable" onclick="showSection('profile')">
+                        <span class="setting-label">Employee Profile</span>
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: var(--text-secondary);">
+                            <path d="M9 18l6-6-6-6"></path>
+                        </svg>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="setting-row clickable" onclick="showChangePasswordModal()">
+                        <span class="setting-label">Change Password</span>
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: var(--text-secondary);">
+                            <path d="M9 18l6-6-6-6"></path>
+                        </svg>
+                    </div>
+
+                    <!-- Dark Mode -->
                     <div class="setting-row">
                         <span class="setting-label">Dark Mode</span>
                         <button class="toggle-slider" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Dark Mode">
@@ -1991,13 +2022,69 @@
                             <span class="toggle-label" id="themeToggleLabel">Off</span>
                         </button>
                     </div>
+
+                    <!-- Notifications After Hours -->
+                    <div class="setting-row">
+                        <span class="setting-label">Notifications After Hours</span>
+                        <button class="toggle-slider" id="afterHoursToggleBtn" onclick="toggleAfterHours()" aria-label="Toggle After Hours Notifications">
+                            <span class="toggle-track">
+                                <span class="toggle-thumb"></span>
+                            </span>
+                            <span class="toggle-label" id="afterHoursToggleLabel">Off</span>
+                        </button>
+                    </div>
                 </div>
-                
+
+                <!-- Other Settings Section -->
                 <div class="home-card">
-                    <div class="home-card-title">Account</div>
+                    <div class="home-card-title">Other Settings</div>
+
+                    <!-- Privacy Policy -->
+                    <div class="setting-row clickable" onclick="showSection('privacy')">
+                        <span class="setting-label">Privacy Policy</span>
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: var(--text-secondary);">
+                            <path d="M9 18l6-6-6-6"></path>
+                        </svg>
+                    </div>
+
+                    <!-- Logout -->
                     <button class="btn" style="width: 100%; background: var(--danger); color: white; margin-top: 8px;" onclick="logout()">
-                        🚪 Logout
+                        Logout
                     </button>
+                </div>
+            </section>
+
+            <!-- Profile Section (Placeholder) -->
+            <section class="section" id="section-profile">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                    <button class="nav-btn" onclick="showSection('settings')" style="background: none; border: none; cursor: pointer;">
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; stroke: var(--text-primary);">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <h2>Employee Profile</h2>
+                </div>
+                <div class="home-card">
+                    <p style="color: var(--text-secondary); text-align: center; padding: 40px 20px;">
+                        Employee Profile page - Coming Soon
+                    </p>
+                </div>
+            </section>
+
+            <!-- Privacy Policy Section (Placeholder) -->
+            <section class="section" id="section-privacy">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                    <button class="nav-btn" onclick="showSection('settings')" style="background: none; border: none; cursor: pointer;">
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; stroke: var(--text-primary);">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <h2>Privacy Policy</h2>
+                </div>
+                <div class="home-card">
+                    <p style="color: var(--text-secondary); text-align: center; padding: 40px 20px;">
+                        Privacy Policy page - Coming Soon
+                    </p>
                 </div>
             </section>
         </main>
@@ -2179,6 +2266,45 @@
 
             // Update toggle button state
             updateThemeToggleButton(isDark);
+        }
+
+        // After Hours Notifications Toggle
+        function initAfterHoursToggle() {
+            const savedSetting = localStorage.getItem('afterHoursNotifications');
+            const isEnabled = savedSetting === 'true';
+            updateAfterHoursToggleButton(isEnabled);
+        }
+
+        function updateAfterHoursToggleButton(isEnabled) {
+            const toggleBtn = document.getElementById('afterHoursToggleBtn');
+            const toggleLabel = document.getElementById('afterHoursToggleLabel');
+
+            if (toggleBtn) {
+                if (isEnabled) {
+                    toggleBtn.classList.add('active');
+                    toggleBtn.setAttribute('aria-checked', 'true');
+                } else {
+                    toggleBtn.classList.remove('active');
+                    toggleBtn.setAttribute('aria-checked', 'false');
+                }
+            }
+
+            if (toggleLabel) {
+                toggleLabel.textContent = isEnabled ? 'On' : 'Off';
+            }
+        }
+
+        function toggleAfterHours() {
+            const currentSetting = localStorage.getItem('afterHoursNotifications');
+            const newSetting = currentSetting !== 'true';
+            localStorage.setItem('afterHoursNotifications', newSetting.toString());
+            updateAfterHoursToggleButton(newSetting);
+        }
+
+        // Change Password Modal
+        function showChangePasswordModal() {
+            // Placeholder - will be implemented when you provide details
+            alert('Change Password - Coming Soon');
         }
         
         initTheme();
@@ -2368,6 +2494,11 @@
             // Initialize messages section
             if (sectionName === 'messages') {
                 initMessages();
+            }
+
+            // Initialize settings section
+            if (sectionName === 'settings') {
+                initAfterHoursToggle();
             }
         }
         
