@@ -1923,9 +1923,12 @@
                             <span class="current-month" id="currentMonthLabel">June 2026</span>
                             <button onclick="changeMonth(1)">→</button>
                         </div>
-                        <button class="request-time-off-btn" onclick="showTimeOffModal()">Request Time Off</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="request-time-off-btn" onclick="showTimeOffModal()">Request Time Off</button>
+                            <button class="request-time-off-btn" id="createScheduleBtn" onclick="showCreateScheduleModal()" style="display: none; background: var(--accent);">Create Schedule</button>
+                        </div>
                     </div>
-                    
+
                     <div class="balance-cards">
                         <div class="balance-card">
                             <div class="balance-label">Vacation Balance</div>
@@ -1938,7 +1941,38 @@
                             <div class="balance-unit">hours</div>
                         </div>
                     </div>
-                    
+
+                    <!-- Team Schedule Legend -->
+                    <div class="home-card" style="margin-bottom: 16px;">
+                        <div class="home-card-title">Team Schedule Legend</div>
+                        <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #10b981; border-radius: 4px;"></div>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">Working</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #f59e0b; border-radius: 4px;"></div>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">Off/Vacation</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #ef4444; border-radius: 4px;"></div>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">Sick</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #334155; border-radius: 4px;"></div>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">No Schedule</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Members Schedule List -->
+                    <div class="home-card" style="margin-bottom: 16px;">
+                        <div class="home-card-title">Team Schedules</div>
+                        <div id="teamScheduleList" style="margin-top: 12px;">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
                     <div class="calendar-grid">
                         <div class="calendar-header">
                             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
@@ -2573,6 +2607,93 @@
                     <div style="display: flex; gap: 12px; margin-top: 24px;">
                         <button class="btn" onclick="closeCreateTeamModal()" style="flex: 1; background: var(--border-color); color: var(--text-primary);">Cancel</button>
                         <button class="btn btn-primary" onclick="createNewTeam()" style="flex: 1;">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Schedule Modal (Manager Only) -->
+        <div class="modal-overlay" id="createScheduleModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 500px; max-height: 85vh; overflow: hidden;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Create Schedule</h3>
+                    <button class="modal-close" onclick="closeCreateScheduleModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto; max-height: 70vh;">
+                    <div class="form-group">
+                        <label>Select Employee *</label>
+                        <select id="scheduleEmployeeSelect" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                            <option value="">Choose employee...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Schedule Type *</label>
+                        <select id="scheduleTypeSelect" onchange="toggleScheduleType()" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                            <option value="recurring">Recurring Weekly Schedule</option>
+                            <option value="daterange">Date Range (Vacation/Sick/Time Off)</option>
+                            <option value="special">Special Date</option>
+                        </select>
+                    </div>
+
+                    <!-- Recurring Schedule Section -->
+                    <div id="recurringSection" style="margin-top: 16px;">
+                        <div class="home-card-title" style="margin-bottom: 12px;">Weekly Schedule</div>
+                        <div id="weeklyScheduleInputs">
+                            <!-- Generated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Date Range Section -->
+                    <div id="dateRangeSection" style="margin-top: 16px; display: none;">
+                        <div class="home-card-title" style="margin-bottom: 12px;">Time Off</div>
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select id="timeOffScheduleType" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                                <option value="vacation">Vacation</option>
+                                <option value="sick">Sick Leave</option>
+                                <option value="personal">Personal Day</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label>Start Date</label>
+                            <input type="date" id="scheduleStartDate" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label>End Date</label>
+                            <input type="date" id="scheduleEndDate" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        </div>
+                    </div>
+
+                    <!-- Special Date Section -->
+                    <div id="specialDateSection" style="margin-top: 16px; display: none;">
+                        <div class="home-card-title" style="margin-bottom: 12px;">Special Date</div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="specialDate" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label>Status</label>
+                            <select id="specialDateStatus" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                                <option value="working">Working</option>
+                                <option value="off">Day Off</option>
+                                <option value="halfday">Half Day</option>
+                                <option value="holiday">Company Holiday</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label>Shift Times (if working)</label>
+                            <div style="display: flex; gap: 12px; margin-top: 8px;">
+                                <input type="time" id="specialStartTime" value="09:00" style="flex: 1; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary);">
+                                <span style="align-self: center; color: var(--text-secondary);">to</span>
+                                <input type="time" id="specialEndTime" value="17:00" style="flex: 1; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button class="btn" onclick="closeCreateScheduleModal()" style="flex: 1; background: var(--border-color); color: var(--text-primary);">Cancel</button>
+                        <button class="btn btn-primary" id="saveScheduleBtn" onclick="saveSchedule()" style="flex: 1;">Save Schedule</button>
                     </div>
                 </div>
             </div>
@@ -3527,12 +3648,12 @@
         function switchTeamTab(tabName) {
             document.querySelectorAll('.team-tab').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.team-tab-content').forEach(content => content.classList.remove('active'));
-            
+
             document.getElementById(`team-tab-${tabName}`).classList.add('active');
             document.getElementById(`team-content-${tabName}`).classList.add('active');
-            
+
             if (tabName === 'schedule') {
-                renderCalendar();
+                initScheduleTab();
                 updateBalances();
             } else if (tabName === 'hr') {
                 renderHRTimeOffRequests();
@@ -4074,6 +4195,349 @@
                 dateStr >= req.startDate && 
                 dateStr <= req.endDate
             );
+        }
+
+        // ==========================================
+        // TEAM SCHEDULE MANAGEMENT FUNCTIONS
+        // ==========================================
+
+        // Check if user can create schedules (Manager, Owner, HR)
+        function canCreateSchedules() {
+            const role = getCurrentUserRole();
+            return ['Owner', 'Manager', 'HR'].includes(role);
+        }
+
+        // Initialize Schedule tab
+        function initScheduleTab() {
+            // Show/hide Create Schedule button based on permissions
+            const createBtn = document.getElementById('createScheduleBtn');
+            if (createBtn) {
+                createBtn.style.display = canCreateSchedules() ? 'block' : 'none';
+            }
+
+            // Render team schedules list
+            renderTeamScheduleList();
+
+            // Refresh calendar
+            renderCalendar();
+        }
+
+        // Render team schedule list
+        function renderTeamScheduleList() {
+            const container = document.getElementById('teamScheduleList');
+            if (!container) return;
+
+            const teamMembers = getTeamMembers();
+            const currentDate = new Date();
+            const todayStr = currentDate.toISOString().split('T')[0];
+
+            if (teamMembers.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No team members found</p>';
+                return;
+            }
+
+            container.innerHTML = teamMembers.map(emp => {
+                const schedule = getEmployeeScheduleForDate(emp.email, todayStr);
+                const status = getScheduleStatusDisplay(schedule);
+                
+                return `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border-color);">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                    display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem;">
+                            ${getInitials(emp.name)}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: var(--text-primary);">${emp.name}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">${emp.role}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.85rem; font-weight: 500; color: ${status.color};">${status.text}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">${status.time}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Get employee schedule for a specific date
+        function getEmployeeScheduleForDate(email, dateStr) {
+            // Check for time off requests first
+            const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const approvedRequest = requests.find(r => 
+                r.employeeEmail === email &&
+                r.status === 'approved' &&
+                dateStr >= r.startDate &&
+                dateStr <= r.endDate
+            );
+
+            if (approvedRequest) {
+                return { type: approvedRequest.type, off: true };
+            }
+
+            // Check for special dates
+            const specialDates = JSON.parse(localStorage.getItem('specialDates')) || {};
+            if (specialDates[email]?.[dateStr]) {
+                return specialDates[email][dateStr];
+            }
+
+            // Check for recurring schedule
+            const schedules = JSON.parse(localStorage.getItem('employeeSchedules')) || {};
+            const empSchedule = schedules[email];
+            
+            if (empSchedule?.recurring) {
+                const date = new Date(dateStr);
+                const dayName = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][date.getDay()];
+                return empSchedule.recurring[dayName] || { status: 'off' };
+            }
+
+            return { status: 'not-set' };
+        }
+
+        // Get schedule status display
+        function getScheduleStatusDisplay(schedule) {
+            if (!schedule || schedule.status === 'not-set') {
+                return { text: 'Not Scheduled', time: '', color: '#718096' };
+            }
+            if (schedule.off || schedule.status === 'off') {
+                if (schedule.type === 'vacation') return { text: 'Vacation', time: 'Day Off', color: '#f59e0b' };
+                if (schedule.type === 'sick') return { text: 'Sick Leave', time: 'Day Off', color: '#ef4444' };
+                if (schedule.type === 'personal') return { text: 'Personal Day', time: 'Day Off', color: '#f59e0b' };
+                return { text: 'Off', time: 'Day Off', color: '#718096' };
+            }
+            if (schedule.status === 'holiday') {
+                return { text: 'Holiday', time: 'Company Holiday', color: '#667eea' };
+            }
+            if (schedule.status === 'halfday') {
+                return { text: 'Half Day', time: `${schedule.startTime || '9:00 AM'} - ${schedule.endTime || '1:00 PM'}`, color: '#10b981' };
+            }
+            
+            // Working
+            const startTime = schedule.startTime || '9:00 AM';
+            const endTime = schedule.endTime || '5:00 PM';
+            return { text: 'Working', time: `${startTime} - ${endTime}`, color: '#10b981' };
+        }
+
+        // Show Create Schedule Modal
+        function showCreateScheduleModal() {
+            if (!canCreateSchedules()) {
+                alert('You do not have permission to create schedules');
+                return;
+            }
+
+            document.getElementById('createScheduleModal').style.display = 'flex';
+            populateScheduleEmployeeDropdown();
+            generateWeeklyScheduleInputs();
+            
+            // Set default dates
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('scheduleStartDate').value = today;
+            document.getElementById('scheduleEndDate').value = today;
+            document.getElementById('specialDate').value = today;
+            
+            // Reset to recurring view
+            document.getElementById('scheduleTypeSelect').value = 'recurring';
+            toggleScheduleType();
+        }
+
+        // Close Create Schedule Modal
+        function closeCreateScheduleModal() {
+            document.getElementById('createScheduleModal').style.display = 'none';
+        }
+
+        // Populate employee dropdown for schedule creation
+        function populateScheduleEmployeeDropdown() {
+            const select = document.getElementById('scheduleEmployeeSelect');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">Choose employee...</option>';
+            
+            const teamMembers = getTeamMembers();
+            teamMembers.forEach(emp => {
+                const option = document.createElement('option');
+                option.value = emp.email;
+                option.textContent = emp.name;
+                select.appendChild(option);
+            });
+
+            // Add "All Team Members" option for managers
+            if (canCreateSchedules()) {
+                const allOption = document.createElement('option');
+                allOption.value = 'ALL_TEAM';
+                allOption.textContent = 'All Team Members';
+                select.insertBefore(allOption, select.children[1]);
+            }
+        }
+
+        // Generate weekly schedule inputs
+        function generateWeeklyScheduleInputs() {
+            const container = document.getElementById('weeklyScheduleInputs');
+            if (!container) return;
+
+            const days = [
+                { key: 'monday', label: 'Monday' },
+                { key: 'tuesday', label: 'Tuesday' },
+                { key: 'wednesday', label: 'Wednesday' },
+                { key: 'thursday', label: 'Thursday' },
+                { key: 'friday', label: 'Friday' },
+                { key: 'saturday', label: 'Saturday' },
+                { key: 'sunday', label: 'Sunday' }
+            ];
+
+            container.innerHTML = days.map(day => `
+                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border-color);">
+                    <div style="flex: 1; font-weight: 500; color: var(--text-primary);">${day.label}</div>
+                    <select id="schedule-${day.key}-status" onchange="toggleDayTimeInputs('${day.key}')" style="padding: 8px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary);">
+                        <option value="working">Working</option>
+                        <option value="off">Off</option>
+                        <option value="halfday">Half Day</option>
+                    </select>
+                    <div id="schedule-${day.key}-times" style="display: flex; gap: 8px;">
+                        <input type="time" id="schedule-${day.key}-start" value="09:00" style="padding: 8px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary); width: 90px;">
+                        <span style="align-self: center; color: var(--text-secondary);">to</span>
+                        <input type="time" id="schedule-${day.key}-end" value="17:00" style="padding: 8px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary); width: 90px;">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toggle day time inputs based on status
+        function toggleDayTimeInputs(day) {
+            const status = document.getElementById(`schedule-${day}-status`).value;
+            const timesDiv = document.getElementById(`schedule-${day}-times`);
+            
+            if (status === 'off') {
+                timesDiv.style.display = 'none';
+            } else {
+                timesDiv.style.display = 'flex';
+            }
+        }
+
+        // Toggle schedule type sections
+        function toggleScheduleType() {
+            const type = document.getElementById('scheduleTypeSelect').value;
+            
+            document.getElementById('recurringSection').style.display = type === 'recurring' ? 'block' : 'none';
+            document.getElementById('dateRangeSection').style.display = type === 'daterange' ? 'block' : 'none';
+            document.getElementById('specialDateSection').style.display = type === 'special' ? 'block' : 'none';
+        }
+
+        // Save schedule
+        function saveSchedule() {
+            const employeeEmail = document.getElementById('scheduleEmployeeSelect').value;
+            const scheduleType = document.getElementById('scheduleTypeSelect').value;
+
+            if (!employeeEmail) {
+                alert('Please select an employee');
+                return;
+            }
+
+            const schedules = JSON.parse(localStorage.getItem('employeeSchedules')) || {};
+            const specialDates = JSON.parse(localStorage.getItem('specialDates')) || {};
+
+            if (scheduleType === 'recurring') {
+                // Save recurring weekly schedule
+                const recurring = {};
+                const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                
+                days.forEach(day => {
+                    const status = document.getElementById(`schedule-${day}-status`).value;
+                    recurring[day] = {
+                        status: status,
+                        startTime: status !== 'off' ? document.getElementById(`schedule-${day}-start`).value : null,
+                        endTime: status !== 'off' ? document.getElementById(`schedule-${day}-end`).value : null
+                    };
+                });
+
+                if (employeeEmail === 'ALL_TEAM') {
+                    getTeamMembers().forEach(emp => {
+                        if (!schedules[emp.email]) schedules[emp.email] = {};
+                        schedules[emp.email].recurring = recurring;
+                    });
+                } else {
+                    if (!schedules[employeeEmail]) schedules[employeeEmail] = {};
+                    schedules[employeeEmail].recurring = recurring;
+                }
+
+                localStorage.setItem('employeeSchedules', JSON.stringify(schedules));
+                alert('Weekly schedule saved successfully!');
+
+            } else if (scheduleType === 'daterange') {
+                // Save date range (vacation/sick/personal)
+                const startDate = document.getElementById('scheduleStartDate').value;
+                const endDate = document.getElementById('scheduleEndDate').value;
+                const type = document.getElementById('timeOffScheduleType').value;
+
+                if (!startDate || !endDate) {
+                    alert('Please select start and end dates');
+                    return;
+                }
+
+                // Create time off requests for the range
+                const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+                const targetEmails = employeeEmail === 'ALL_TEAM' ? getTeamMembers().map(e => e.email) : [employeeEmail];
+
+                targetEmails.forEach(email => {
+                    const request = {
+                        id: Date.now() + Math.random(),
+                        employeeEmail: email,
+                        employeeName: getEmployeeName(email),
+                        team: getCurrentUserTeam(),
+                        type: type,
+                        startDate: startDate,
+                        endDate: endDate,
+                        hoursRequested: calculateHoursForDateRange(startDate, endDate),
+                        notes: 'Scheduled by manager',
+                        status: 'approved',
+                        submittedAt: new Date().toISOString()
+                    };
+                    requests.push(request);
+                });
+
+                localStorage.setItem('timeOffRequests', JSON.stringify(requests));
+                alert(`Time off (${type}) scheduled successfully!`);
+
+            } else if (scheduleType === 'special') {
+                // Save special date
+                const date = document.getElementById('specialDate').value;
+                const status = document.getElementById('specialDateStatus').value;
+                
+                if (!date) {
+                    alert('Please select a date');
+                    return;
+                }
+
+                const targetEmails = employeeEmail === 'ALL_TEAM' ? getTeamMembers().map(e => e.email) : [employeeEmail];
+
+                targetEmails.forEach(email => {
+                    if (!specialDates[email]) specialDates[email] = {};
+                    specialDates[email][date] = {
+                        status: status,
+                        startTime: status === 'working' || status === 'halfday' ? document.getElementById('specialStartTime').value : null,
+                        endTime: status === 'working' || status === 'halfday' ? document.getElementById('specialEndTime').value : null
+                    };
+                });
+
+                localStorage.setItem('specialDates', JSON.stringify(specialDates));
+                alert('Special date scheduled successfully!');
+            }
+
+            closeCreateScheduleModal();
+            renderTeamScheduleList();
+            renderCalendar();
+        }
+
+        // Calculate hours for date range
+        function calculateHoursForDateRange(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            return days * 8; // 8 hours per day
+        }
+
+        // Get employee name by email
+        function getEmployeeName(email) {
+            const emp = getTeamMembers().find(e => e.email === email);
+            return emp ? emp.name : email;
         }
         
         function showDayDetail(dateStr) {
