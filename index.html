@@ -4410,20 +4410,20 @@
             
             const timeOptionsHtml = timeOptions.join('');
 
-            // Compact 2-column layout
+            // Single column layout - centered
             container.innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 6px; max-width: 320px; margin: 0 auto;">
                     ${days.map(day => `
-                        <div style="display: flex; align-items: center; gap: 4px; padding: 4px 0; border-bottom: 1px solid var(--border-color);">
-                            <div style="width: 32px; font-weight: 500; color: var(--text-primary); font-size: 0.8rem;">${day.label}</div>
-                            <select id="schedule-${day.key}-start" onchange="updateTotalHours()" style="flex: 1; padding: 4px 2px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; background: var(--bg-primary); color: var(--text-primary); min-width: 60px;">
+                        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
+                            <div style="width: 36px; font-weight: 500; color: var(--text-primary); font-size: 0.85rem;">${day.label}</div>
+                            <select id="schedule-${day.key}-start" onchange="updateTotalHours()" style="flex: 1; padding: 6px 4px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.8rem; background: var(--bg-primary); color: var(--text-primary); min-width: 70px;">
                                 ${timeOptionsHtml}
                             </select>
-                            <span style="color: var(--text-secondary); font-size: 0.7rem;">-</span>
-                            <select id="schedule-${day.key}-end" onchange="updateTotalHours()" style="flex: 1; padding: 4px 2px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; background: var(--bg-primary); color: var(--text-primary); min-width: 60px;">
+                            <span style="color: var(--text-secondary); font-size: 0.75rem;">-</span>
+                            <select id="schedule-${day.key}-end" onchange="updateTotalHours()" style="flex: 1; padding: 6px 4px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.8rem; background: var(--bg-primary); color: var(--text-primary); min-width: 70px;">
                                 ${timeOptionsHtml}
                             </select>
-                            <div id="hours-${day.key}" style="width: 28px; text-align: right; font-size: 0.7rem; color: var(--text-secondary);"></div>
+                            <div id="hours-${day.key}" style="width: 32px; text-align: right; font-size: 0.75rem; color: var(--text-secondary);"></div>
                         </div>
                     `).join('')}
                 </div>
