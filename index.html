@@ -2691,6 +2691,14 @@
                         </div>
                     </div>
 
+                    <div style="background: var(--bg-primary); border-radius: 12px; padding: 16px; margin: 20px 0; text-align: center; border: 2px solid var(--border-color);">
+                        <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 4px;">Weekly Total</div>
+                        <div id="weeklyTotalHours">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-secondary);">0.0 hours</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">0 days scheduled</div>
+                        </div>
+                    </div>
+
                     <div style="display: flex; gap: 12px; margin-top: 24px;">
                         <button class="btn" onclick="closeCreateScheduleModal()" style="flex: 1; background: var(--border-color); color: var(--text-primary);">Cancel</button>
                         <button class="btn btn-primary" id="saveScheduleBtn" onclick="saveSchedule()" style="flex: 1;">Save Schedule</button>
@@ -4383,27 +4391,43 @@
                 { key: 'sunday', label: 'Sunday' }
             ];
 
-            // Generate time options from 5 AM to 11 PM in 30-min increments, plus "Off"
+            // Generate time options from 12 AM to 11:30 PM in 30-min increments, plus "Off"
+            // Include overnight hours (e.g., 1 AM = 25:00 for calculation purposes)
             const timeOptions = ['<option value="off">Off</option>'];
+            
+            // Regular hours (5 AM - 11 PM)
             for (let hour = 5; hour <= 23; hour++) {
                 const hourStr = hour.toString().padStart(2, '0');
-                timeOptions.push(`<option value="${hourStr}:00">${hour > 12 ? hour - 12 : hour}:00 ${hour >= 12 ? 'PM' : 'AM'}</option>`);
-                timeOptions.push(`<option value="${hourStr}:30">${hour > 12 ? hour - 12 : hour}:30 ${hour >= 12 ? 'PM' : 'AM'}</option>`);
+                const displayHour = hour > 12 ? hour - 12 : hour;
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                timeOptions.push(`<option value="${hourStr}:00">${displayHour}:00 ${ampm}</option>`);
+                timeOptions.push(`<option value="${hourStr}:30">${displayHour}:30 ${ampm}</option>`);
             }
+            
+            // Overnight hours (12 AM - 4 AM) - stored as 24-28 for calculation
+            for (let hour = 0; hour < 5; hour++) {
+                const actualHour = hour + 24; // For calculation: 24 = midnight, 25 = 1 AM, etc.
+                const displayHour = hour === 0 ? 12 : hour;
+                const hourStr = actualHour.toString();
+                timeOptions.push(`<option value="${hourStr}:00">${displayHour}:00 AM (+1 day)</option>`);
+                timeOptions.push(`<option value="${hourStr}:30">${displayHour}:30 AM (+1 day)</option>`);
+            }
+            
             const timeOptionsHtml = timeOptions.join('');
 
             container.innerHTML = days.map(day => `
                 <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
                     <div style="width: 90px; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">${day.label}</div>
                     <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-                        <select id="schedule-${day.key}-start" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary);">
+                        <select id="schedule-${day.key}-start" onchange="updateTotalHours()" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary);">
                             ${timeOptionsHtml}
                         </select>
                         <span style="color: var(--text-secondary); font-size: 0.85rem;">to</span>
-                        <select id="schedule-${day.key}-end" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary);">
+                        <select id="schedule-${day.key}-end" onchange="updateTotalHours()" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary);">
                             ${timeOptionsHtml}
                         </select>
                     </div>
+                    <div id="hours-${day.key}" style="width: 60px; text-align: right; font-size: 0.85rem; color: var(--text-secondary);"></div>
                 </div>
             `).join('');
 
@@ -4414,6 +4438,86 @@
                 if (startSelect) startSelect.value = '09:00';
                 if (endSelect) endSelect.value = '17:00';
             });
+            
+            // Calculate initial total
+            updateTotalHours();
+        }
+
+        // Calculate and display total scheduled hours
+        function updateTotalHours() {
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            let totalHours = 0;
+            let workingDays = 0;
+
+            days.forEach(day => {
+                const startSelect = document.getElementById(`schedule-${day}-start`);
+                const endSelect = document.getElementById(`schedule-${day}-end`);
+                const hoursDisplay = document.getElementById(`hours-${day}`);
+
+                if (!startSelect || !endSelect) return;
+
+                const startVal = startSelect.value;
+                const endVal = endSelect.value;
+
+                if (startVal === 'off' || endVal === 'off') {
+                    if (hoursDisplay) hoursDisplay.textContent = '0 hrs';
+                    return;
+                }
+
+                // Calculate hours
+                const hours = calculateHoursBetween(startVal, endVal);
+                totalHours += hours;
+                if (hours > 0) workingDays++;
+
+                if (hoursDisplay) {
+                    hoursDisplay.textContent = `${hours.toFixed(1)} hrs`;
+                }
+            });
+
+            // Update total display
+            const totalElement = document.getElementById('weeklyTotalHours');
+            if (totalElement) {
+                const avgHours = workingDays > 0 ? (totalHours / workingDays).toFixed(1) : 0;
+                let statusColor = 'var(--text-secondary)';
+                let statusText = '';
+                
+                if (totalHours > 40) {
+                    statusColor = '#f59e0b'; // Warning color
+                    statusText = ' (Overtime)';
+                } else if (totalHours < 35 && workingDays > 0) {
+                    statusColor = '#10b981'; // Success color
+                    statusText = ' (Part-time)';
+                } else if (totalHours === 40) {
+                    statusColor = '#667eea'; // Accent color
+                    statusText = ' (Full-time)';
+                }
+
+                totalElement.innerHTML = `
+                    <div style="font-size: 1.5rem; font-weight: 700; color: ${statusColor};">${totalHours.toFixed(1)} hours</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+                        ${workingDays} days scheduled${statusText}
+                    </div>
+                `;
+            }
+        }
+
+        // Calculate hours between two time values
+        function calculateHoursBetween(start, end) {
+            const [startHour, startMin] = start.split(':').map(Number);
+            const [endHour, endMin] = end.split(':').map(Number);
+
+            // Convert to minutes (handles overnight where hour can be 24-28)
+            const startMinutes = startHour * 60 + startMin;
+            const endMinutes = endHour * 60 + endMin;
+
+            let diffMinutes = endMinutes - startMinutes;
+            
+            // If end is earlier than start, assume it's the next day (this shouldn't happen with our logic, but just in case)
+            if (diffMinutes < 0) {
+                diffMinutes += 24 * 60;
+            }
+
+            return diffMinutes / 60;
         }
 
         // Toggle schedule type sections
