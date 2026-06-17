@@ -4383,33 +4383,37 @@
                 { key: 'sunday', label: 'Sunday' }
             ];
 
+            // Generate time options from 5 AM to 11 PM in 30-min increments, plus "Off"
+            const timeOptions = ['<option value="off">Off</option>'];
+            for (let hour = 5; hour <= 23; hour++) {
+                const hourStr = hour.toString().padStart(2, '0');
+                timeOptions.push(`<option value="${hourStr}:00">${hour > 12 ? hour - 12 : hour}:00 ${hour >= 12 ? 'PM' : 'AM'}</option>`);
+                timeOptions.push(`<option value="${hourStr}:30">${hour > 12 ? hour - 12 : hour}:30 ${hour >= 12 ? 'PM' : 'AM'}</option>`);
+            }
+            const timeOptionsHtml = timeOptions.join('');
+
             container.innerHTML = days.map(day => `
-                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border-color);">
-                    <div style="flex: 1; font-weight: 500; color: var(--text-primary);">${day.label}</div>
-                    <select id="schedule-${day.key}-status" onchange="toggleDayTimeInputs('${day.key}')" style="padding: 8px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary);">
-                        <option value="working">Working</option>
-                        <option value="off">Off</option>
-                        <option value="halfday">Half Day</option>
-                    </select>
-                    <div id="schedule-${day.key}-times" style="display: flex; gap: 8px;">
-                        <input type="time" id="schedule-${day.key}-start" value="09:00" style="padding: 8px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary); width: 90px;">
-                        <span style="align-self: center; color: var(--text-secondary);">to</span>
-                        <input type="time" id="schedule-${day.key}-end" value="17:00" style="padding: 8px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary); width: 90px;">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                    <div style="width: 90px; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">${day.label}</div>
+                    <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                        <select id="schedule-${day.key}-start" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary);">
+                            ${timeOptionsHtml}
+                        </select>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">to</span>
+                        <select id="schedule-${day.key}-end" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-primary); color: var(--text-primary);">
+                            ${timeOptionsHtml}
+                        </select>
                     </div>
                 </div>
             `).join('');
-        }
 
-        // Toggle day time inputs based on status
-        function toggleDayTimeInputs(day) {
-            const status = document.getElementById(`schedule-${day}-status`).value;
-            const timesDiv = document.getElementById(`schedule-${day}-times`);
-            
-            if (status === 'off') {
-                timesDiv.style.display = 'none';
-            } else {
-                timesDiv.style.display = 'flex';
-            }
+            // Set default values (9:00 AM to 5:00 PM)
+            days.forEach(day => {
+                const startSelect = document.getElementById(`schedule-${day.key}-start`);
+                const endSelect = document.getElementById(`schedule-${day.key}-end`);
+                if (startSelect) startSelect.value = '09:00';
+                if (endSelect) endSelect.value = '17:00';
+            });
         }
 
         // Toggle schedule type sections
@@ -4438,13 +4442,16 @@
                 // Save recurring weekly schedule
                 const recurring = {};
                 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-                
+
                 days.forEach(day => {
-                    const status = document.getElementById(`schedule-${day}-status`).value;
+                    const startTime = document.getElementById(`schedule-${day}-start`).value;
+                    const endTime = document.getElementById(`schedule-${day}-end`).value;
+                    const isOff = startTime === 'off' || endTime === 'off';
+
                     recurring[day] = {
-                        status: status,
-                        startTime: status !== 'off' ? document.getElementById(`schedule-${day}-start`).value : null,
-                        endTime: status !== 'off' ? document.getElementById(`schedule-${day}-end`).value : null
+                        status: isOff ? 'off' : 'working',
+                        startTime: isOff ? null : startTime,
+                        endTime: isOff ? null : endTime
                     };
                 });
 
