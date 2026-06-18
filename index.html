@@ -2448,12 +2448,12 @@
         
         <!-- Task Modal -->
         <div class="modal-overlay" id="taskModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
-            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 80vh; overflow: hidden;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 85vh; overflow: hidden; display: flex; flex-direction: column;">
                 <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
                     <h3 id="taskModalTitle">Add Task</h3>
                     <button class="modal-close" onclick="closeTaskModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
                 </div>
-                <div class="modal-body" style="padding: 20px; overflow-y: auto;">
+                <div class="modal-body" style="padding: 20px; overflow-y: auto; flex: 1;">
                     <input type="hidden" id="editingTaskId">
                     <div class="form-group">
                         <label>Task Title</label>
@@ -3467,10 +3467,16 @@
         
         function ensureRecurringTasks() {
             const tasks = getTasks();
-            const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
-            const currentDayOfWeek = today.getDay();
-            const currentDayOfMonth = today.getDate();
+            
+            // Get today's date in local timezone (YYYY-MM-DD)
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+            
+            const currentDayOfWeek = now.getDay();
+            const currentDayOfMonth = now.getDate();
             
             let changed = false;
             
@@ -3650,6 +3656,8 @@
             ensureRecurringTasks();
             const tasks = getTasks();
             const filteredTasks = tasks.filter(t => {
+                // Don't show base recurring tasks (templates) - only show generated instances or non-recurring tasks
+                if (t.recurrence && t.recurrence !== 'none' && !t.parentId) return false;
                 // Show tasks assigned to user, user's team, or created by user
                 if (t.assignee === currentUser.email) return true;
                 if (t.team && getUserTeam() === t.team) return true;
