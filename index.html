@@ -2485,6 +2485,63 @@
                         <label>Due Date</label>
                         <input type="date" id="taskDue" style="width: auto; min-width: 140px; max-width: 200px; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
                     </div>
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Recurrence</label>
+                        <select id="taskRecurrence" onchange="toggleRecurrenceOptions()" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                            <option value="none">None</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="weeklyDayGroup" style="margin-top: 16px; display: none;">
+                        <label>Day of Week</label>
+                        <select id="taskWeeklyDay" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                            <option value="1">Monday</option>
+                            <option value="2">Tuesday</option>
+                            <option value="3">Wednesday</option>
+                            <option value="4">Thursday</option>
+                            <option value="5">Friday</option>
+                            <option value="6">Saturday</option>
+                            <option value="0">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="monthlyDateGroup" style="margin-top: 16px; display: none;">
+                        <label>Day of Month</label>
+                        <select id="taskMonthlyDate" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                            <option value="1">1st</option>
+                            <option value="2">2nd</option>
+                            <option value="3">3rd</option>
+                            <option value="4">4th</option>
+                            <option value="5">5th</option>
+                            <option value="6">6th</option>
+                            <option value="7">7th</option>
+                            <option value="8">8th</option>
+                            <option value="9">9th</option>
+                            <option value="10">10th</option>
+                            <option value="11">11th</option>
+                            <option value="12">12th</option>
+                            <option value="13">13th</option>
+                            <option value="14">14th</option>
+                            <option value="15">15th</option>
+                            <option value="16">16th</option>
+                            <option value="17">17th</option>
+                            <option value="18">18th</option>
+                            <option value="19">19th</option>
+                            <option value="20">20th</option>
+                            <option value="21">21st</option>
+                            <option value="22">22nd</option>
+                            <option value="23">23rd</option>
+                            <option value="24">24th</option>
+                            <option value="25">25th</option>
+                            <option value="26">26th</option>
+                            <option value="27">27th</option>
+                            <option value="28">28th</option>
+                            <option value="29">29th</option>
+                            <option value="30">30th</option>
+                            <option value="31">31st</option>
+                        </select>
+                    </div>
                     <button class="btn btn-primary" onclick="saveTask()" style="margin-top: 24px;">Save Task</button>
                 </div>
             </div>
@@ -3245,6 +3302,7 @@
         
         // Update home data
         function updateHomeData() {
+            ensureRecurringTasks();
             // Get task count from shared tasks storage (same as Tasks page)
             const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
             const userTasks = tasks.filter(t => t.assignee === currentUser.email && t.status !== 'done');
@@ -3407,6 +3465,58 @@
             return JSON.parse(localStorage.getItem('tasks')) || [];
         }
         
+        function ensureRecurringTasks() {
+            const tasks = getTasks();
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            const currentDayOfWeek = today.getDay();
+            const currentDayOfMonth = today.getDate();
+            
+            let changed = false;
+            
+            tasks.forEach(task => {
+                if (!task.recurrence || task.recurrence === 'none') return;
+                if (task.generatedForDate === todayStr) return;
+                if (task.parentId) return; // Don't process generated instances
+                
+                let shouldGenerate = false;
+                
+                if (task.recurrence === 'daily') {
+                    shouldGenerate = true;
+                } else if (task.recurrence === 'weekly' && task.recurrenceDay !== null) {
+                    shouldGenerate = parseInt(task.recurrenceDay) === currentDayOfWeek;
+                } else if (task.recurrence === 'monthly' && task.recurrenceDate !== null) {
+                    shouldGenerate = parseInt(task.recurrenceDate) === currentDayOfMonth;
+                }
+                
+                if (shouldGenerate) {
+                    // Check if already generated for today
+                    const alreadyExists = tasks.some(t => t.parentId === task.id && t.generatedForDate === todayStr);
+                    if (!alreadyExists) {
+                        const newTask = {
+                            id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                            title: task.title,
+                            assignee: task.assignee,
+                            team: task.team,
+                            due: todayStr,
+                            status: 'todo',
+                            createdBy: task.createdBy || currentUser.email,
+                            createdAt: new Date().toISOString(),
+                            recurrence: 'none',
+                            parentId: task.id,
+                            generatedForDate: todayStr
+                        };
+                        tasks.push(newTask);
+                        changed = true;
+                    }
+                }
+            });
+            
+            if (changed) {
+                saveTasks(tasks);
+            }
+        }
+        
         function saveTasks(tasks) {
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
@@ -3424,6 +3534,10 @@
                     document.getElementById('taskAssignee').value = task.assignee || '';
                     document.getElementById('taskTeam').value = task.team || '';
                     document.getElementById('taskDue').value = task.due || '';
+                    document.getElementById('taskRecurrence').value = task.recurrence || 'none';
+                    document.getElementById('taskWeeklyDay').value = task.recurrenceDay || '1';
+                    document.getElementById('taskMonthlyDate').value = task.recurrenceDate || '1';
+                    toggleRecurrenceOptions();
                 }
             } else {
                 document.getElementById('editingTaskId').value = '';
@@ -3431,7 +3545,17 @@
                 document.getElementById('taskAssignee').value = '';
                 document.getElementById('taskTeam').value = '';
                 document.getElementById('taskDue').value = '';
+                document.getElementById('taskRecurrence').value = 'none';
+                document.getElementById('taskWeeklyDay').value = '1';
+                document.getElementById('taskMonthlyDate').value = '1';
+                toggleRecurrenceOptions();
             }
+        }
+        
+        function toggleRecurrenceOptions() {
+            const recurrence = document.getElementById('taskRecurrence').value;
+            document.getElementById('weeklyDayGroup').style.display = recurrence === 'weekly' ? 'block' : 'none';
+            document.getElementById('monthlyDateGroup').style.display = recurrence === 'monthly' ? 'block' : 'none';
         }
         
         function closeTaskModal() {
@@ -3444,6 +3568,9 @@
             const assignee = document.getElementById('taskAssignee').value;
             const team = document.getElementById('taskTeam').value;
             const due = document.getElementById('taskDue').value;
+            const recurrence = document.getElementById('taskRecurrence').value;
+            const weeklyDay = document.getElementById('taskWeeklyDay').value;
+            const monthlyDate = document.getElementById('taskMonthlyDate').value;
             
             if (!title) {
                 alert('Please enter a task title');
@@ -3460,6 +3587,9 @@
                     task.assignee = assignee;
                     task.team = team;
                     task.due = due;
+                    task.recurrence = recurrence;
+                    task.recurrenceDay = recurrence === 'weekly' ? weeklyDay : null;
+                    task.recurrenceDate = recurrence === 'monthly' ? monthlyDate : null;
                 }
             } else {
                 // Add new
@@ -3471,7 +3601,10 @@
                     due: due,
                     status: 'todo',
                     createdBy: currentUser.email,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    recurrence: recurrence,
+                    recurrenceDay: recurrence === 'weekly' ? weeklyDay : null,
+                    recurrenceDate: recurrence === 'monthly' ? monthlyDate : null
                 };
                 tasks.push(newTask);
             }
@@ -3483,9 +3616,21 @@
         }
         
         function deleteTask(taskId) {
-            if (!confirm('Delete this task?')) return;
-            const tasks = getTasks().filter(t => t.id !== taskId);
-            saveTasks(tasks);
+            const tasks = getTasks();
+            const task = tasks.find(t => t.id === taskId);
+            
+            if (!task) return;
+            
+            let confirmMsg = 'Delete this task?';
+            if (task.recurrence && task.recurrence !== 'none') {
+                confirmMsg = 'This is a recurring task. Deleting it will stop all future occurrences. Are you sure?';
+            }
+            
+            if (!confirm(confirmMsg)) return;
+            
+            // If deleting a base recurring task, also clean up any generated instances
+            const filtered = tasks.filter(t => t.id !== taskId && t.parentId !== taskId);
+            saveTasks(filtered);
             renderTasks();
             updateHomeData();
         }
@@ -3502,6 +3647,7 @@
         }
         
         function renderTasks() {
+            ensureRecurringTasks();
             const tasks = getTasks();
             const filteredTasks = tasks.filter(t => {
                 // Show tasks assigned to user, user's team, or created by user
@@ -3544,6 +3690,13 @@
                 const isDueSoon = dueDate && !isOverdue && (dueDate - today) < 2 * 24 * 60 * 60 * 1000;
                 
                 let dueBadge = '';
+                let recurrenceBadge = '';
+                
+                if (task.recurrence && task.recurrence !== 'none') {
+                    const recurrenceLabels = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly' };
+                    recurrenceBadge = `<span class="task-badge recurring">${recurrenceLabels[task.recurrence]}</span>`;
+                }
+                
                 if (task.due) {
                     const dueClass = isOverdue ? 'due-soon' : isDueSoon ? 'due-soon' : 'due-later';
                     const dueText = isOverdue ? 'Overdue' : isDueSoon ? 'Due Soon' : formatDate(task.due);
@@ -3572,6 +3725,7 @@
                         <div class="task-title" style="padding-right: 60px;">${task.title}</div>
                         <div class="task-meta">
                             ${dueBadge}
+                            ${recurrenceBadge}
                             ${teamBadge}
                             <span class="task-assignee">
                                 <div class="task-avatar">${getInitials(assigneeName)}</div>
