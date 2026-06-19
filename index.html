@@ -3729,9 +3729,13 @@
                 }
                 
                 if (task.due) {
-                    const dueClass = isOverdue ? 'due-soon' : isDueSoon ? 'due-soon' : 'due-later';
-                    const dueText = isOverdue ? 'Overdue' : isDueSoon ? 'Due Soon' : formatDate(task.due);
-                    dueBadge = `<span class="task-badge ${dueClass}">${dueText}</span>`;
+                    if (task.status === 'done') {
+                        dueBadge = `<span class="task-badge recurring">Done</span>`;
+                    } else {
+                        const dueClass = isOverdue ? 'due-soon' : isDueSoon ? 'due-soon' : 'due-later';
+                        const dueText = isOverdue ? 'Overdue' : isDueSoon ? 'Due Soon' : formatDate(task.due);
+                        dueBadge = `<span class="task-badge ${dueClass}">${dueText}</span>`;
+                    }
                 }
                 
                 const teamBadge = task.team ? `<span class="task-badge team">[${task.team}]</span>` : '';
