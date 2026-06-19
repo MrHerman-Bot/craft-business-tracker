@@ -3318,12 +3318,11 @@
                 if (tasksWithDueDate.length === 0) {
                     soonestTaskEl.textContent = 'No due dates set';
                 } else {
-                    tasksWithDueDate.sort((a, b) => new Date(a.due) - new Date(b.due));
+                    tasksWithDueDate.sort((a, b) => new Date(a.due + 'T00:00:00') - new Date(b.due + 'T00:00:00'));
                     const soonest = tasksWithDueDate[0];
-                    const dueDate = new Date(soonest.due);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    dueDate.setHours(0, 0, 0, 0);
+                    const dueDate = new Date(soonest.due + 'T00:00:00');
+                    const now = new Date();
+                    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     
                     const daysDiff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
                     let dueText = '';
@@ -3478,12 +3477,20 @@
             const currentDayOfWeek = now.getDay();
             const currentDayOfMonth = now.getDate();
             
+            // Load deleted instances tracking
+            const deletedInstances = JSON.parse(localStorage.getItem('deletedRecurringInstances') || '{}');
+            
             let changed = false;
             
             tasks.forEach(task => {
                 if (!task.recurrence || task.recurrence === 'none') return;
                 if (task.generatedForDate === todayStr) return;
                 if (task.parentId) return; // Don't process generated instances
+                
+                // Check if this recurring task was deleted for today
+                if (deletedInstances[task.id] && deletedInstances[task.id].includes(todayStr)) {
+                    return; // Skip generation for deleted instances
+                }
                 
                 let shouldGenerate = false;
                 
@@ -3637,6 +3644,20 @@
             // If deleting a base recurring task, also clean up any generated instances
             const filtered = tasks.filter(t => t.id !== taskId && t.parentId !== taskId);
             saveTasks(filtered);
+            
+            // If this was a generated instance from a recurring task, mark it as deleted for today
+            // to prevent immediate regeneration
+            if (task.parentId) {
+                const deletedInstances = JSON.parse(localStorage.getItem('deletedRecurringInstances') || '{}');
+                const today = new Date();
+                const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                if (!deletedInstances[task.parentId]) {
+                    deletedInstances[task.parentId] = [];
+                }
+                deletedInstances[task.parentId].push(todayStr);
+                localStorage.setItem('deletedRecurringInstances', JSON.stringify(deletedInstances));
+            }
+            
             renderTasks();
             updateHomeData();
         }
@@ -3692,10 +3713,12 @@
             }
             
             container.innerHTML = tasks.map(task => {
-                const dueDate = task.due ? new Date(task.due) : null;
-                const today = new Date();
+                // Normalize dates to midnight for comparison (avoid timezone issues)
+                const dueDate = task.due ? new Date(task.due + 'T00:00:00') : null;
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 const isOverdue = dueDate && dueDate < today && task.status !== 'done';
-                const isDueSoon = dueDate && !isOverdue && (dueDate - today) < 2 * 24 * 60 * 60 * 1000;
+                const isDueSoon = dueDate && !isOverdue && (dueDate - today) <= 2 * 24 * 60 * 60 * 1000;
                 
                 let dueBadge = '';
                 let recurrenceBadge = '';
