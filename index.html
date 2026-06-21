@@ -1983,6 +1983,39 @@
                 
                 <!-- HR Admin Tab -->
                 <div class="team-tab-content" id="team-content-hr">
+                    <!-- Reports Section -->
+                    <div class="home-card" style="margin-bottom: 16px;">
+                        <div class="home-card-title">Reports</div>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
+                            <button class="btn" onclick="showTimeClockReportModal()" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: white;">
+                                <svg class="icon-svg" viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2;">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                Time Clock Report
+                            </button>
+                            <button class="btn" onclick="showScheduleReportModal()" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: white;">
+                                <svg class="icon-svg" viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2;">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                Schedule Report
+                            </button>
+                            <button class="btn" onclick="showTaskLifecycleReportModal()" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: white;">
+                                <svg class="icon-svg" viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2;">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                Task Lifecycle Report
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Time Off Requests Section -->
                     <div class="home-card" style="margin-bottom: 16px;">
                         <div class="home-card-title">Time Off Requests</div>
@@ -2755,6 +2788,177 @@
                     <div style="display: flex; gap: 10px; margin-top: 16px;">
                         <button class="btn" onclick="closeCreateScheduleModal()" style="flex: 1; background: var(--border-color); color: var(--text-primary); padding: 12px;">Cancel</button>
                         <button class="btn btn-primary" id="saveScheduleBtn" onclick="saveSchedule()" style="flex: 1; padding: 12px;">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Time Clock Report Modal -->
+        <div class="modal-overlay" id="timeClockReportModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Time Clock Report</h3>
+                    <button class="modal-close" onclick="closeTimeClockReportModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto; flex: 1;">
+                    <!-- Filter Section -->
+                    <div style="background: var(--bg-primary); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Start Date</label>
+                                <input type="date" id="timeClockReportStartDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">End Date</label>
+                                <input type="date" id="timeClockReportEndDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Employee (Optional)</label>
+                                <select id="timeClockReportEmployee" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                    <option value="">All Employees</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Team (Optional)</label>
+                                <select id="timeClockReportTeam" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                    <option value="">All Teams</option>
+                                    <option value="Production">Production</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Warehouse">Warehouse</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateTimeClockReport()" style="width: 100%;">Generate Report</button>
+                    </div>
+                    
+                    <!-- Report Results -->
+                    <div id="timeClockReportResults" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h4 style="margin: 0;">Report Results</h4>
+                            <button class="btn" onclick="printTimeClockReport()" style="background: var(--success); color: white; padding: 8px 16px; font-size: 0.85rem;">
+                                Print / Export
+                            </button>
+                        </div>
+                        <div id="timeClockReportTable" style="overflow-x: auto;">
+                            <!-- Report table generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Report Modal -->
+        <div class="modal-overlay" id="scheduleReportModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 800px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Schedule Report</h3>
+                    <button class="modal-close" onclick="closeScheduleReportModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto; flex: 1;">
+                    <!-- Filter Section -->
+                    <div style="background: var(--bg-primary); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Start Date</label>
+                                <input type="date" id="scheduleReportStartDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">End Date</label>
+                                <input type="date" id="scheduleReportEndDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Employee (Optional)</label>
+                                <select id="scheduleReportEmployee" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                    <option value="">All Employees</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Team (Optional)</label>
+                                <select id="scheduleReportTeam" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                    <option value="">All Teams</option>
+                                    <option value="Production">Production</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Warehouse">Warehouse</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateScheduleReport()" style="width: 100%;">Generate Report</button>
+                    </div>
+                    
+                    <!-- Report Results -->
+                    <div id="scheduleReportResults" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h4 style="margin: 0;">Schedule Report Results</h4>
+                            <button class="btn" onclick="printScheduleReport()" style="background: var(--success); color: white; padding: 8px 16px; font-size: 0.85rem;">
+                                Print / Export
+                            </button>
+                        </div>
+                        <div id="scheduleReportTable" style="overflow-x: auto;">
+                            <!-- Report table generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Lifecycle Report Modal -->
+        <div class="modal-overlay" id="taskLifecycleReportModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 900px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Task Lifecycle Report</h3>
+                    <button class="modal-close" onclick="closeTaskLifecycleReportModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto; flex: 1;">
+                    <!-- Filter Section -->
+                    <div style="background: var(--bg-primary); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Start Date</label>
+                                <input type="date" id="taskReportStartDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">End Date</label>
+                                <input type="date" id="taskReportEndDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Employee (Optional)</label>
+                                <select id="taskReportEmployee" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                    <option value="">All Employees</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem; color: var(--text-secondary);">Team (Optional)</label>
+                                <select id="taskReportTeam" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                    <option value="">All Teams</option>
+                                    <option value="Production">Production</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Warehouse">Warehouse</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateTaskLifecycleReport()" style="width: 100%;">Generate Report</button>
+                    </div>
+                    
+                    <!-- Report Results -->
+                    <div id="taskLifecycleReportResults" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h4 style="margin: 0;">Task Lifecycle Results</h4>
+                            <button class="btn" onclick="printTaskLifecycleReport()" style="background: var(--success); color: white; padding: 8px 16px; font-size: 0.85rem;">
+                                Print / Export
+                            </button>
+                        </div>
+                        <div id="taskLifecycleReportTable" style="overflow-x: auto;">
+                            <!-- Report table generated here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3620,6 +3824,9 @@
                     recurrenceDate: recurrence === 'monthly' ? monthlyDate : null
                 };
                 tasks.push(newTask);
+                
+                // Track initial creation in lifecycle history
+                trackTaskStatusChange(newTask.id, null, 'todo');
             }
             
             saveTasks(tasks);
@@ -3666,7 +3873,12 @@
             const tasks = getTasks();
             const task = tasks.find(t => t.id === taskId);
             if (task) {
+                const oldStatus = task.status;
                 task.status = newStatus;
+                
+                // Track the status change for lifecycle reporting
+                trackTaskStatusChange(taskId, oldStatus, newStatus);
+                
                 saveTasks(tasks);
                 renderTasks();
                 updateHomeData();
@@ -4745,6 +4957,11 @@
                     };
                 });
 
+                // Add metadata for tracking
+                recurring.createdBy = currentUser ? currentUser.name : 'Unknown';
+                recurring.createdAt = new Date().toISOString();
+                recurring.updatedAt = new Date().toISOString();
+
                 if (employeeEmail === 'ALL_TEAM') {
                     getTeamMembers().forEach(emp => {
                         if (!schedules[emp.email]) schedules[emp.email] = {};
@@ -5598,6 +5815,746 @@
                 closeNewMessageModal();
             }
         });
+
+        // ==========================================
+        // HR ADMIN REPORT FUNCTIONS
+        // ==========================================
+
+        // Helper function to get all employees for dropdowns
+        function getAllEmployeesForReports() {
+            const allEmployees = [];
+            
+            // Add users from the users object
+            Object.entries(users).forEach(([email, userData]) => {
+                allEmployees.push({
+                    email: email,
+                    name: userData.name,
+                    role: userData.role,
+                    team: userData.team || 'Unassigned'
+                });
+            });
+            
+            // Add team employees
+            const teamEmployees = JSON.parse(localStorage.getItem('teamEmployees')) || [];
+            teamEmployees.forEach(emp => {
+                if (!allEmployees.find(e => e.email === emp.email)) {
+                    allEmployees.push({
+                        email: emp.email,
+                        name: emp.name,
+                        role: emp.role || 'Employee',
+                        team: emp.team || 'Unassigned'
+                    });
+                }
+            });
+            
+            return allEmployees.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+        // Populate employee dropdowns for reports
+        function populateReportEmployeeDropdowns() {
+            const employees = getAllEmployeesForReports();
+            
+            ['timeClockReportEmployee', 'scheduleReportEmployee', 'taskReportEmployee'].forEach(dropdownId => {
+                const dropdown = document.getElementById(dropdownId);
+                if (!dropdown) return;
+                
+                // Keep the first option (All Employees)
+                const firstOption = dropdown.querySelector('option[value=""]');
+                dropdown.innerHTML = '';
+                if (firstOption) dropdown.appendChild(firstOption);
+                else dropdown.innerHTML = '<option value="">All Employees</option>';
+                
+                employees.forEach(emp => {
+                    const option = document.createElement('option');
+                    option.value = emp.email;
+                    option.textContent = `${emp.name} (${emp.team})`;
+                    dropdown.appendChild(option);
+                });
+            });
+        }
+
+        // ==========================================
+        // TIME CLOCK REPORT
+        // ==========================================
+
+        function showTimeClockReportModal() {
+            document.getElementById('timeClockReportModal').style.display = 'flex';
+            populateReportEmployeeDropdowns();
+            
+            // Set default date range (last 30 days)
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - 30);
+            
+            document.getElementById('timeClockReportStartDate').value = startDate.toISOString().split('T')[0];
+            document.getElementById('timeClockReportEndDate').value = endDate.toISOString().split('T')[0];
+            
+            // Hide results initially
+            document.getElementById('timeClockReportResults').style.display = 'none';
+        }
+
+        function closeTimeClockReportModal() {
+            document.getElementById('timeClockReportModal').style.display = 'none';
+        }
+
+        function generateTimeClockReport() {
+            const startDate = document.getElementById('timeClockReportStartDate').value;
+            const endDate = document.getElementById('timeClockReportEndDate').value;
+            const employeeFilter = document.getElementById('timeClockReportEmployee').value;
+            const teamFilter = document.getElementById('timeClockReportTeam').value;
+            
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            // Get all time entries
+            const timeEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+            const allEmployees = getAllEmployeesForReports();
+            
+            // Filter entries
+            let filteredEntries = [];
+            
+            Object.entries(timeEntries).forEach(([email, entries]) => {
+                const employee = allEmployees.find(e => e.email === email);
+                if (!employee) return;
+                
+                // Apply filters
+                if (employeeFilter && email !== employeeFilter) return;
+                if (teamFilter && employee.team !== teamFilter) return;
+                
+                entries.forEach(entry => {
+                    const entryDate = entry.date;
+                    if (entryDate >= startDate && entryDate <= endDate) {
+                        filteredEntries.push({
+                            ...entry,
+                            employeeName: employee.name,
+                            employeeEmail: email,
+                            team: employee.team
+                        });
+                    }
+                });
+            });
+            
+            // Sort by date descending, then by employee
+            filteredEntries.sort((a, b) => {
+                if (a.date !== b.date) return b.date.localeCompare(a.date);
+                return a.employeeName.localeCompare(b.employeeName);
+            });
+            
+            // Generate table HTML
+            const tableHtml = generateTimeClockTable(filteredEntries);
+            document.getElementById('timeClockReportTable').innerHTML = tableHtml;
+            document.getElementById('timeClockReportResults').style.display = 'block';
+        }
+
+        function generateTimeClockTable(entries) {
+            if (entries.length === 0) {
+                return '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">No time entries found for the selected criteria.</p>';
+            }
+            
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: var(--bg-primary); border-bottom: 2px solid var(--border-color);">
+                            <th style="padding: 12px; text-align: left;">Date</th>
+                            <th style="padding: 12px; text-align: left;">Employee</th>
+                            <th style="padding: 12px; text-align: left;">Team</th>
+                            <th style="padding: 12px; text-align: center;">Clock In</th>
+                            <th style="padding: 12px; text-align: center;">Lunch Out</th>
+                            <th style="padding: 12px; text-align: center;">Lunch In</th>
+                            <th style="padding: 12px; text-align: center;">Clock Out</th>
+                            <th style="padding: 12px; text-align: right;">Total Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            entries.forEach(entry => {
+                const clockIn = entry.clockIn ? formatTimeForReport(entry.clockIn) : '-';
+                const lunchOut = entry.lunchOut ? formatTimeForReport(entry.lunchOut) : '-';
+                const lunchIn = entry.lunchIn ? formatTimeForReport(entry.lunchIn) : '-';
+                const clockOut = entry.clockOut ? formatTimeForReport(entry.clockOut) : '-';
+                const totalHours = calculateTotalHours(entry);
+                
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 10px 12px;">${formatDateForReport(entry.date)}</td>
+                        <td style="padding: 10px 12px;">${entry.employeeName}</td>
+                        <td style="padding: 10px 12px;">${entry.team}</td>
+                        <td style="padding: 10px 12px; text-align: center;">${clockIn}</td>
+                        <td style="padding: 10px 12px; text-align: center;">${lunchOut}</td>
+                        <td style="padding: 10px 12px; text-align: center;">${lunchIn}</td>
+                        <td style="padding: 10px 12px; text-align: center;">${clockOut}</td>
+                        <td style="padding: 10px 12px; text-align: right; font-weight: 600;">${totalHours}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function formatTimeForReport(timeStr) {
+            if (!timeStr) return '-';
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const displayHour = hours % 12 || 12;
+            return `${displayHour}:${minutes.toString().padStart(2, '0')} ${period}`;
+        }
+
+        function formatDateForReport(dateStr) {
+            const [year, month, day] = dateStr.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function calculateTotalHours(entry) {
+            if (!entry.clockIn || !entry.clockOut) return '-';
+            
+            const [inHours, inMinutes] = entry.clockIn.split(':').map(Number);
+            const [outHours, outMinutes] = entry.clockOut.split(':').map(Number);
+            
+            let totalMinutes = (outHours * 60 + outMinutes) - (inHours * 60 + inMinutes);
+            
+            // Subtract lunch if taken
+            if (entry.lunchOut && entry.lunchIn) {
+                const [lunchOutH, lunchOutM] = entry.lunchOut.split(':').map(Number);
+                const [lunchInH, lunchInM] = entry.lunchIn.split(':').map(Number);
+                totalMinutes -= ((lunchInH * 60 + lunchInM) - (lunchOutH * 60 + lunchOutM));
+            }
+            
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            return `${hours}h ${minutes}m`;
+        }
+
+        function printTimeClockReport() {
+            const startDate = document.getElementById('timeClockReportStartDate').value;
+            const endDate = document.getElementById('timeClockReportEndDate').value;
+            const employeeFilter = document.getElementById('timeClockReportEmployee').value;
+            const teamFilter = document.getElementById('timeClockReportTeam').value;
+            
+            const employeeName = employeeFilter ? 
+                document.getElementById('timeClockReportEmployee').selectedOptions[0].text.split('(')[0].trim() : 
+                'All Employees';
+            const teamName = teamFilter || 'All Teams';
+            
+            const printDate = new Date().toLocaleString('en-US', { 
+                month: 'long', day: 'numeric', year: 'numeric', 
+                hour: 'numeric', minute: '2-digit' 
+            });
+            
+            const tableContent = document.getElementById('timeClockReportTable').innerHTML;
+            
+            const printHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Time Clock Report</title>
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
+                        .header { border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+                        .header h1 { margin: 0 0 10px 0; font-size: 1.5rem; }
+                        .header .meta { color: #666; font-size: 0.9rem; line-height: 1.6; }
+                        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+                        th { background: #f5f5f5; padding: 12px; text-align: left; border-bottom: 2px solid #333; font-weight: 600; }
+                        td { padding: 10px 12px; border-bottom: 1px solid #ddd; }
+                        td:nth-child(4), td:nth-child(5), td:nth-child(6), td:nth-child(7) { text-align: center; }
+                        td:nth-child(8) { text-align: right; font-weight: 600; }
+                        @media print { 
+                            body { padding: 10px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Time Clock Report</h1>
+                        <div class="meta">
+                            <strong>Date Range:</strong> ${formatDateForReport(startDate)} - ${formatDateForReport(endDate)}<br>
+                            <strong>Employee:</strong> ${employeeName}<br>
+                            <strong>Team:</strong> ${teamName}<br>
+                            <strong>Generated:</strong> ${printDate}
+                        </div>
+                    </div>
+                    ${tableContent}
+                    <div class="no-print" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center;">
+                        <button onclick="window.print()" style="padding: 10px 20px; font-size: 1rem; cursor: pointer;">Print / Save as PDF</button>
+                        <button onclick="window.close()" style="padding: 10px 20px; font-size: 1rem; margin-left: 10px; cursor: pointer;">Close</button>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank', 'width=1000,height=700');
+            printWindow.document.write(printHtml);
+            printWindow.document.close();
+        }
+
+        // ==========================================
+        // SCHEDULE REPORT
+        // ==========================================
+
+        function showScheduleReportModal() {
+            document.getElementById('scheduleReportModal').style.display = 'flex';
+            populateReportEmployeeDropdowns();
+            
+            // Set default date range (next 30 days)
+            const startDate = new Date();
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 30);
+            
+            document.getElementById('scheduleReportStartDate').value = startDate.toISOString().split('T')[0];
+            document.getElementById('scheduleReportEndDate').value = endDate.toISOString().split('T')[0];
+            
+            // Hide results initially
+            document.getElementById('scheduleReportResults').style.display = 'none';
+        }
+
+        function closeScheduleReportModal() {
+            document.getElementById('scheduleReportModal').style.display = 'none';
+        }
+
+        function generateScheduleReport() {
+            const startDate = document.getElementById('scheduleReportStartDate').value;
+            const endDate = document.getElementById('scheduleReportEndDate').value;
+            const employeeFilter = document.getElementById('scheduleReportEmployee').value;
+            const teamFilter = document.getElementById('scheduleReportTeam').value;
+            
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            // Get all schedules
+            const employeeSchedules = JSON.parse(localStorage.getItem('employeeSchedules')) || {};
+            const allEmployees = getAllEmployeesForReports();
+            
+            // Generate date range
+            const dateRange = [];
+            let currentDate = new Date(startDate + 'T00:00:00');
+            const end = new Date(endDate + 'T00:00:00');
+            
+            while (currentDate <= end) {
+                const year = currentDate.getFullYear();
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                dateRange.push(`${year}-${month}-${day}`);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // Collect schedule entries
+            let scheduleEntries = [];
+            
+            allEmployees.forEach(employee => {
+                // Apply filters
+                if (employeeFilter && employee.email !== employeeFilter) return;
+                if (teamFilter && employee.team !== teamFilter) return;
+                
+                dateRange.forEach(dateStr => {
+                    const schedule = getEmployeeScheduleForDate(employee.email, dateStr);
+                    if (schedule && schedule.status !== 'none') {
+                        scheduleEntries.push({
+                            date: dateStr,
+                            employeeName: employee.name,
+                            employeeEmail: employee.email,
+                            team: employee.team,
+                            schedule: schedule,
+                            createdBy: schedule.createdBy || 'Unknown',
+                            createdAt: schedule.createdAt || 'Unknown',
+                            updatedAt: schedule.updatedAt || schedule.createdAt || 'Unknown'
+                        });
+                    }
+                });
+            });
+            
+            // Sort by date, then by employee
+            scheduleEntries.sort((a, b) => {
+                if (a.date !== b.date) return a.date.localeCompare(b.date);
+                return a.employeeName.localeCompare(b.employeeName);
+            });
+            
+            // Generate table HTML
+            const tableHtml = generateScheduleTable(scheduleEntries);
+            document.getElementById('scheduleReportTable').innerHTML = tableHtml;
+            document.getElementById('scheduleReportResults').style.display = 'block';
+        }
+
+        function generateScheduleTable(entries) {
+            if (entries.length === 0) {
+                return '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">No schedules found for the selected criteria.</p>';
+            }
+            
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                    <thead>
+                        <tr style="background: var(--bg-primary); border-bottom: 2px solid var(--border-color);">
+                            <th style="padding: 10px; text-align: left;">Date</th>
+                            <th style="padding: 10px; text-align: left;">Employee</th>
+                            <th style="padding: 10px; text-align: left;">Team</th>
+                            <th style="padding: 10px; text-align: center;">Status</th>
+                            <th style="padding: 10px; text-align: center;">Time</th>
+                            <th style="padding: 10px; text-align: left;">Created By</th>
+                            <th style="padding: 10px; text-align: left;">Created</th>
+                            <th style="padding: 10px; text-align: left;">Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            entries.forEach(entry => {
+                const statusInfo = getScheduleStatusDisplay(entry.schedule);
+                const createdDate = entry.createdAt !== 'Unknown' ? 
+                    new Date(entry.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 
+                    'Unknown';
+                const updatedDate = entry.updatedAt !== 'Unknown' ? 
+                    new Date(entry.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 
+                    'Unknown';
+                
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 8px 10px;">${formatDateForReport(entry.date)}</td>
+                        <td style="padding: 8px 10px;">${entry.employeeName}</td>
+                        <td style="padding: 8px 10px;">${entry.team}</td>
+                        <td style="padding: 8px 10px; text-align: center;">
+                            <span style="background: ${statusInfo.color}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">${statusInfo.text}</span>
+                        </td>
+                        <td style="padding: 8px 10px; text-align: center;">${statusInfo.time}</td>
+                        <td style="padding: 8px 10px; font-size: 0.75rem;">${entry.createdBy}</td>
+                        <td style="padding: 8px 10px; font-size: 0.75rem;">${createdDate}</td>
+                        <td style="padding: 8px 10px; font-size: 0.75rem;">${updatedDate}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function getScheduleStatusDisplay(schedule) {
+            if (!schedule) return { text: 'None', time: '-', color: '#718096' };
+            
+            if (schedule.status === 'vacation') {
+                return { text: 'Vacation', time: 'All Day', color: '#f59e0b' };
+            }
+            if (schedule.status === 'sick') {
+                return { text: 'Sick', time: 'All Day', color: '#ef4444' };
+            }
+            if (schedule.status === 'off') {
+                return { text: 'Off', time: 'Day Off', color: '#718096' };
+            }
+            if (schedule.status === 'holiday') {
+                return { text: 'Holiday', time: 'Company Holiday', color: '#667eea' };
+            }
+            if (schedule.status === 'halfday') {
+                return { text: 'Half Day', time: `${schedule.startTime || '9:00 AM'} - ${schedule.endTime || '1:00 PM'}`, color: '#10b981' };
+            }
+            
+            // Working
+            const startTime = schedule.startTime || '9:00 AM';
+            const endTime = schedule.endTime || '5:00 PM';
+            return { text: 'Working', time: `${startTime} - ${endTime}`, color: '#10b981' };
+        }
+
+        function printScheduleReport() {
+            const startDate = document.getElementById('scheduleReportStartDate').value;
+            const endDate = document.getElementById('scheduleReportEndDate').value;
+            const employeeFilter = document.getElementById('scheduleReportEmployee').value;
+            const teamFilter = document.getElementById('scheduleReportTeam').value;
+            
+            const employeeName = employeeFilter ? 
+                document.getElementById('scheduleReportEmployee').selectedOptions[0].text.split('(')[0].trim() : 
+                'All Employees';
+            const teamName = teamFilter || 'All Teams';
+            
+            const printDate = new Date().toLocaleString('en-US', { 
+                month: 'long', day: 'numeric', year: 'numeric', 
+                hour: 'numeric', minute: '2-digit' 
+            });
+            
+            const tableContent = document.getElementById('scheduleReportTable').innerHTML;
+            
+            const printHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Schedule Report</title>
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1100px; margin: 0 auto; padding: 20px; }
+                        .header { border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+                        .header h1 { margin: 0 0 10px 0; font-size: 1.5rem; }
+                        .header .meta { color: #666; font-size: 0.9rem; line-height: 1.6; }
+                        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+                        th { background: #f5f5f5; padding: 10px; text-align: left; border-bottom: 2px solid #333; font-weight: 600; }
+                        td { padding: 8px 10px; border-bottom: 1px solid #ddd; }
+                        td:nth-child(4), td:nth-child(5) { text-align: center; }
+                        @media print { 
+                            body { padding: 10px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Schedule Report</h1>
+                        <div class="meta">
+                            <strong>Date Range:</strong> ${formatDateForReport(startDate)} - ${formatDateForReport(endDate)}<br>
+                            <strong>Employee:</strong> ${employeeName}<br>
+                            <strong>Team:</strong> ${teamName}<br>
+                            <strong>Generated:</strong> ${printDate}
+                        </div>
+                    </div>
+                    ${tableContent}
+                    <div class="no-print" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center;">
+                        <button onclick="window.print()" style="padding: 10px 20px; font-size: 1rem; cursor: pointer;">Print / Save as PDF</button>
+                        <button onclick="window.close()" style="padding: 10px 20px; font-size: 1rem; margin-left: 10px; cursor: pointer;">Close</button>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank', 'width=1100,height=700');
+            printWindow.document.write(printHtml);
+            printWindow.document.close();
+        }
+
+        // ==========================================
+        // TASK LIFECYCLE REPORT
+        // ==========================================
+
+        function showTaskLifecycleReportModal() {
+            document.getElementById('taskLifecycleReportModal').style.display = 'flex';
+            populateReportEmployeeDropdowns();
+            
+            // Set default date range (last 30 days)
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - 30);
+            
+            document.getElementById('taskReportStartDate').value = startDate.toISOString().split('T')[0];
+            document.getElementById('taskReportEndDate').value = endDate.toISOString().split('T')[0];
+            
+            // Hide results initially
+            document.getElementById('taskLifecycleReportResults').style.display = 'none';
+        }
+
+        function closeTaskLifecycleReportModal() {
+            document.getElementById('taskLifecycleReportModal').style.display = 'none';
+        }
+
+        function generateTaskLifecycleReport() {
+            const startDate = document.getElementById('taskReportStartDate').value;
+            const endDate = document.getElementById('taskReportEndDate').value;
+            const employeeFilter = document.getElementById('taskReportEmployee').value;
+            const teamFilter = document.getElementById('taskReportTeam').value;
+            
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            // Get all tasks with lifecycle history
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const taskLifecycleHistory = JSON.parse(localStorage.getItem('taskLifecycleHistory')) || {};
+            const allEmployees = getAllEmployeesForReports();
+            
+            // Filter tasks
+            let filteredTasks = tasks.filter(task => {
+                // Check if task falls within date range
+                if (task.due && (task.due < startDate || task.due > endDate)) {
+                    // Still include if it was created or modified within range
+                    const history = taskLifecycleHistory[task.id];
+                    if (!history) return false;
+                    
+                    const hasActivityInRange = history.changes.some(change => {
+                        return change.timestamp >= startDate && change.timestamp <= endDate + 'T23:59:59';
+                    });
+                    if (!hasActivityInRange) return false;
+                }
+                
+                // Apply employee filter
+                if (employeeFilter) {
+                    if (task.assignee !== employeeFilter) return false;
+                }
+                
+                // Apply team filter
+                if (teamFilter) {
+                    if (task.team !== teamFilter) return false;
+                }
+                
+                return true;
+            });
+            
+            // Generate table HTML
+            const tableHtml = generateTaskLifecycleTable(filteredTasks, taskLifecycleHistory, allEmployees);
+            document.getElementById('taskLifecycleReportTable').innerHTML = tableHtml;
+            document.getElementById('taskLifecycleReportResults').style.display = 'block';
+        }
+
+        function generateTaskLifecycleTable(tasks, history, allEmployees) {
+            if (tasks.length === 0) {
+                return '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">No tasks found for the selected criteria.</p>';
+            }
+            
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                    <thead>
+                        <tr style="background: var(--bg-primary); border-bottom: 2px solid var(--border-color);">
+                            <th style="padding: 10px; text-align: left;">Task</th>
+                            <th style="padding: 10px; text-align: left;">Assignee</th>
+                            <th style="padding: 10px; text-align: left;">Team</th>
+                            <th style="padding: 10px; text-align: center;">Created (To Do)</th>
+                            <th style="padding: 10px; text-align: center;">In Progress</th>
+                            <th style="padding: 10px; text-align: center;">Done</th>
+                            <th style="padding: 10px; text-align: center;">Duration</th>
+                            <th style="padding: 10px; text-align: center;">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            tasks.forEach(task => {
+                const assignee = allEmployees.find(e => e.email === task.assignee);
+                const assigneeName = assignee ? assignee.name : (task.assignee || 'Unassigned');
+                const teamName = task.team || (assignee ? assignee.team : 'Unassigned');
+                
+                const taskHistory = history[task.id] || { changes: [] };
+                
+                // Find status change timestamps
+                let createdDate = task.createdAt || taskHistory.changes.find(c => c.toStatus === 'todo')?.timestamp;
+                let inProgressDate = taskHistory.changes.find(c => c.toStatus === 'doing')?.timestamp;
+                let doneDate = taskHistory.changes.find(c => c.toStatus === 'done')?.timestamp;
+                
+                // Format dates
+                const formatLifecycleDate = (dateStr) => {
+                    if (!dateStr) return '-';
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + '<br>' +
+                           date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                };
+                
+                // Calculate duration
+                let duration = '-';
+                if (createdDate && doneDate) {
+                    const start = new Date(createdDate);
+                    const end = new Date(doneDate);
+                    const diffHours = Math.round((end - start) / (1000 * 60 * 60));
+                    const diffDays = Math.floor(diffHours / 24);
+                    const remainingHours = diffHours % 24;
+                    
+                    if (diffDays > 0) {
+                        duration = `${diffDays}d ${remainingHours}h`;
+                    } else {
+                        duration = `${diffHours}h`;
+                    }
+                }
+                
+                const isRecurring = task.recurrence && task.recurrence !== 'none';
+                const isGenerated = task.parentId;
+                let taskType = 'One-time';
+                if (isRecurring && !isGenerated) taskType = 'Recurring (Base)';
+                else if (isGenerated) taskType = 'Recurring (Instance)';
+                
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 8px 10px;">${task.title}</td>
+                        <td style="padding: 8px 10px;">${assigneeName}</td>
+                        <td style="padding: 8px 10px;">${teamName}</td>
+                        <td style="padding: 8px 10px; text-align: center; font-size: 0.75rem;">${formatLifecycleDate(createdDate)}</td>
+                        <td style="padding: 8px 10px; text-align: center; font-size: 0.75rem;">${formatLifecycleDate(inProgressDate)}</td>
+                        <td style="padding: 8px 10px; text-align: center; font-size: 0.75rem;">${formatLifecycleDate(doneDate)}</td>
+                        <td style="padding: 8px 10px; text-align: center; font-weight: 600;">${duration}</td>
+                        <td style="padding: 8px 10px; text-align: center;">
+                            <span style="background: ${isRecurring ? '#667eea' : '#10b981'}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem;">${taskType}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function printTaskLifecycleReport() {
+            const startDate = document.getElementById('taskReportStartDate').value;
+            const endDate = document.getElementById('taskReportEndDate').value;
+            const employeeFilter = document.getElementById('taskReportEmployee').value;
+            const teamFilter = document.getElementById('taskReportTeam').value;
+            
+            const employeeName = employeeFilter ? 
+                document.getElementById('taskReportEmployee').selectedOptions[0].text.split('(')[0].trim() : 
+                'All Employees';
+            const teamName = teamFilter || 'All Teams';
+            
+            const printDate = new Date().toLocaleString('en-US', { 
+                month: 'long', day: 'numeric', year: 'numeric', 
+                hour: 'numeric', minute: '2-digit' 
+            });
+            
+            const tableContent = document.getElementById('taskLifecycleReportTable').innerHTML;
+            
+            const printHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Task Lifecycle Report</title>
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+                        .header { border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+                        .header h1 { margin: 0 0 10px 0; font-size: 1.5rem; }
+                        .header .meta { color: #666; font-size: 0.9rem; line-height: 1.6; }
+                        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+                        th { background: #f5f5f5; padding: 10px; text-align: left; border-bottom: 2px solid #333; font-weight: 600; }
+                        td { padding: 8px 10px; border-bottom: 1px solid #ddd; }
+                        td:nth-child(4), td:nth-child(5), td:nth-child(6), td:nth-child(7), td:nth-child(8) { text-align: center; }
+                        @media print { 
+                            body { padding: 10px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Task Lifecycle Report</h1>
+                        <div class="meta">
+                            <strong>Date Range:</strong> ${formatDateForReport(startDate)} - ${formatDateForReport(endDate)}<br>
+                            <strong>Employee:</strong> ${employeeName}<br>
+                            <strong>Team:</strong> ${teamName}<br>
+                            <strong>Generated:</strong> ${printDate}
+                        </div>
+                    </div>
+                    ${tableContent}
+                    <div class="no-print" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center;">
+                        <button onclick="window.print()" style="padding: 10px 20px; font-size: 1rem; cursor: pointer;">Print / Save as PDF</button>
+                        <button onclick="window.close()" style="padding: 10px 20px; font-size: 1rem; margin-left: 10px; cursor: pointer;">Close</button>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank', 'width=1200,height=700');
+            printWindow.document.write(printHtml);
+            printWindow.document.close();
+        }
+
+        // Track task status changes for lifecycle reporting
+        function trackTaskStatusChange(taskId, fromStatus, toStatus) {
+            const history = JSON.parse(localStorage.getItem('taskLifecycleHistory')) || {};
+            
+            if (!history[taskId]) {
+                history[taskId] = { changes: [] };
+            }
+            
+            history[taskId].changes.push({
+                fromStatus: fromStatus,
+                toStatus: toStatus,
+                timestamp: new Date().toISOString(),
+                changedBy: currentUser ? currentUser.email : 'unknown'
+            });
+            
+            localStorage.setItem('taskLifecycleHistory', JSON.stringify(history));
+        }
     </script>
 </body>
 </html>
