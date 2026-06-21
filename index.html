@@ -2806,11 +2806,11 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                             <div class="form-group">
                                 <label style="font-size: 0.85rem; color: var(--text-secondary);">Start Date</label>
-                                <input type="date" id="timeClockReportStartDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                <input type="date" id="timeClockReportStartDate" style="width: auto; min-width: 140px; max-width: 200px; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label style="font-size: 0.85rem; color: var(--text-secondary);">End Date</label>
-                                <input type="date" id="timeClockReportEndDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                <input type="date" id="timeClockReportEndDate" style="width: auto; min-width: 140px; max-width: 200px; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
@@ -2863,11 +2863,11 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                             <div class="form-group">
                                 <label style="font-size: 0.85rem; color: var(--text-secondary);">Start Date</label>
-                                <input type="date" id="scheduleReportStartDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                <input type="date" id="scheduleReportStartDate" style="width: auto; min-width: 140px; max-width: 200px; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label style="font-size: 0.85rem; color: var(--text-secondary);">End Date</label>
-                                <input type="date" id="scheduleReportEndDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                <input type="date" id="scheduleReportEndDate" style="width: auto; min-width: 140px; max-width: 200px; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
@@ -2920,11 +2920,11 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                             <div class="form-group">
                                 <label style="font-size: 0.85rem; color: var(--text-secondary);">Start Date</label>
-                                <input type="date" id="taskReportStartDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                <input type="date" id="taskReportStartDate" style="width: auto; min-width: 140px; max-width: 200px; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label style="font-size: 0.85rem; color: var(--text-secondary);">End Date</label>
-                                <input type="date" id="taskReportEndDate" style="width: 100%; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
+                                <input type="date" id="taskReportEndDate" style="width: auto; min-width: 140px; max-width: 200px; padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--bg-secondary); color: var(--text-primary); margin-top: 6px;">
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
@@ -5898,54 +5898,64 @@
         }
 
         function generateTimeClockReport() {
-            const startDate = document.getElementById('timeClockReportStartDate').value;
-            const endDate = document.getElementById('timeClockReportEndDate').value;
-            const employeeFilter = document.getElementById('timeClockReportEmployee').value;
-            const teamFilter = document.getElementById('timeClockReportTeam').value;
-            
-            if (!startDate || !endDate) {
-                alert('Please select both start and end dates');
-                return;
-            }
-            
-            // Get all time entries
-            const timeEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
-            const allEmployees = getAllEmployeesForReports();
-            
-            // Filter entries
-            let filteredEntries = [];
-            
-            Object.entries(timeEntries).forEach(([email, entries]) => {
-                const employee = allEmployees.find(e => e.email === email);
-                if (!employee) return;
+            try {
+                const startDate = document.getElementById('timeClockReportStartDate').value;
+                const endDate = document.getElementById('timeClockReportEndDate').value;
+                const employeeFilter = document.getElementById('timeClockReportEmployee').value;
+                const teamFilter = document.getElementById('timeClockReportTeam').value;
                 
-                // Apply filters
-                if (employeeFilter && email !== employeeFilter) return;
-                if (teamFilter && employee.team !== teamFilter) return;
+                if (!startDate || !endDate) {
+                    alert('Please select both start and end dates');
+                    return;
+                }
                 
-                entries.forEach(entry => {
-                    const entryDate = entry.date;
-                    if (entryDate >= startDate && entryDate <= endDate) {
-                        filteredEntries.push({
-                            ...entry,
-                            employeeName: employee.name,
-                            employeeEmail: email,
-                            team: employee.team
-                        });
-                    }
+                // Get all time entries - support both old and new formats
+                let timeEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+                const allEmployees = getAllEmployeesForReports();
+                
+                // Filter entries
+                let filteredEntries = [];
+                
+                Object.entries(timeEntries).forEach(([email, entries]) => {
+                    const employee = allEmployees.find(e => e.email === email);
+                    if (!employee) return;
+                    
+                    // Apply filters
+                    if (employeeFilter && email !== employeeFilter) return;
+                    if (teamFilter && employee.team !== teamFilter) return;
+                    
+                    // Handle both array format and object format
+                    const entriesArray = Array.isArray(entries) ? entries : [entries];
+                    
+                    entriesArray.forEach(entry => {
+                        if (!entry) return;
+                        const entryDate = entry.date;
+                        if (entryDate && entryDate >= startDate && entryDate <= endDate) {
+                            filteredEntries.push({
+                                ...entry,
+                                employeeName: employee.name,
+                                employeeEmail: email,
+                                team: employee.team
+                            });
+                        }
+                    });
                 });
-            });
-            
-            // Sort by date descending, then by employee
-            filteredEntries.sort((a, b) => {
-                if (a.date !== b.date) return b.date.localeCompare(a.date);
-                return a.employeeName.localeCompare(b.employeeName);
-            });
-            
-            // Generate table HTML
-            const tableHtml = generateTimeClockTable(filteredEntries);
-            document.getElementById('timeClockReportTable').innerHTML = tableHtml;
-            document.getElementById('timeClockReportResults').style.display = 'block';
+                
+                // Sort by date descending, then by employee
+                filteredEntries.sort((a, b) => {
+                    if (a.date !== b.date) return b.date.localeCompare(a.date);
+                    return a.employeeName.localeCompare(b.employeeName);
+                });
+                
+                // Generate table HTML
+                const tableHtml = generateTimeClockTable(filteredEntries);
+                document.getElementById('timeClockReportTable').innerHTML = tableHtml;
+                document.getElementById('timeClockReportResults').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error generating time clock report:', error);
+                alert('Error generating report. Please try again.');
+            }
         }
 
         function generateTimeClockTable(entries) {
@@ -6127,8 +6137,9 @@
                 return;
             }
             
-            // Get all schedules
+            // Get all schedules and time off requests
             const employeeSchedules = JSON.parse(localStorage.getItem('employeeSchedules')) || {};
+            const timeOffRequests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
             const allEmployees = getAllEmployeesForReports();
             
             // Generate date range
@@ -6153,18 +6164,47 @@
                 if (teamFilter && employee.team !== teamFilter) return;
                 
                 dateRange.forEach(dateStr => {
-                    const schedule = getEmployeeScheduleForDate(employee.email, dateStr);
-                    if (schedule && schedule.status !== 'none') {
+                    // First check for approved time off requests
+                    const approvedRequest = timeOffRequests.find(r => 
+                        r.employeeEmail === employee.email &&
+                        r.status === 'approved' &&
+                        dateStr >= r.startDate &&
+                        dateStr <= r.endDate
+                    );
+                    
+                    if (approvedRequest) {
+                        // Show vacation/sick time instead of regular schedule
                         scheduleEntries.push({
                             date: dateStr,
                             employeeName: employee.name,
                             employeeEmail: employee.email,
                             team: employee.team,
-                            schedule: schedule,
-                            createdBy: schedule.createdBy || 'Unknown',
-                            createdAt: schedule.createdAt || 'Unknown',
-                            updatedAt: schedule.updatedAt || schedule.createdAt || 'Unknown'
+                            schedule: {
+                                status: approvedRequest.type === 'vacation' ? 'vacation' : 'sick',
+                                startTime: null,
+                                endTime: null
+                            },
+                            createdBy: approvedRequest.employeeName || 'Employee',
+                            createdAt: approvedRequest.submittedAt || 'Unknown',
+                            updatedAt: approvedRequest.submittedAt || 'Unknown',
+                            isTimeOff: true
                         });
+                    } else {
+                        // Check for regular schedule
+                        const schedule = getEmployeeScheduleForDate(employee.email, dateStr);
+                        if (schedule && schedule.status !== 'none') {
+                            scheduleEntries.push({
+                                date: dateStr,
+                                employeeName: employee.name,
+                                employeeEmail: employee.email,
+                                team: employee.team,
+                                schedule: schedule,
+                                createdBy: schedule.createdBy || 'System',
+                                createdAt: schedule.createdAt || 'Unknown',
+                                updatedAt: schedule.updatedAt || schedule.createdAt || 'Unknown',
+                                isTimeOff: false
+                            });
+                        }
                     }
                 });
             });
