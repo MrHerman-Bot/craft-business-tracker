@@ -1871,6 +1871,16 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Manage Recurring Tasks Button -->
+                <div style="margin-top: 20px; padding: 0 16px;">
+                    <button class="btn" onclick="showRecurringTasksModal()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--bg-primary); border: 2px dashed var(--border-color); color: var(--text-secondary);">
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2;">
+                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 0 1-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Manage Recurring Tasks
+                    </button>
+                </div>
             </section>
             
             <!-- Team Section -->
@@ -2576,6 +2586,24 @@
                         </select>
                     </div>
                     <button class="btn btn-primary" onclick="saveTask()" style="margin-top: 24px;">Save Task</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Manage Recurring Tasks Modal -->
+        <div class="modal-overlay" id="recurringTasksModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 500px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Manage Recurring Tasks</h3>
+                    <button class="modal-close" onclick="closeRecurringTasksModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto; flex: 1;">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 16px;">
+                        These are the base templates for recurring tasks. Deleting a template will stop all future occurrences.
+                    </p>
+                    <div id="recurringTasksList">
+                        <!-- Populated by JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -4004,6 +4032,111 @@
         
         function getInitials(name) {
             return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+        
+        // ==========================================
+        // RECURRING TASKS MANAGEMENT
+        // ==========================================
+        
+        function showRecurringTasksModal() {
+            document.getElementById('recurringTasksModal').style.display = 'flex';
+            renderRecurringTasksList();
+        }
+        
+        function closeRecurringTasksModal() {
+            document.getElementById('recurringTasksModal').style.display = 'none';
+        }
+        
+        function renderRecurringTasksList() {
+            const tasks = getTasks();
+            const recurringTemplates = tasks.filter(t => 
+                t.recurrence && t.recurrence !== 'none' && !t.parentId
+            );
+            
+            const container = document.getElementById('recurringTasksList');
+            
+            if (recurringTemplates.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; margin-bottom: 16px; opacity: 0.5;">
+                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 0 1-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        <p>No recurring task templates found.</p>
+                        <p style="font-size: 0.85rem; margin-top: 8px;">Create a recurring task from the Tasks page.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const recurrenceLabels = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly' };
+            const recurrenceIcons = { daily: '🔄', weekly: '🗓️', monthly: '📅' };
+            
+            container.innerHTML = recurringTemplates.map(task => {
+                const recurrenceInfo = recurrenceLabels[task.recurrence] || task.recurrence;
+                let extraInfo = '';
+                if (task.recurrence === 'weekly' && task.recurrenceDay !== undefined) {
+                    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    extraInfo = `on ${days[task.recurrenceDay]}`;
+                } else if (task.recurrence === 'monthly' && task.recurrenceDate) {
+                    extraInfo = `on the ${task.recurrenceDate}${getOrdinalSuffix(task.recurrenceDate)}`;
+                }
+                
+                const assigneeName = task.assignee ? getUserName(task.assignee) : (task.team ? `[${task.team}]` : 'Unassigned');
+                
+                return `
+                    <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">${task.title}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                                    <span style="background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 8px;">${recurrenceInfo}</span>
+                                    ${extraInfo}
+                                </div>
+                            </div>
+                            <button onclick="deleteRecurringTemplate('${task.id}')" style="background: var(--danger); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                                <svg class="icon-svg" viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2;">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                Stop Recurrence
+                            </button>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary);">
+                            <div class="task-avatar" style="width: 24px; height: 24px; font-size: 0.7rem;">${getInitials(assigneeName)}</div>
+                            <span>${assigneeName}</span>
+                            ${task.team ? `<span style="background: var(--bg-secondary); padding: 2px 8px; border-radius: 4px;">[${task.team}]</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function getOrdinalSuffix(n) {
+            const s = ['th', 'st', 'nd', 'rd'];
+            const v = n % 100;
+            return s[(v - 20) % 10] || s[v] || s[0];
+        }
+        
+        function deleteRecurringTemplate(taskId) {
+            if (!confirm('Are you sure you want to stop this recurring task? All future occurrences will be cancelled.')) {
+                return;
+            }
+            
+            const tasks = getTasks();
+            // Remove the template AND all generated instances
+            const filtered = tasks.filter(t => t.id !== taskId && t.parentId !== taskId);
+            saveTasks(filtered);
+            
+            // Also clean up deleted instances tracking
+            const deletedInstances = JSON.parse(localStorage.getItem('deletedRecurringInstances') || '{}');
+            if (deletedInstances[taskId]) {
+                delete deletedInstances[taskId];
+                localStorage.setItem('deletedRecurringInstances', JSON.stringify(deletedInstances));
+            }
+            
+            renderRecurringTasksList();
+            renderTasks();
+            updateHomeData();
         }
         
         // ==========================================
