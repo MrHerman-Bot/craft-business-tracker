@@ -1746,6 +1746,70 @@
                 <button type="submit" class="btn btn-primary">Sign In</button>
                 <p class="error-message" id="loginError">Invalid email or password</p>
             </form>
+            
+            <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-color); text-align: center;">
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px;">Don't have an account?</p>
+                <button class="btn" onclick="showSignupModal()" style="background: var(--bg-primary); border: 2px solid var(--accent); color: var(--accent); width: 100%;">
+                    Create Account
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sign Up Modal -->
+    <div class="modal-overlay" id="signupModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
+        <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+            <div class="modal-header" style="padding: 24px 24px 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.4rem;">Create Account</h3>
+                    <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">Set up your Business Command Center</p>
+                </div>
+                <button class="modal-close" onclick="closeSignupModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+            </div>
+            <div class="modal-body" style="padding: 24px; overflow-y: auto; flex: 1;">
+                <form id="signupForm" onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="signupName" placeholder="John Smith" required style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Email Address *</label>
+                        <input type="email" id="signupEmail" placeholder="john@company.com" required style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        <p id="signupEmailError" style="color: var(--danger); font-size: 0.85rem; margin-top: 6px; display: none;">This email is already registered</p>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Password *</label>
+                        <input type="password" id="signupPassword" placeholder="Create a password (min 6 characters)" required minlength="6" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Confirm Password *</label>
+                        <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        <p id="signupPasswordError" style="color: var(--danger); font-size: 0.85rem; margin-top: 6px; display: none;">Passwords do not match</p>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Company/Organization Name *</label>
+                        <input type="text" id="signupCompany" placeholder="Acme Corp" required style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 6px;">This creates your private workspace</p>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 12px; background: var(--bg-primary); border-radius: 8px;">
+                        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="signupTerms" required style="margin-top: 3px;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">I agree to the <a href="#" onclick="showPrivacyPolicy(); return false;" style="color: var(--accent);">Privacy Policy</a> and Terms of Service</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="margin-top: 24px; width: 100%;">Create Account</button>
+                </form>
+                
+                <p style="text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.9rem;">
+                    Already have an account? <a href="#" onclick="closeSignupModal(); return false;" style="color: var(--accent);">Sign In</a>
+                </p>
+            </div>
         </div>
     </div>
     
@@ -3477,24 +3541,39 @@
 
         initTheme();
         
-        // User data
-        const users = {
-            'owner@company.com': { password: 'owner123', name: 'Alex Thompson', role: 'Owner', avatar: 'AT' },
-            'manager@company.com': { password: 'manager123', name: 'Jordan Smith', role: 'Manager', avatar: 'JS' },
-            'employee@company.com': { password: 'employee123', name: 'Casey Johnson', role: 'Employee', avatar: 'CJ' },
-            'hr@company.com': { password: 'hr123', name: 'Sam Parker', role: 'HR', avatar: 'SP' },
-            'lead@company.com': { password: 'lead123', name: 'Taylor Reed', role: 'Team Lead', avatar: 'TR' },
-            'warehouse@company.com': { password: 'warehouse123', name: 'Morgan Lee', role: 'Employee', avatar: 'ML' }
-        };
+        // User data - merge defaults with any stored users
+        function getUsers() {
+            const storedUsers = JSON.parse(localStorage.getItem('appUsers')) || {};
+            const defaultUsers = {
+                'owner@company.com': { password: 'owner123', name: 'Alex Thompson', role: 'Owner', avatar: 'AT', company: 'Demo Company' },
+                'manager@company.com': { password: 'manager123', name: 'Jordan Smith', role: 'Manager', avatar: 'JS', company: 'Demo Company' },
+                'employee@company.com': { password: 'employee123', name: 'Casey Johnson', role: 'Employee', avatar: 'CJ', company: 'Demo Company' },
+                'hr@company.com': { password: 'hr123', name: 'Sam Parker', role: 'HR', avatar: 'SP', company: 'Demo Company' },
+                'lead@company.com': { password: 'lead123', name: 'Taylor Reed', role: 'Team Lead', avatar: 'TR', company: 'Demo Company' },
+                'warehouse@company.com': { password: 'warehouse123', name: 'Morgan Lee', role: 'Employee', avatar: 'ML', company: 'Demo Company' }
+            };
+            return { ...defaultUsers, ...storedUsers };
+        }
+        
+        function saveUser(email, userData) {
+            const storedUsers = JSON.parse(localStorage.getItem('appUsers')) || {};
+            storedUsers[email] = userData;
+            localStorage.setItem('appUsers', JSON.stringify(storedUsers));
+        }
+        
+        function getCurrentCompany() {
+            return currentUser?.company || 'Default Company';
+        }
         
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         
         // Handle login
         function handleLogin(event) {
             event.preventDefault();
-            const email = document.getElementById('email').value.toLowerCase();
+            const email = document.getElementById('email').value.toLowerCase().trim();
             const password = document.getElementById('password').value;
             
+            const users = getUsers();
             const user = users[email];
             if (user && user.password === password) {
                 currentUser = { email, ...user };
@@ -3503,6 +3582,118 @@
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
+        }
+        
+        // Sign Up Functions
+        function showSignupModal() {
+            document.getElementById('signupModal').style.display = 'flex';
+            // Clear form
+            document.getElementById('signupForm').reset();
+            document.getElementById('signupEmailError').style.display = 'none';
+            document.getElementById('signupPasswordError').style.display = 'none';
+        }
+        
+        function closeSignupModal() {
+            document.getElementById('signupModal').style.display = 'none';
+        }
+        
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.toLowerCase().trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const company = document.getElementById('signupCompany').value.trim();
+            
+            // Reset errors
+            document.getElementById('signupEmailError').style.display = 'none';
+            document.getElementById('signupPasswordError').style.display = 'none';
+            
+            // Check if email already exists
+            const users = getUsers();
+            if (users[email]) {
+                document.getElementById('signupEmailError').style.display = 'block';
+                return;
+            }
+            
+            // Check password match
+            if (password !== confirmPassword) {
+                document.getElementById('signupPasswordError').textContent = 'Passwords do not match';
+                document.getElementById('signupPasswordError').style.display = 'block';
+                return;
+            }
+            
+            // Check password length
+            if (password.length < 6) {
+                document.getElementById('signupPasswordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('signupPasswordError').style.display = 'block';
+                return;
+            }
+            
+            // Create new user
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            const newUser = {
+                password: password,
+                name: name,
+                role: 'Owner', // First user is Owner
+                avatar: initials,
+                company: company,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save user
+            saveUser(email, newUser);
+            
+            // Initialize company data
+            initializeCompanyData(company, email, name);
+            
+            // Auto-login
+            currentUser = { email, ...newUser };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Close modal and show app
+            closeSignupModal();
+            showApp();
+        }
+        
+        function initializeCompanyData(companyName, ownerEmail, ownerName) {
+            // Initialize company-specific storage keys
+            const companyKey = `company_${companyName.replace(/\s+/g, '_').toLowerCase()}`;
+            
+            // Check if company already has data
+            const existingData = localStorage.getItem(companyKey);
+            if (!existingData) {
+                // Create initial company data structure
+                const companyData = {
+                    name: companyName,
+                    createdAt: new Date().toISOString(),
+                    owner: ownerEmail,
+                    employees: [{
+                        email: ownerEmail,
+                        name: ownerName,
+                        role: 'Owner',
+                        team: 'Admin',
+                        timezone: 'America/New_York'
+                    }],
+                    teams: ['Production', 'Sales', 'Warehouse', 'Admin'],
+                    settings: {
+                        allowSelfRegistration: false,
+                        subscription: 'trial',
+                        trialEnds: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 day trial
+                    }
+                };
+                localStorage.setItem(companyKey, JSON.stringify(companyData));
+            }
+            
+            // Set current company context
+            localStorage.setItem('currentCompany', companyName);
+        }
+        
+        // Show Privacy Policy from signup
+        function showPrivacyPolicy() {
+            closeSignupModal();
+            showSection('privacy');
         }
         
         // Show app
@@ -3684,6 +3875,7 @@
         function logout() {
             currentUser = null;
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentCompany');
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('appContainer').classList.remove('active');
             document.getElementById('loginForm').reset();
