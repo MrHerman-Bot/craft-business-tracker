@@ -1762,7 +1762,7 @@
     </div>
     
     <!-- Sign Up Modal -->
-    <div class="modal-overlay" id="signupModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
+    <div class="modal-overlay" id="signupModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
         <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
             <div class="modal-header" style="padding: 24px 24px 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
                 <div>
@@ -3591,7 +3591,11 @@
         
         // Sign Up Functions
         function showSignupModal() {
-            document.getElementById('signupModal').style.display = 'flex';
+            console.log('showSignupModal called');
+            const modal = document.getElementById('signupModal');
+            console.log('Modal element:', modal);
+            modal.style.display = 'flex';
+            console.log('Modal display set to:', modal.style.display);
             // Clear form
             document.getElementById('signupForm').reset();
             document.getElementById('signupEmailError').style.display = 'none';
