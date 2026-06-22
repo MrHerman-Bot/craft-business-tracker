@@ -2102,12 +2102,20 @@
                     </div>
 
                     <!-- Add New Employee Button -->
-                    <button class="btn btn-primary" onclick="showSection('add-employee')" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <button class="btn btn-primary" onclick="showSection('add-employee')" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;">
                         <svg class="icon-svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2;">
                             <path d="M12 5v14M5 12h14"></path>
                         </svg>
                         Add New Employee
                     </button>
+                    
+                    <!-- Manage Employees Section -->
+                    <div class="home-card">
+                        <div class="home-card-title">Manage Employees</div>
+                        <div id="manageEmployeesList" style="margin-top: 12px;">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
                 </div>
             </section>
             
@@ -2208,6 +2216,11 @@
                 <!-- Logout Button -->
                 <button class="btn" style="width: 100%; background: var(--danger); color: white; margin-top: 8px;" onclick="logout()">
                     Logout
+                </button>
+                
+                <!-- Delete Account Button -->
+                <button class="btn" style="width: 100%; background: transparent; border: 2px solid var(--danger); color: var(--danger); margin-top: 12px;" onclick="showDeleteAccountModal()">
+                    Delete My Account
                 </button>
             </section>
 
@@ -2778,6 +2791,50 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Delete Account Modal -->
+        <div class="modal-overlay" id="deleteAccountModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 80vh; overflow: hidden;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: var(--danger);">Delete Account</h3>
+                    <button class="modal-close" onclick="closeDeleteAccountModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto;">
+                    <div style="background: #fee2e2; border: 1px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                        <p style="color: #991b1b; margin: 0; font-size: 0.9rem;"><strong>Warning:</strong> This action cannot be undone. All your data will be permanently deleted.</p>
+                    </div>
+                    <p style="margin-bottom: 16px; color: var(--text-secondary);">To confirm deletion, please type your email address: <strong id="deleteAccountEmailDisplay"></strong></p>
+                    <div class="form-group">
+                        <label>Your Email Address</label>
+                        <input type="email" id="deleteAccountConfirmEmail" placeholder="Enter your email to confirm" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        <div id="deleteAccountError" style="color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none;">Email does not match</div>
+                    </div>
+                    <button class="btn" onclick="submitDeleteAccount()" style="margin-top: 24px; width: 100%; background: var(--danger); color: white;">Permanently Delete My Account</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Delete Employee Modal (HR Admin) -->
+        <div class="modal-overlay" id="deleteEmployeeModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+            <div class="modal" style="background: var(--bg-secondary); border-radius: 20px; width: 100%; max-width: 450px; max-height: 80vh; overflow: hidden;">
+                <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: var(--danger);">Delete Employee</h3>
+                    <button class="modal-close" onclick="closeDeleteEmployeeModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto;">
+                    <div style="background: #fee2e2; border: 1px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                        <p style="color: #991b1b; margin: 0; font-size: 0.9rem;"><strong>Warning:</strong> This will permanently delete the employee account and all associated data. This action cannot be undone.</p>
+                    </div>
+                    <p style="margin-bottom: 16px; color: var(--text-secondary);">To confirm deletion of <strong id="deleteEmployeeNameDisplay"></strong>, please type their email address:</p>
+                    <div class="form-group">
+                        <label>Employee Email Address</label>
+                        <input type="email" id="deleteEmployeeConfirmEmail" placeholder="Enter employee email to confirm" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 1rem; background: var(--bg-primary); color: var(--text-primary); margin-top: 8px;">
+                        <div id="deleteEmployeeError" style="color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none;">Email does not match</div>
+                    </div>
+                    <button class="btn" onclick="submitDeleteEmployee()" style="margin-top: 24px; width: 100%; background: var(--danger); color: white;">Permanently Delete Employee</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Create New Team Modal -->
         <div class="modal-overlay" id="createTeamModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
@@ -3241,6 +3298,160 @@
                 btn.textContent = originalText;
                 btn.style.background = '';
                 closeChangePasswordModal();
+            }, 1500);
+        }
+        
+        // Delete Account Modal Functions
+        function showDeleteAccountModal() {
+            document.getElementById('deleteAccountModal').style.display = 'flex';
+            document.getElementById('deleteAccountEmailDisplay').textContent = currentUser.email;
+            document.getElementById('deleteAccountConfirmEmail').value = '';
+            document.getElementById('deleteAccountError').style.display = 'none';
+        }
+        
+        function closeDeleteAccountModal() {
+            document.getElementById('deleteAccountModal').style.display = 'none';
+        }
+        
+        function submitDeleteAccount() {
+            const confirmEmail = document.getElementById('deleteAccountConfirmEmail').value.toLowerCase().trim();
+            const errorEl = document.getElementById('deleteAccountError');
+            
+            // Check if email matches
+            if (confirmEmail !== currentUser.email.toLowerCase()) {
+                errorEl.textContent = 'Email does not match';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            errorEl.style.display = 'none';
+            
+            // Delete user data
+            deleteUserAccount(currentUser.email);
+            
+            // Show success and logout
+            const btn = document.querySelector('#deleteAccountModal .btn');
+            btn.textContent = 'Account Deleted';
+            
+            setTimeout(() => {
+                closeDeleteAccountModal();
+                logout();
+            }, 1500);
+        }
+        
+        function deleteUserAccount(email) {
+            // Remove from appUsers
+            const users = JSON.parse(localStorage.getItem('appUsers')) || {};
+            delete users[email];
+            localStorage.setItem('appUsers', JSON.stringify(users));
+            
+            // Remove from teamEmployees
+            const employees = JSON.parse(localStorage.getItem('teamEmployees')) || [];
+            const filteredEmployees = employees.filter(e => e.email !== email);
+            localStorage.setItem('teamEmployees', JSON.stringify(filteredEmployees));
+            
+            // Remove profile data
+            localStorage.removeItem(`profile_${email}`);
+            
+            // Remove time entries
+            const timeEntries = JSON.parse(localStorage.getItem('timeEntries')) || {};
+            delete timeEntries[email];
+            localStorage.setItem('timeEntries', JSON.stringify(timeEntries));
+            
+            // Note: Messages, tasks, and schedules are kept for audit purposes
+            // but could be cleaned up here if desired
+        }
+        
+        // HR Admin Delete Employee Functions
+        function renderManageEmployeesList() {
+            const container = document.getElementById('manageEmployeesList');
+            if (!container) return;
+            
+            const allEmployees = getAllEmployeesForCompany();
+            const currentUserRole = getCurrentUserRole();
+            
+            if (allEmployees.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No employees found</p>';
+                return;
+            }
+            
+            let html = '';
+            allEmployees.forEach(emp => {
+                // Don't allow deleting yourself
+                const isSelf = emp.email === currentUser.email;
+                // Don't allow deleting other Owners (only self)
+                const isOwner = emp.role === 'Owner';
+                // Can delete if: not self AND (not owner OR current user is the owner being deleted)
+                const canDelete = !isSelf && !isOwner;
+                
+                html += `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-primary); border-radius: 12px; margin-bottom: 8px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem;">
+                                ${emp.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-primary);">${emp.name}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">${emp.role} • ${emp.team}</div>
+                            </div>
+                        </div>
+                        ${canDelete ? `
+                            <button onclick="showDeleteEmployeeModal('${emp.email}', '${emp.name}')" style="background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem;">
+                                Delete
+                            </button>
+                        ` : `
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">${isSelf ? 'You' : 'Protected'}</span>
+                        `}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        let employeeToDelete = null;
+        
+        function showDeleteEmployeeModal(email, name) {
+            employeeToDelete = { email, name };
+            document.getElementById('deleteEmployeeModal').style.display = 'flex';
+            document.getElementById('deleteEmployeeNameDisplay').textContent = name;
+            document.getElementById('deleteEmployeeConfirmEmail').value = '';
+            document.getElementById('deleteEmployeeError').style.display = 'none';
+        }
+        
+        function closeDeleteEmployeeModal() {
+            document.getElementById('deleteEmployeeModal').style.display = 'none';
+            employeeToDelete = null;
+        }
+        
+        function submitDeleteEmployee() {
+            if (!employeeToDelete) return;
+            
+            const confirmEmail = document.getElementById('deleteEmployeeConfirmEmail').value.toLowerCase().trim();
+            const errorEl = document.getElementById('deleteEmployeeError');
+            
+            // Check if email matches
+            if (confirmEmail !== employeeToDelete.email.toLowerCase()) {
+                errorEl.textContent = 'Email does not match';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            errorEl.style.display = 'none';
+            
+            // Delete the employee
+            deleteUserAccount(employeeToDelete.email);
+            
+            // Show success
+            const btn = document.querySelector('#deleteEmployeeModal .btn');
+            btn.textContent = 'Employee Deleted';
+            btn.style.background = 'var(--success)';
+            
+            setTimeout(() => {
+                closeDeleteEmployeeModal();
+                renderManageEmployeesList(); // Refresh the list
+                btn.textContent = 'Permanently Delete Employee';
+                btn.style.background = 'var(--danger)';
             }, 1500);
         }
 
@@ -4356,13 +4567,28 @@
         
         // Get current user's team
         function getCurrentUserTeam() {
+            // First check localStorage
+            const storedEmployees = JSON.parse(localStorage.getItem('teamEmployees')) || [];
+            const storedEmp = storedEmployees.find(e => e.email === currentUser.email);
+            if (storedEmp?.team) return storedEmp.team;
+            
+            // Fallback to hardcoded array
             const emp = teamEmployees.find(e => e.email === currentUser.email);
             return emp?.team || 'Production';
         }
         
         function getCurrentUserRole() {
-            const emp = teamEmployees.find(e => e.email === currentUser.email);
-            return emp?.role || 'Employee';
+            // First check localStorage for the user's role
+            const storedEmployees = JSON.parse(localStorage.getItem('teamEmployees')) || [];
+            const emp = storedEmployees.find(e => e.email === currentUser.email);
+            if (emp?.role) return emp.role;
+            
+            // Fallback to hardcoded array for demo users
+            const hardcodedEmp = teamEmployees.find(e => e.email === currentUser.email);
+            if (hardcodedEmp?.role) return hardcodedEmp.role;
+            
+            // Final fallback to currentUser role if set
+            return currentUser?.role || 'Employee';
         }
         
         // Check if user can see HR Admin tab
@@ -4371,16 +4597,48 @@
             return ['Owner', 'HR'].includes(role);
         }
         
+        // Get all employees for current company (merges hardcoded and stored data)
+        function getAllEmployeesForCompany() {
+            const currentCompany = currentUser?.company || 'Demo Company';
+            
+            // Get stored employees
+            const storedEmployees = JSON.parse(localStorage.getItem('teamEmployees')) || [];
+            
+            // Filter stored employees by company
+            const filteredStored = storedEmployees.filter(e => {
+                // If employee has no company, include them (backward compatibility)
+                // If employee has company, only include if it matches current company
+                return !e.company || e.company === currentCompany;
+            });
+            
+            // For demo company, also include hardcoded employees
+            if (currentCompany === 'Demo Company') {
+                // Create a map of stored employees by email for quick lookup
+                const storedMap = new Map(filteredStored.map(e => [e.email, e]));
+                
+                // Add hardcoded employees that aren't in stored data
+                teamEmployees.forEach(emp => {
+                    if (!storedMap.has(emp.email)) {
+                        filteredStored.push({...emp, company: 'Demo Company'});
+                    }
+                });
+            }
+            
+            return filteredStored;
+        }
+        
         // Get team members
         function getTeamMembers() {
             const team = getCurrentUserTeam();
-            return teamEmployees.filter(e => e.team === team);
+            const allEmployees = getAllEmployeesForCompany();
+            return allEmployees.filter(e => e.team === team);
         }
         
         // Get manager for current team
         function getTeamManager() {
             const team = getCurrentUserTeam();
-            return teamEmployees.find(e => e.team === team && (e.role === 'Manager' || e.role === 'Owner')) || teamEmployees[0];
+            const allEmployees = getAllEmployeesForCompany();
+            return allEmployees.find(e => e.team === team && (e.role === 'Manager' || e.role === 'Owner')) || allEmployees[0];
         }
         
         // Team Tab Switching
@@ -4489,7 +4747,8 @@
         let currentTimezone = 'America/New_York';
         
         function initClock() {
-            const emp = teamEmployees.find(e => e.email === currentUser.email);
+            const allEmployees = getAllEmployeesForCompany();
+            const emp = allEmployees.find(e => e.email === currentUser.email);
             currentTimezone = emp?.timezone || 'America/New_York';
             
             document.getElementById('timezoneDisplay').textContent = `Timezone: ${currentTimezone.replace(/_/g, ' ')}`;
@@ -4620,7 +4879,8 @@
             const homeClock = document.getElementById('homeDigitalClock');
             if (!homeClock) return;
 
-            const emp = teamEmployees.find(e => e.email === currentUser.email);
+            const allEmployees = getAllEmployeesForCompany();
+            const emp = allEmployees.find(e => e.email === currentUser.email);
             currentTimezone = emp?.timezone || 'America/New_York';
 
             const timezoneDisplay = document.getElementById('homeTimezone');
@@ -5554,6 +5814,8 @@
             const hrTab = document.getElementById('team-tab-hr');
             if (hrTab && canAccessHRAdmin()) {
                 hrTab.style.display = 'block';
+                renderManageEmployeesList();
+                renderHRTimeOffRequests();
             }
         }
 
@@ -5929,7 +6191,8 @@
             }
             
             // Individuals section
-            const filteredEmployees = teamEmployees.filter(e => 
+            const allEmployees = getAllEmployeesForCompany();
+            const filteredEmployees = allEmployees.filter(e => 
                 e.name.toLowerCase().includes(filterLower) && 
                 e.email !== currentUser.email
             );
