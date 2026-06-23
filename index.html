@@ -5072,8 +5072,10 @@
         
         function getDaySchedule(employee, dateStr) {
             const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const currentCompany = currentUser?.company || 'Demo Company';
             const approvedRequest = requests.find(r => 
                 r.employeeEmail === employee.email &&
+                (r.company === currentCompany || !r.company) && // Company isolation
                 r.status === 'approved' &&
                 dateStr >= r.startDate &&
                 dateStr <= r.endDate
@@ -5132,6 +5134,7 @@
                 employeeEmail: currentUser.email,
                 employeeName: currentUser.name,
                 team: getCurrentUserTeam(),
+                company: currentUser.company || 'Demo Company', // Add company isolation
                 type: type,
                 startDate: startDate,
                 endDate: endDate,
@@ -5189,8 +5192,10 @@
         
         function getTimeOffForDay(dateStr) {
             const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const currentCompany = currentUser?.company || 'Demo Company';
             return requests.filter(req => 
                 req.team === getCurrentUserTeam() &&
+                (req.company === currentCompany || !req.company) && // Company isolation
                 dateStr >= req.startDate && 
                 dateStr <= req.endDate
             );
@@ -5262,8 +5267,10 @@
         function getEmployeeScheduleForDate(email, dateStr) {
             // Check for time off requests first
             const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
+            const currentCompany = currentUser?.company || 'Demo Company';
             const approvedRequest = requests.find(r => 
                 r.employeeEmail === email &&
+                (r.company === currentCompany || !r.company) && // Company isolation
                 r.status === 'approved' &&
                 dateStr >= r.startDate &&
                 dateStr <= r.endDate
@@ -5757,7 +5764,14 @@
         function renderHRTimeOffRequests() {
             const container = document.getElementById('hrTimeOffRequests');
             const requests = JSON.parse(localStorage.getItem('timeOffRequests')) || [];
-            const pendingRequests = requests.filter(r => r.status === 'pending' && r.team === getCurrentUserTeam());
+            const currentCompany = currentUser?.company || 'Demo Company';
+            
+            // Filter by status, team, AND company
+            const pendingRequests = requests.filter(r => 
+                r.status === 'pending' && 
+                r.team === getCurrentUserTeam() &&
+                (r.company === currentCompany || !r.company) // Include if company matches or no company field (backward compat)
+            );
             
             if (pendingRequests.length === 0) {
                 container.innerHTML = `
@@ -6754,6 +6768,7 @@
             
             // Collect schedule entries
             let scheduleEntries = [];
+            const currentCompany = currentUser?.company || 'Demo Company';
             
             allEmployees.forEach(employee => {
                 // Apply filters
@@ -6764,6 +6779,7 @@
                     // First check for approved time off requests
                     const approvedRequest = timeOffRequests.find(r => 
                         r.employeeEmail === employee.email &&
+                        (r.company === currentCompany || !r.company) && // Company isolation
                         r.status === 'approved' &&
                         dateStr >= r.startDate &&
                         dateStr <= r.endDate
