@@ -5899,8 +5899,21 @@
             return userTeam === teamId;
         }
         
+        // Filter conversations by company
+        function canViewConversation(conv) {
+            const currentCompany = currentUser?.company || 'Demo Company';
+            // If conversation has no company, check if it's a demo conversation
+            if (!conv.company) {
+                // Only show company-less conversations if user is in Demo Company
+                return currentCompany === 'Demo Company';
+            }
+            return conv.company === currentCompany;
+        }
+        
         // Initialize demo conversations
         function initDemoConversations() {
+            const currentCompany = currentUser?.company || 'Demo Company';
+            
             if (Object.keys(conversations).length === 0) {
                 const today = new Date().toISOString().split('T')[0];
                 const now = new Date();
@@ -5913,7 +5926,8 @@
                             { id: 1, sender: 'Jordan Smith', text: 'Hey, can we talk about the inventory?', time: '10:30 AM', date: today },
                             { id: 2, sender: 'You', text: 'Sure, what\'s up?', time: '10:32 AM', date: today }
                         ],
-                        unread: 0
+                        unread: 0,
+                        company: 'Demo Company'
                     }
                 };
                 
@@ -5927,7 +5941,8 @@
                             { id: 1, sender: 'Alex Thompson', text: 'Team meeting at 3 PM today', time: '9:00 AM', date: today },
                             { id: 2, sender: 'Casey Johnson', text: 'Got it, I\'ll be there', time: '9:05 AM', date: today }
                         ],
-                        unread: 1
+                        unread: 1,
+                        company: 'Demo Company'
                     };
                 }
                 
@@ -5951,6 +5966,11 @@
             // Filter visible conversations
             const currentUserEmail = currentUser.email;
             const visibleConversations = sortedConversations.filter(([id, conv]) => {
+                // First check company filtering
+                if (!canViewConversation(conv)) {
+                    return false;
+                }
+                
                 if (conv.isTeam) {
                     // Team conversations: only show user's own team
                     return canViewTeamConversation(id);
@@ -6271,7 +6291,8 @@
                     contact: contact,
                     isTeam: isTeam,
                     messages: [],
-                    unread: 0
+                    unread: 0,
+                    company: currentUser?.company || 'Demo Company'
                 };
                 localStorage.setItem('conversations', JSON.stringify(conversations));
             }
@@ -6459,9 +6480,14 @@
         // Helper function to get all employees for dropdowns
         function getAllEmployeesForReports() {
             const allEmployees = [];
+            const currentCompany = currentUser?.company || 'Demo Company';
             
-            // Add users from the users object
+            // Add users from the users object (filtered by company)
             Object.entries(users).forEach(([email, userData]) => {
+                // Only include users from same company
+                if (userData.company && userData.company !== currentCompany) {
+                    return;
+                }
                 allEmployees.push({
                     email: email,
                     name: userData.name,
@@ -6470,9 +6496,13 @@
                 });
             });
             
-            // Add team employees
+            // Add team employees (filtered by company)
             const teamEmployees = JSON.parse(localStorage.getItem('teamEmployees')) || [];
             teamEmployees.forEach(emp => {
+                // Only include employees from same company
+                if (emp.company && emp.company !== currentCompany) {
+                    return;
+                }
                 if (!allEmployees.find(e => e.email === emp.email)) {
                     allEmployees.push({
                         email: emp.email,
