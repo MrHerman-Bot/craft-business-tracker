@@ -4068,6 +4068,9 @@
             // Show selected section
             document.getElementById(`section-${sectionName}`).classList.add('active');
             
+            // Scroll to top of page
+            window.scrollTo(0, 0);
+            
             // Update bottom nav
             const bottomBtn = document.getElementById(`bottom-${sectionName}`);
             if (bottomBtn) bottomBtn.classList.add('active');
