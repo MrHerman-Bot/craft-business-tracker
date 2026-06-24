@@ -480,7 +480,6 @@
         
         /* Active state with bump up effect */
         .bottom-nav-btn.active {
-            color: var(--accent);
             transform: translateY(-8px);
         }
         
@@ -501,6 +500,16 @@
         .bottom-nav-btn.active .icon-svg {
             stroke: white;
             transform: translateY(-2px);
+        }
+        
+        /* Keep text color consistent - don't change to accent on active */
+        .bottom-nav-btn span {
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .bottom-nav-btn.active span {
+            color: var(--text-secondary);
         }
         
         .nav-badge {
