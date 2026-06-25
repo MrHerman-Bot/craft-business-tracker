@@ -4154,7 +4154,14 @@
         
         // Task Functions
         function getTasks() {
-            return JSON.parse(localStorage.getItem('tasks')) || [];
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const currentCompany = currentUser?.company || 'Demo Company';
+            // Filter tasks by company
+            return tasks.filter(t => {
+                // If task has no company, include it (backward compatibility)
+                if (!t.company) return true;
+                return t.company === currentCompany;
+            });
         }
         
         function ensureRecurringTasks() {
@@ -4210,7 +4217,8 @@
                             createdAt: new Date().toISOString(),
                             recurrence: 'none',
                             parentId: task.id,
-                            generatedForDate: todayStr
+                            generatedForDate: todayStr,
+                            company: task.company || currentUser?.company || 'Demo Company'
                         };
                         tasks.push(newTask);
                         changed = true;
@@ -4310,7 +4318,8 @@
                     createdAt: new Date().toISOString(),
                     recurrence: recurrence,
                     recurrenceDay: recurrence === 'weekly' ? weeklyDay : null,
-                    recurrenceDate: recurrence === 'monthly' ? monthlyDate : null
+                    recurrenceDate: recurrence === 'monthly' ? monthlyDate : null,
+                    company: currentUser?.company || 'Demo Company'
                 };
                 tasks.push(newTask);
                 
