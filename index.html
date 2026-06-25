@@ -3992,8 +3992,8 @@
         // Update home data
         function updateHomeData() {
             ensureRecurringTasks();
-            // Get task count from shared tasks storage (same as Tasks page)
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            // Get task count from shared tasks storage (same as Tasks page) - with company filter
+            const tasks = getTasks();
             const userTasks = tasks.filter(t => t.assignee === currentUser.email && t.status !== 'done');
             document.getElementById('taskCount').textContent = userTasks.length;
             
@@ -7095,8 +7095,8 @@
                 return;
             }
             
-            // Get all tasks with lifecycle history
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            // Get all tasks with lifecycle history - filtered by company
+            const tasks = getTasks();
             const taskLifecycleHistory = JSON.parse(localStorage.getItem('taskLifecycleHistory')) || {};
             const allEmployees = getAllEmployeesForReports();
             
